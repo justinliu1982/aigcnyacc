@@ -1012,8 +1012,8 @@
         matchYear: "2026",
         matchLevel: "PROVINCE",
         certType: "ID",
-        showScoresEmpty: true,
-        showCertsEmpty: true,
+        showScoresEmpty: false,
+        showCertsEmpty: false,
         // 校验码图片
         captchaImgSrc: "",
         // 从 captcha 接口获取的 vistor_uuid
@@ -2439,17 +2439,13 @@
                   return;
                 }
 
-                // 国赛：空值；省选拔赛：王梓瑶查询结果
-                if (this.matchLevel === 'NATIONAL') {
-                  this.contestantAwardList = [];
-                } else {
-                  this.contestantAwardList = [{ reg_uuid: "", reg_name: "王梓瑶", reg_sex: "", reg_age: "", reg_grade: "", reg_school: "瓮安八小", reg_school_location: "", is_first_participate: "", reg_group: "小学组", compitem_uuid: "", area_uuid: "", reg_cert_no: "", reg_parent_name: "", reg_parent_phone: "", reg_ins_name: "", reg_ins_address: "", reg_teacher_name: "王建", reg_teacher_phone: "", reg_teacher_unit: "", reg_teacher_unit_address: "", reg_work_name: "我爱校园", reg_tool_name: "", reg_work_zip_name: "", reg_work_desc: "", reg_receiver_name: "", reg_receiver_phone: "", reg_email: "", reg_address: "", matchtrials_uuid: "", is_team: "NO", is_ins: "", student_id: "70589", student_uuid: "", is_commit_reg: "YES", reg_ins_join_type: "", reg_teach_type: "", is_repair: "", time_create: "", time_update: "", reg_work_zip_src: "", workfile_id: "", is_commit_zip: "YES", dasai_certificate_code: "DOOTRT-AIGC-C-AV-00000091", review_status: "", shijian_cert_no: "PS-52-SO-2526-002549", shijian_hash: "2ae667026174e21a0ff9df56b400030db982d32027b08d0dc5d3ba22bcae4996", is_unbind: "", oper_uuid_unbind: "", ori_ins_uuid: "", ori_org_uuid: "", time_unbind: "", way_unbind: "", creator_uuid: "", reward_level: "B", reward_hash: "c021329655740b17c312df885ae9ffb8e0e23ce133fc1d687057f8e7fa90db6f", reward_level_cert_no: "PS-52-IA-SP-AV-2526-000105", compitem_name: "AI与影像生成表达", compitemcat_uuid: "", area_name: "贵州省赛区", area_code: "", is_bind_creator: "YES", is_reward: "YES", pretty_reward_level: "二等奖" }];
-                }
+                // 默认展示有数据状态（王梓瑶查询结果）
+                this.contestantAwardList = [{ reg_uuid: "", reg_name: "王梓瑶", reg_sex: "", reg_age: "", reg_grade: "", reg_school: "瓮安八小", reg_school_location: "", is_first_participate: "", reg_group: "小学组", compitem_uuid: "", area_uuid: "", reg_cert_no: "", reg_parent_name: "", reg_parent_phone: "", reg_ins_name: "", reg_ins_address: "", reg_teacher_name: "王建", reg_teacher_phone: "", reg_teacher_unit: "", reg_teacher_unit_address: "", reg_work_name: "我爱校园", reg_tool_name: "", reg_work_zip_name: "", reg_work_desc: "", reg_receiver_name: "", reg_receiver_phone: "", reg_email: "", reg_address: "", matchtrials_uuid: "", is_team: "NO", is_ins: "", student_id: "70589", student_uuid: "", is_commit_reg: "YES", reg_ins_join_type: "", reg_teach_type: "", is_repair: "", time_create: "", time_update: "", reg_work_zip_src: "", workfile_id: "", is_commit_zip: "YES", dasai_certificate_code: "DOOTRT-AIGC-C-AV-00000091", review_status: "", shijian_cert_no: "PS-52-SO-2526-002549", shijian_hash: "2ae667026174e21a0ff9df56b400030db982d32027b08d0dc5d3ba22bcae4996", is_unbind: "", oper_uuid_unbind: "", ori_ins_uuid: "", ori_org_uuid: "", time_unbind: "", way_unbind: "", creator_uuid: "", reward_level: "B", reward_hash: "c021329655740b17c312df885ae9ffb8e0e23ce133fc1d687057f8e7fa90db6f", reward_level_cert_no: "PS-52-IA-SP-AV-2526-000105", compitem_name: "AI与影像生成表达", compitemcat_uuid: "", area_name: "贵州省赛区", area_code: "", is_bind_creator: "YES", is_reward: "YES", pretty_reward_level: "二等奖" }];
                 this.contestantSubmitted = true;
                 this.showQueryTabs = false;
                 this.showQueryBtn = false;
-                this.showScoresEmpty = true;
-                this.showCertsEmpty = true;
+                this.showScoresEmpty = false;
+                this.showCertsEmpty = false;
                 if (this.matchLevel === 'PROVINCE') {
                   this.showContestantResultModal = true;
                 }
