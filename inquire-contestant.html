@@ -115,7 +115,7 @@
       <!-- Module 1: 已获奖项（遍历 contestantAwardList，逐条判断） -->
       <div class="mt-[36px]" x-show="contestantAwardList.length > 0">
         <!-- 分隔线 + 标签 我的参赛成绩 -->
-        <div class="flex w-[896px] m-auto items-center">
+        <div class="flex w-[896px] m-auto items-center cursor-pointer" @click="showScoresEmpty = !showScoresEmpty">
           <div class="flex-1 h-[2px]" style="
               background: linear-gradient(
                 270deg,
@@ -168,7 +168,7 @@
         </div>
 
         <!-- ===== 获奖作品列表 ===== -->
-        <div>
+        <div x-show="!showScoresEmpty">
           <!-- 遍历每个作品记录 -->
           <template x-for="(award, index) in contestantAwardList" :key="index">
             <div class="mt-[40px]">
@@ -224,8 +224,13 @@
           </template>
         </div>
 
+        <!-- 成绩空值 -->
+        <div x-show="showScoresEmpty" class="w-[1020px] m-auto mt-[40px]">
+          <div class="w-full h-[120px] rounded-[24px] bg-[#F5F5F5] flex items-center justify-center text-[16px] text-black/40">未查询到有效信息</div>
+        </div>
+
         <!-- 分隔线 + 标签 我的参赛证书 -->
-        <div class="flex w-[896px] m-auto items-center pt-[40px] pb-[50px]" x-show="hasValidRegistration">
+        <div class="flex w-[896px] m-auto items-center pt-[40px] pb-[50px] cursor-pointer" x-show="hasValidRegistration" @click="showCertsEmpty = !showCertsEmpty">
           <div class="flex-1 h-[2px]" style="
               background: linear-gradient(
                 270deg,
@@ -279,7 +284,7 @@
 
         <!-- 参赛证书的循环 -->
         <div class="p-[12px] bg-[#f0ebfb] rounded-[32px]" style="box-shadow: 0px 4px 20px 0px #00000014"
-          x-show="hasValidRegistration">
+          x-show="hasValidRegistration && !showCertsEmpty">
           <div class="p-[12px] rounded-[24px] bg-white gap-[10px] flex flex-wrap" x-show="hasAnyCertificateToShow">
             <template x-for="(award, index) in contestantAwardList" :key="index">
               <div class="w-[255px] h-[95px] cursor-pointer" x-show="isReward(award)" style="
@@ -350,46 +355,14 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- ===== 国赛空值状态（我的参赛成绩 / 我的参赛证书，点击标题切换显示） ===== -->
-      <div x-show="contestantAwardList.length === 0">
-        <!-- 我的参赛成绩 -->
-        <div class="flex w-[896px] m-auto items-center mt-[36px] cursor-pointer" @click="showScoresEmpty = !showScoresEmpty">
-          <div class="flex-1 h-[2px]" style="background: linear-gradient(270deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%);"></div>
-          <div class="w-[10px] h-[10px] rounded-full items-center justify-center flex" style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
-            <div class="w-[4px] h-[4px] bg-[#fff] rounded-full"></div>
-          </div>
-          <div class="flex-shrink-0 mx-[15px] w-[200px] h-[46px]" style="border-radius: 20px; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); padding: 3px;">
-            <div class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]" style="border-radius: 17px">我的参赛成绩</div>
-          </div>
-          <div class="w-[10px] h-[10px] rounded-full items-center justify-center flex" style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
-            <div class="w-[4px] h-[4px] bg-[#fff] rounded-full"></div>
-          </div>
-          <div class="flex-1 h-[2px]" style="background: linear-gradient(90deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%);"></div>
-        </div>
-        <div x-show="showScoresEmpty" class="w-[1020px] m-auto mt-[40px]">
-          <div class="w-full h-[120px] rounded-[24px] bg-[#F5F5F5] flex items-center justify-center text-[16px] text-black/40">未查询到有效信息</div>
-        </div>
-
-        <!-- 我的参赛证书 -->
-        <div class="flex w-[896px] m-auto items-center pt-[40px] cursor-pointer" @click="showCertsEmpty = !showCertsEmpty">
-          <div class="flex-1 h-[2px]" style="background: linear-gradient(270deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%);"></div>
-          <div class="w-[10px] h-[10px] rounded-full items-center justify-center flex" style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
-            <div class="w-[4px] h-[4px] bg-[#fff] rounded-full"></div>
-          </div>
-          <div class="flex-shrink-0 mx-[15px] w-[200px] h-[46px]" style="border-radius: 20px; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); padding: 3px;">
-            <div class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]" style="border-radius: 17px">我的参赛证书</div>
-          </div>
-          <div class="w-[10px] h-[10px] rounded-full items-center justify-center flex" style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
-            <div class="w-[4px] h-[4px] bg-[#fff] rounded-full"></div>
-          </div>
-          <div class="flex-1 h-[2px]" style="background: linear-gradient(90deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%);"></div>
-        </div>
+        <!-- 证书空值 -->
         <div x-show="showCertsEmpty" class="w-[1020px] m-auto mt-[40px]">
           <div class="w-full h-[120px] rounded-[24px] bg-[#F5F5F5] flex items-center justify-center text-[16px] text-black/40">未查询到有效信息</div>
         </div>
       </div>
+
+
     </div>
   </div>
 </div>
