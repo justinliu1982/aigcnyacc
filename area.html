@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>赛区分布</title>
+    <script src="./browser@4.js"></script>
+  </head>
+  <style>
+    * {
+      line-height: normal;
+    }
+    html {
+      font-family: "PingFang SC", "Roboto", "Microsoft YaHei", "Helvetica Neue";
+    }
+    .area-TitleCont {
+      background-color: #9162ff;
+      width: 192px;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .area-item {
+      background-color: #d8cdff;
+      padding: 8px;
+      border-radius: 24px;
+      margin-top: 16px;
+    }
+
+    .area-item:first-of-type {
+      margin-top: 0px;
+    }
+
+    .area-item .unit-item {
+      margin-top: 8px;
+    }
+
+    .area-item .unit-item:first-of-type {
+      margin-top: 0px;
+    }
+
+    .area-item > .unit-item > .setX-item {
+      margin-top: 8px;
+    }
+
+    .area-item > .unit-item > .setX-item:first-of-type {
+      margin-top: 0px;
+    }
+
+    /* 
+    .area-item:nth-child(-n + 5) {
+        margin-top: 0;
+    }
+
+    .area-item:nth-child(5n) {
+        margin-right: 0;
+    } */
+    .banner_bg {
+      background: url("./img/area_bg.png");
+      background-size: 100%;
+      background-position: 0;
+      background-repeat: no-repeat;
+    }
+  </style>
+
+  <body>
+    <!-- 关于 -->
+    <!-- 容器：用于插入头部 -->
+    <div id="headerContainer"></div>
+
+    <!-- 中间独有的内容 -->
+    <main>
+      <div
+        id="banner"
+        class="h-[280px] w-full mt-[84px] relative bg-[#4900b8] banner_bg"
+      ></div>
+      <div class="bg-[#fafafa]">
+        <div class="w-[1320px] m-auto pt-[40px] pb-[160px]">
+          <!-- <div class="text-right">
+            <img src="./img/frame152.png" class="h-[40px] inline-block" />
+          </div> -->
+
+          <!-- <a href="./competition.html?id=area" id="areaCont" class="mt-[24px]"> -->
+          <div href="" id="areaCont" class="mt-[24px]"></div>
+          <div
+            class="mt-[16px] bg-[#e0d6ff] h-[36px] flex items-center justify-center rounded-[24px] text-[14px]"
+            style="color: rgba(0, 0, 0, 0.8)"
+          >
+            更多赛区信息持续更新中...
+          </div>
+          <!-- <div class="area-item flex">
+                    <div class="area-TitleCont flex items-center justify-center"
+                        style="border-radius: 16px 8px 8px 16px;">北京赛区</div>
+                    <div class="flex-1 text-[14px] ml-[8px]" style="color: rgba(0, 0, 0, 0.8);">
+                        <div class="flex unit-item">
+                            <div class="w-[420px] bg-[#f7f5ff] p-[8px]" style="border-radius: 8px 4px 4px 8px;">
+                                <div class="flex items-center">
+                                    <img src="./img/icon-unit.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                                    <span class="font-light">组织单位：</span>
+                                    <span class="font-normal">北京绚一文化有限公司</span>
+                                </div>
+                                <div class="mt-[8px] flex items-center">
+                                    <img src="./img/icon-phone.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                                    <span class="font-light">联系人：</span>
+                                    <span class="font-normal mr-[20px]">戴老师</span>
+                                    <span class="font-light">联系电话：</span>
+                                    <span class="font-normal">15011275713</span>
+                                </div>
+                                <div class="mt-[8px] flex items-center">
+                                    <img src="./img/icon-tousu.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                                    <span class="font-light">监督投诉人：</span>
+                                    <span class="font-normal mr-[20px]">王老师</span>
+                                    <span class="font-light">监督投诉电话：</span>
+                                    <span class="font-normal">15210735732</span>
+                                </div>
+                            </div>
+                            <div class="flex-1 bg-[#f7f5ff] p-[8px] ml-[8px]" style="border-radius: 4px 16px 16px 4px;">
+                                <div class="flex items-center">
+                                    <img src="./img/icon-saix.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                                    <span class="font-light">组织赛项：</span>
+                                </div>
+                                <div class="flex rounded-[12px] bg-[#d8cdff] p-[2px] mt-[8px] setX-item">
+                                    <div class="w-[20px] h-[20px] font-light rounded-full mr-[8px] flex items-center justify-center text-[12px]"
+                                        style="background-color: rgba(247, 245, 255, 1);">一</div>
+                                    <div>AI与图像生成表达、AI与造型艺术、AI与设计艺术、AI与视觉传达、AI 与产品设计艺术</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center mt-[8px] p-[8px] rounded-[8px] bg-[#f7f5ff]">
+                            <img src="./img/icon-unit.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                            <span class="font-light">组织单位：</span>
+                            <span class="font-normal">北京绚一文化有限公司</span>
+                        </div>
+                    </div>
+                </div> -->
+          <!-- <div class="area-item flex">
+                    <div class="area-TitleCont flex items-center justify-center"
+                        style="border-radius: 16px 8px 8px 16px;">北京赛区</div>
+                    <div class="flex-1 flex text-[14px] ml-[8px]" style="color: rgba(0, 0, 0, 0.8);">
+                        <div class="w-[320px] bg-[#ebe6fa] p-[8px] flex items-center justify-center rounded-[8px]">
+                            <div class="flex items-center">
+                                <img src="./img/icon-mail.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                                <span class="font-light">监管投诉邮箱：</span>
+                                <span class="font-normal">北京绚一文化有限公司</span>
+                            </div>
+                        </div>
+                        <div class="flex-1 ml-[8px] flex flex-col">
+                            <div class="flex-1 p-[8px] bg-[#ebe6fa]" style="border-radius: 8px 16px 16px 8px;">
+                                <div class="flex items-center">
+                                    <img src="./img/icon-unit.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                                    <span class="font-light">组织单位：</span>
+                                    <span class="font-normal">北京绚一文化有限公司</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="flex items-center flex-1 unit-item">
+                                        <img src="./img/icon-phone.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                                        <span class="font-light">组织单位：</span>
+                                        <span class="font-normal">北京绚一文化有限公司</span>
+                                    </div>
+                                    <div class="flex items-center flex-1 unit-item">
+                                        <img src="./img/icon-tousu.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                                        <span class="font-light">组织单位：</span>
+                                        <span class="font-normal">北京绚一文化有限公司</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+        </div>
+      </div>
+    </main>
+
+    <!-- 容器：用于插入底部 -->
+    <div id="footerContainer"></div>
+
+    <!-- 动态加载公共部分 -->
+    <script type="module">
+      import {list} from "./area.js";
+
+      // 加载公共文件的函数
+      async function loadCommonPart(url, containerId) {
+        try {
+          const response = await fetch(url);
+          const html = await response.text();
+          document.getElementById(containerId).innerHTML = html;
+          if (containerId === "headerContainer") {
+            // 动态导入 header.js
+            const { initHeader } = await import("./header.js");
+            // 给一点延迟确保 DOM 完全渲染
+            setTimeout(initHeader, 10);
+          }
+        } catch (error) {
+          console.error("加载公共部分失败：", error);
+        }
+      }
+
+      // 加载头部和底部
+      loadCommonPart("./header.html", "headerContainer");
+      loadCommonPart("./footer.html", "footerContainer");
+
+      function loadList() {
+        const areaCont = document.getElementById("areaCont");
+
+        list.forEach((item, index) => {
+          const div = document.createElement("div");
+          div.className = "area-item flex";
+
+          // 生成单位列表HTML
+          let unitsHtml = "";
+          item.unitList.forEach((unitItem, unitIndex) => {
+            // 生成赛项列表HTML
+            let eventsHtml = "";
+            let supportView = "";
+            unitItem.eventList.forEach((event, eventIndex) => {
+                // 将 value 按、分割成数组，过滤空字符串，然后去重，再用、拼接
+                const uniqueValue = [...new Set(event.value.split('、').filter(item => item.trim()))].join('、');
+              eventsHtml += `
+                    <div class="flex items-center rounded-[12px] bg-[#E0D6FF]  p-[10px] mt-[8px] setX-item">
+                        <div class=" flex rounded-[12px] flex items-center box-border">
+                            <div class="p-[10px] w-[115px] font-light bg-[#F7F5FF] text-center  rounded-[12px] mr-[8px]  text-[14px]"
+                            style="border:1px solid #E0D6FF;">${event.key}</div>
+                             <div style="color:rgba(0,0,0,0.7)" class="flex-1">${uniqueValue}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            unitItem.supportList &&  unitItem.supportList.forEach((y,yIndex)=>{
+                supportView += `
+                    <div class="flex mt-[8px] items-center">
+                        <img src="./img/support_icon.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                        <span class="font-light">支持单位：</span>
+                        <span class="font-normal">${y}</span>
+                    </div>
+                `
+            })
+            unitsHtml += `
+                <div class="flex unit-item">
+                    <div class="w-[420px] bg-[#f7f5ff] p-[8px]" style="border-radius: 8px 4px 4px 8px;">
+                        <div class="flex items-center">
+                            <img src="./img/icon-unit.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                            <span class="font-light">组织单位：</span>
+                            <span class="font-normal">${unitItem.unit}</span>
+                        </div>
+                        ${supportView}
+                        <div class="mt-[8px] flex items-center">
+                            <img src="./img/icon-phone.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                            ${unitItem.Contact ? `<span class="font-light">联系人：</span>
+                            <span class="font-normal mr-[20px]">${unitItem.Contact}</span>` : ''}
+                            <span class="font-light">联系电话：</span>
+                            <span class="font-normal">${unitItem.phone}</span>
+                        </div>
+                        <div class="mt-[8px] flex items-center">
+                            <img src="./img/icon-tousu.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                            ${unitItem.Complaint ? `<span class="font-light whitespace-nowrap">监督投诉人：</span>
+                            <span class="font-normal mr-[20px] whitespace-nowrap">${unitItem.Complaint}</span>` : ''}
+                            <span class="font-light whitespace-nowrap">监督投诉电话：</span>
+                            <span style="width:110px;word-break:break-all;" class="font-normal">${unitItem.ComplaintPhone}</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 bg-[#f7f5ff] p-[8px] ml-[8px]" style="border-radius: 4px 16px 16px 4px;">
+                        <div class="flex items-center">
+                            <img src="./img/icon-saix.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                            <span class="font-light">组织赛项：</span>
+                        </div>
+                        ${eventsHtml}
+                    </div>
+                </div>
+            `;
+          });
+
+          // 添加监管投诉邮箱块
+          unitsHtml += `
+            <div class="flex items-center mt-[8px] p-[8px] rounded-[8px] bg-[#f7f5ff]">
+                <img src="./img/icon-mail.svg" class="inline-block w-[20px] h-[20px] mr-[8px]">
+                <span class="font-light">监管投诉邮箱：</span>
+                <span class="font-normal">${item.email}</span>
+            </div>
+        `;
+
+          div.innerHTML = `
+            <div class="area-TitleCont flex items-center justify-center"
+                style="border-radius: 16px 8px 8px 16px;">${item.area}</div>
+            <div class="flex-1 text-[14px] ml-[8px]" style="color: rgba(0, 0, 0, 0.8);">
+                ${unitsHtml}
+            </div>
+        `;
+
+          areaCont.appendChild(div);
+        });
+      }
+
+      loadList();
+    </script>
+  </body>
+</html>

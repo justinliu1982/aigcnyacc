@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>指导老师查询</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+</head>
+<body>
+<!-- ===== 指导老师查询 ===== -->
+<div>
+  <!-- 404 占位 -->
+  <div
+     x-show="typeof showTeacherContent !== 'undefined' && !showTeacherContent"
+    class="flex flex-col items-center justify-center"
+    style="width: 480px; height: 306px; background: #EBE6FA; border-radius: 80px; margin: 60px auto 0 auto;"
+  >
+    <div
+      style="font-size: 20px; font-weight: 400; color: rgba(0, 0, 0, 0.80); text-align: center; line-height: 1.5;"
+    >
+      功能即将开放
+    </div>
+    <img
+      src="./img/404_icon.png"
+      alt="404"
+      style="margin-top: 16px; width: auto; height: auto;"
+    />
+  </div>
+  <!-- 正常内容 -->
+   <div x-show="typeof showTeacherContent === 'undefined' || showTeacherContent">
+    <!-- 查询表单区域 -->
+    <div x-show="!teacherSubmitted" class="p-[30px] w-[1100px] bg-[#EBE6FA]" style="border-radius: 32px; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);">
+      <!-- 第一行：比赛年份、阶段 -->
+      <div class="flex gap-[24px]">
+        <div
+          class="w-[290px] text-sm flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white"
+        >
+          <span
+            style="border-right: 1px solid #9162ff"
+            class="pr-2 text-black/60 flex-shrink-0"
+            >比赛年份</span
+          >
+          <div class="select-arrow-wrapper flex-1 min-w-0">
+            <select
+              class="border-0 pl-3 pr-3 outline-none bg-transparent p-0 leading-normal w-auto m-0 text-base"
+              style="color: #9162ff"
+              x-model="matchYear"
+            >
+              <option value="" disabled selected>请选择年份</option>
+              <option value="2026">2026</option>
+            </select>
+          </div>
+        </div>
+        <div
+          class="w-[290px] text-sm flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white"
+        >
+          <span
+            class="pr-2 text-black/60 flex-shrink-0"
+            style="border-right: 1px solid #9162ff"
+            >阶段</span
+          >
+          <div class="select-arrow-wrapper flex-1 min-w-0">
+            <select
+              class="border-0 pl-3 outline-none bg-transparent p-0 leading-normal w-auto m-0 text-base"
+              style="color: #9162ff; font-size: 16px"
+              x-model="matchLevel"
+            >
+              <option value="" disabled selected>请选择阶段</option>
+              <option value="PROVINCE">省赛</option>
+              <option value="NATIONAL">国赛</option>
+            </select>
+          </div>
+        </div>
+        <div
+          class="w-[412px] overflow-hidden rounded-[16px] text-sm flex items-center pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white"
+        >
+          <span class="pr-2 text-black/60" style="border-right: 1px solid #9162ff"
+            >指导老师姓名</span
+          >
+          <input
+            class="flex-1 ml-2 text-[16px] border-0 outline-none focus:outline-none!important focus:ring-0!important"
+            type="text"
+            placeholder="输入完整姓名"
+            x-model="teacherName"
+          />
+        </div>
+      </div>
+      <!-- 第二行：指导老师手机号、校验码、验证码 -->
+      <div class="flex gap-[24px] mt-[24px]">
+        <div
+          class="w-[340px] text-sm flex rounded-[16px] items-center pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white"
+        >
+          <span class="pr-2 text-black/60 flex-shrink-0 whitespace-nowrap" style="border-right: 1px solid #9162ff"
+            >指导老师手机号</span
+          >
+          <input
+            class="flex-1 ml-2 text-[16px] min-w-0 border-0 outline-none focus:outline-none!important focus:ring-0!important"
+            type="text"
+            placeholder="输入手机号码"
+            x-model="teacherPhone"
+          />
+        </div>
+        <div
+          class="w-[280px] overflow-hidden rounded-[16px] text-sm flex items-center pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white flex-shrink-0"
+        >
+          <span class="pr-2 text-black/60 flex-shrink-0" style="border-right: 1px solid #9162ff"
+            >校验码</span
+          >
+          <input
+            class="w-[80px] flex-shrink-0 ml-2 text-[16px] border-0 outline-none focus:outline-none!important focus:ring-0!important"
+            type="text"
+            placeholder="校验码"
+            x-model="contestantVerifyCode"
+          />
+          <div
+            class="flex-shrink-0 ml-[8px] w-[100px] h-[36px] flex items-center justify-center cursor-pointer"
+            style="overflow: hidden;"
+            @click="refreshCaptcha()"
+          >
+            <img
+              :src="captchaImgSrc"
+              alt="校验码"
+              class="w-full h-full object-contain"
+            />
+          </div>
+        </div>
+        <div
+          class="flex-1 overflow-hidden text-sm flex items-center h-[48px] min-w-0"
+        >
+          <div
+            class="flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-full bg-white"
+            style="flex: 0 0 220px; width: 235px;"
+          >
+            <span
+              class="pr-2 text-black/60 flex-shrink-0"
+              style="border-right: 1px solid #9162ff"
+              >验证码</span
+            >
+            <input
+              class="flex-1 ml-2 min-w-0 text-[16px] border-0 outline-none focus:outline-none!important focus:ring-0!important"
+              type="text"
+              placeholder="验证码"
+              x-model="teacherVerifyCode"
+            />
+          </div>
+          <div
+            class="flex-shrink-0 ml-[24px] w-[114px] rounded-[16px] h-[48px] flex items-center justify-center text-[13px] font-medium cursor-pointer text-white whitespace-nowrap"
+            style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)"
+            @click="sendTeacherVerifyCode()"
+            x-text="teacherVerifyCodeBtnText"
+          ></div>
+        </div>
+      </div>
+      <div class="flex flex-col">
+        <div class="mt-[24px] text-base text-black/80 font-normal">
+          说明
+        </div>
+        <div class="text-sm text-black/60 mt-[4px]">
+          请正确填写指导老师姓名和手机号码，确保信息准确无误，以便顺利查询比赛成绩。
+        </div>
+      </div>
+    </div>
+
+    <!-- 指导老师查询 - 提交成功展示区域 -->
+    <div x-show="teacherSubmitted">
+      <!-- 顶部：返回查询 -->
+      <div class="flex justify-end mb-[20px]">
+        <div
+          class="px-[20px] h-[38px] flex items-center justify-center text-[16px] font-medium cursor-pointer  bg-[rgba(240, 235, 251, 1)]"
+          style="
+            border-radius: 30px;
+            border: 1px solid rgba(145, 98, 255, 1);
+            color: rgba(145, 98, 255, 1);
+          "
+          @click="teacherSubmitted = false; showQueryBtn = true; showQueryTabs = true"
+        >
+        <img src="./img/return_icon_img.png" class="w-[18px] h-[18px]" />  
+        <span class="pl-[10px]">返回查询</span>
+        </div>
+      </div>
+
+      <!-- 白色卡片 -->
+      <div
+        class="bg-white p-[40px] rounded-[32px] mt-[29px] relative"
+        style="
+          border: 5px solid rgba(201, 179, 252, 1);
+        "
+      >
+          <div class="absolute w-[380px] top-[-25px] left-1/2 -translate-x-1/2">
+              <img src="./img/award_icon.png" alt="award icon" class="w-[380px] h-[67px]" onerror="this.style.display='none'" />
+              <div class=" absolute  top-[60%]  left-1/2 -translate-x-1/2 -translate-y-2/2 text-[rgba(135,66,219,1)] text-[22px] font-medium">指导老师获奖查询</div>
+          </div>
+          <!-- 标题区域 -->
+          <div class="text-center">
+            <div class="mt-[10px] text-[rgb(158,164,176)] text-[18px] font-medium">
+              指导老师：<span x-text="teacherName || '-'"></span> ｜ <span x-text="(matchYear || '') + '年' + (matchLevel === 'NATIONAL' ? '国赛' : matchLevel === 'PROVINCE' ? '省赛' : '')"></span>
+            </div>
+          </div>
+
+          <!-- Module 1: 已获奖项 -->
+          <div class="mt-[32px]">
+            <!-- 分隔线 + 标签 -->
+            <div class="flex w-[896px] m-auto items-center">
+              <div class="flex-1 h-[2px]" style="background: linear-gradient(270deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%)"></div>
+              <div class="w-[10px] h-[10px] items-center justify-center flex" style="border-radius: 50%; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
+                <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+              </div>
+              <div class="flex-shrink-0 mx-[15px] w-[200px] h-[46px] relative" style="border-radius: 20px; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); padding: 3px;">
+                <div class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]" style="border-radius: 17px;">已获奖项</div>
+              </div>
+              <div class="w-[10px] h-[10px] items-center justify-center flex" style="border-radius: 50%; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
+                <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+              </div>
+              <div class="flex-1 h-[2px]" style="background: linear-gradient(90deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%)"></div>
+            </div>
+
+            <div class="mt-[20px] w-full flex justify-center">
+              <!-- 已获奖项 - 根据 teacherReward 和 teacherLevel 动态显示 -->
+              <div class="mt-[20px]">
+                <div class="w-[422px] h-[365px] relative">
+                  <img
+                    :src="'./img/winning_icon_' + (teacherLevel === 'ai_pioneer' ? '4' : teacherLevel === 'innovation_pacesetter' ? '2' : '1') + '.png'"
+                    class="w-[422px] h-[365px]" alt="">
+                  <div class="text-[18px] text-[#fff] font-medium absolute top-[18px] right-[60px]">
+                    <span x-show="teacherReward === 'YES'">已获奖</span>
+                    <span x-show="teacherReward !== 'YES'">未获奖</span>
+                  </div>
+                  <!-- 等级名称 -->
+                  <div class="absolute text-[22px] top-[62px] font-medium absolute left-[40px]" :style="{ color: teacherLevel === 'ai_pioneer' ? '#10934F' : teacherLevel === 'innovation_pacesetter' ? '#E06B39' : '#3489FF' }">
+                    <span x-show="teacherLevel === 'excellent_teacher'">优秀指导教师</span>
+                    <span x-show="teacherLevel === 'innovation_pacesetter'">教学创新标兵</span>
+                    <span x-show="teacherLevel === 'ai_pioneer'">人工智能教育先锋</span>
+                  </div>
+                  <div class="absolute text-[16px] top-[112px] left-[40px]">申领要求：</div>
+                  <!-- 申领要求 -->
+                  <div class="absolute text-[16px] w-[80%] top-[140px] left-[40px]">
+                    <span x-show="teacherLevel === 'excellent_teacher'">1、指导10名以上选手参赛</span>
+                    <span x-show="teacherLevel === 'innovation_pacesetter'">1、指导10名以上选手参赛且总获奖学生不低于4名</span>
+                    <span x-show="teacherLevel === 'ai_pioneer'">1、指导30名以上选手参赛且总获奖学生不低于10名</span>
+                  </div>
+                  <!-- 提示 -->
+                  <div class="absolute text-[16px] w-[80%] top-[190px] left-[40px]">
+                    <span x-show="teacherLevel === 'excellent_teacher'">（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例8%）</span>
+                    <span x-show="teacherLevel === 'innovation_pacesetter'">（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例1.6%）</span>
+                    <span x-show="teacherLevel === 'ai_pioneer'">（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例0.8%）</span>
+                  </div>
+                  <div class="absolute w-[98px] h-[36px] flex rounded-[100px] left-[40px] bottom-[55px] items-center justify-center bg-[#fff] cursor-pointer" @click="alert('该功能将于7月20日开放')">
+                    <span class="text-[16px] font-medium" :style="{ color: teacherLevel === 'ai_pioneer' ? '#10934F' : teacherLevel === 'innovation_pacesetter' ? '#E06B39' : '#3C8DFF' }">查看详情</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Module 2: 指导作品列表 -->
+          <div class="mt-[55px]">
+            <!-- 分隔线 + 标签 -->
+            <div class="flex w-[896px] m-auto items-center">
+              <div class="flex-1 h-[2px]" style="background: linear-gradient(270deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%)"></div>
+              
+              <div class="w-[10px] h-[10px] items-center justify-center flex" style="border-radius: 50%; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
+                <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+              </div>
+              <div class="flex-shrink-0 mx-[15px] w-[200px] h-[46px] relative" style="border-radius: 20px; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); padding: 3px;">
+                <div class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]" style="border-radius: 17px;">指导作品列表</div>
+              </div>
+               <div class="w-[10px] h-[10px] items-center justify-center flex" style="border-radius: 50%; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
+                <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+              </div>
+              <div class="flex-1 h-[2px]" style="background: linear-gradient(90deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%)"></div>
+            </div>
+
+            <!-- 作品表格 -->
+            <div
+              class="overflow-hidden"
+              style="
+                border-radius: 16px;
+              "
+            >
+              <!-- 表头：椭圆圆角，无边框 -->
+              <div
+                class="flex items-center mx-auto w-[1000px] h-[50px] mt-[38px] rounded-full text-[18px]"
+                style="
+                  background: rgba(240, 235, 251, 1);
+                  color: rgba(135, 66, 219, 1);
+                "
+              >
+                <span class="relative pl-[40px] text-left" style="flex: 0 0 120px;">序号<span class="absolute right-0" style="color: rgba(135, 66, 219, 1);">丨</span></span>
+                <span class="flex-1 text-center relative">作品名称<span class="absolute right-0" style="color: rgba(135, 66, 219, 1);">丨</span></span>
+                <span class="flex-1 text-center" style="position: relative;">参赛者<span class="absolute right-0" style="color: rgba(135, 66, 219, 1);">丨</span></span>
+                <span class="flex-1 text-center" style="position: relative;">组别<span class="absolute right-0" style="color: rgba(135, 66, 219, 1);">丨</span></span>
+                <span class="flex-1 text-center">奖项</span>
+              </div>
+              <!-- 作品列表 - 使用 API 返回的 teacherWorkList 渲染 -->
+              <div class="mx-auto w-[1000px] pt-[5px]">
+                <template x-for="(work, index) in teacherWorkList" :key="index">
+                  <div class="flex items-center text-[16px]" style="border-bottom: 1px solid rgba(201, 179, 252, 1); min-height: 54px;">
+                    <div class="text-left text-black/60" style="flex: 0 0 120px; padding-left: 40px;" x-text="index + 1"></div>
+                    <div class="flex-1 flex justify-center items-center" style="color: rgba(0,0,0,0.6); min-width:0;">
+                      <template x-if="work.reg_work_name">
+                        <span style="display:flex; align-items:center; min-width:0; max-width:100%;">
+                          <span>《</span>
+                          <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex-shrink:1; min-width:0;" x-text="work.reg_work_name"></span>
+                          <span>》</span>
+                        </span>
+                      </template>
+                      <span x-show="!work.reg_work_name">未上传作品</span>
+                    </div>
+                    <div class="flex-1 text-center" style="color: rgba(0,0,0,0.6);" x-text="work.reg_name"></div>
+                    <div class="flex-1 text-center" style="color: rgba(0,0,0,0.6);" x-text="work.reg_group"></div>
+                    <div class="flex-1 text-center">
+                      <template x-if="work.pretty_reward_level === '一等奖'">
+                        <img src="./img/jiang_1.png" style="width:70px;height:34px;display:inline-block;" alt="一等奖" />
+                      </template>
+                      <template x-if="work.pretty_reward_level === '二等奖'">
+                        <img src="./img/jiang_2.png" style="width:70px;height:34px;display:inline-block;" alt="二等奖" />
+                      </template>
+                      <template x-if="work.pretty_reward_level === '三等奖'">
+                        <img src="./img/jiang_3.png" style="width:70px;height:34px;display:inline-block;" alt="三等奖" />
+                      </template>
+                      <template x-if="work.pretty_reward_level === '优胜奖'">
+                        <img src="./img/jiang_4.png" style="width:70px;height:34px;display:inline-block;" alt="优胜奖" />
+                      </template>
+                      <span x-show="!work.pretty_reward_level || work.pretty_reward_level === '未获奖'" x-text="'未获奖'"></span>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+      </div>
+      </div>
+    </div>
+
+    <!-- 证书预览弹框 -->
+    <div id="certModal" class="fixed inset-0 z-50 flex items-center justify-center" style="display: none; background: rgba(0,0,0,0.5);" onclick="if(event.target===this)this.style.display='none'">
+      <div class="bg-white rounded-[24px] p-[32px]" style="width: 1100px;">
+        <!-- 第一行：标题 + 关闭按钮 -->
+        <div class="flex items-center justify-between">
+          <span class="text-[22px] font-medium" style="color: rgba(135, 66, 219, 1);">指导教师证书预览</span>
+          <div class="w-[30px] h-[30px] flex items-center justify-center cursor-pointer" style="border: 2px solid rgba(135, 66, 219, 1); border-radius: 50%;" onclick="document.getElementById('certModal').style.display='none'">
+            <img class="w-[11px] h-[11px]" src="./img/clone_icon_img.png" />
+          </div>
+        </div>
+        <!-- 第二行：横线 -->
+        <div class="mt-[25px] h-[2px] w-full" style="background: rgba(135, 66, 219, 1);"></div>
+        <!-- 第三行：证书图片区域 -->
+        <div class="mt-[20px] mx-auto p-[25px] flex gap-[15px] rounded-[16px]" style="background: rgba(240, 235, 251, 1);">
+          <div class="flex-1 h-[320px] flex items-center justify-center overflow-hidden" >
+            <!-- <img src="./img/certificate_img.png" alt="证书预览" class="w-full h-full object-contain" onerror="this.style.display='none'" /> -->
+          </div>
+          <div class="flex-1 h-[320px] flex items-center justify-center overflow-hidden" >
+            <!-- <img src="./img/certificate_img.png" alt="铜板证书预览" class="w-full h-full object-contain" onerror="this.style.display='none'" /> -->
+          </div>
+        </div>
+        <!-- 第四行：按钮 -->
+        <div class="mt-[30px] flex justify-center gap-[15px]">
+          <div class="px-[30px] h-[48px] flex items-center justify-center text-[18px] font-medium text-white cursor-pointer rounded-[16px]" style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); font-weight: 500;">
+            下载数字证书
+          </div>
+          <div class="px-[30px] h-[48px] flex items-center justify-center text-[18px] font-medium text-white cursor-pointer rounded-[16px]" style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); font-weight: 500;">
+            申领纸质证书
+          </div>
+          <div class="px-[30px] h-[48px] flex items-center justify-center text-[18px] font-medium text-white cursor-pointer rounded-[16px]" style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); font-weight: 500;">
+            申领铜板证书
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

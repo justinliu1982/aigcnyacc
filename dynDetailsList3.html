@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>大赛动态</title>
+    <script src="./browser@4.js"></script>
+  </head>
+  <style>
+    * {
+      line-height: normal;
+    }
+    html {
+      font-family: "PingFang SC", "Roboto", "Microsoft YaHei", "Helvetica Neue";
+    }
+    .navItem {
+      color: var(---60, rgba(0, 0, 0, 0.6));
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 44px;
+      width: 140px;
+      text-align: center;
+    }
+
+    .active {
+      color: #fff;
+      border-radius: 30px;
+      background: var(--Color, #9162ff);
+    }
+    .banner_bg {
+      background-image: url("./img/competition_bg.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 0;
+    }
+    .hover_item {
+      cursor: pointer;
+    }
+  </style>
+
+  <body>
+    <!-- 关于 -->
+    <!-- 容器：用于插入头部 -->
+    <div id="headerContainer"></div>
+
+    <!-- 中间独有的内容 -->
+    <main class="text-center">
+      <div class="w-[800px] mt-[84px] m-auto">
+        <div class="flex items-center">
+          <span
+            class="text-xs text-white px-3 py-1"
+            style="border-radius: 4px; background: #ff6265"
+            >公告通知</span
+          >
+          <span class="ml-10 text-black/60 text-xs"
+            >发布时间：2025-10-30 10:08
+          </span>
+          <span class="ml-10 text-black/60 text-xs"
+            >来源：文化和旅游部艺术发展中心数字艺术与区块链实验室</span
+          >
+        </div>
+        <div class="mt-10 font-medium text-[32px] text-left">
+          实验室筹建的“全国青少年人工智能辅助生成数字艺术创作者大赛”入选教育部2025-2028学年面向中小学生的全国性竞赛活动
+        </div>
+        <div
+          class="mt-[40px] text-left text-black/80 text-[16px] mb-3 indent-8"
+        >
+          数字艺术与区块链实验室筹建的“全国青少年人工智能辅助生成数字艺术创作者大赛”入选教育部2025-2028学年面向中小学生的全国性竞赛活动。
+        </div>
+        <div
+          class="mt-[12px] text-left text-black/60 text-sm mb-[12px] indent-8"
+        >
+          <span class="font-semibold">教育部网站原文</span>
+          ：http://www.moe.gov.cn/srcsite/A29/202510/t20251029_1418393.html
+        </div>
+        <img src="./img/wenzhang1.svg" alt="" />
+        <div class="mt-[40px] mb-[12px] text-[20px] font-normal text-left">
+          附件竞赛名单截图
+        </div>
+        <img src="./img/wenzhang2.svg" alt="" />
+        <div class="mt-10">
+          <div class="w-full h-[1px] bg-black/20 mt-[120px] mb-[20px]"></div>
+          <a href="./dynDetailsList1.html?id=dynamic">
+            <div class="text-left pl-[20px] text-black/80 text-sm font-normal">
+              上一篇
+            </div>
+          </a>
+          <a href="./dynDetailsList1.html?id=dynamic">
+            <div
+              class="w-[800px] hover_item flex mt-[12px] items-center px-4 pt-5 pb-5 pb-3"
+              style="
+                box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
+                background: var(---100, #fff);
+                border-radius: 20px;
+              "
+            >
+              <div class="flex-1 text-left pr-10">
+                <div class="text-base">
+                  第一届“全国青少年人工智能辅助生成数字艺术创作者大赛”公告
+                </div>
+                <div class="text-xs mt-4 text-black/40">
+                  根据《教育部办公厅关于公布2025—2028学年面向中小学生的全国性竞赛活动的通知（教监管厅函〔2025〕7号）》的通知要求，以及文化和旅游部艺术发展中心（以下简称“中心”）的相关管理规定，现将本次竞赛活动具体内容通知如下：一、大赛名称中文名称：全国青少年...
+                </div>
+                <div class="mt-[10px]">
+                  <span
+                    class="px-3 py-1 text-white rounded-xl text-xs"
+                    style="background-color: #ff6265;"
+                    >公告通知</span
+                  >
+                  <span class="pl-3 text-black/60 text-xs">2025.11.09</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <div
+            class="text-left mt-[12px] pl-[20px] text-black/80 text-sm font-normal"
+          >
+            下一篇
+          </div>
+          <div
+            class="w-[800px] mb-[150px] mt-[24px] flex items-center px-4 pt-5 pb-5 pb-3"
+            style="
+              box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
+              background: var(---100, #fff);
+              border-radius: 20px;
+            "
+          >
+            <div class="flex-1 text-left pr-10">没有了</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 容器：用于插入底部 -->
+    <div id="footerContainer"></div>
+
+    <!-- 动态加载公共部分 -->
+    <script>
+      // 加载公共文件的函数
+      async function loadCommonPart(url, containerId) {
+        try {
+          const response = await fetch(url);
+          const html = await response.text();
+          document.getElementById(containerId).innerHTML = html;
+          if (containerId === "headerContainer") {
+            // 动态导入 header.js
+            const { initHeader } = await import("./header.js");
+            // 给一点延迟确保 DOM 完全渲染
+            setTimeout(initHeader, 10);
+          }
+        } catch (error) {
+          console.error("加载公共部分失败：", error);
+        }
+      }
+
+      // 加载头部和底部
+      loadCommonPart("./header.html", "headerContainer");
+      loadCommonPart("./footer.html", "footerContainer");
+    </script>
+  </body>
+</html>

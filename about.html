@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>关于大赛</title>
+    <script src="./browser@4.js"></script>
+    <script src="https://www.shuixingzhou.com/static/www/js/jquery-3.6.0.min.js"></script>
+  </head>
+  <style>
+    html {
+      font-family: "PingFang SC", "Roboto", "Microsoft YaHei", "Helvetica Neue";
+    }
+    .navItem {
+      color: var(---60, rgba(0, 0, 0, 0.6));
+      padding: 8px 40px;
+      font-weight: 500;
+      font-size: 16px;
+      height: 40px;
+      border-radius: 30px;
+      line-height: 24px;
+      width: 320px;
+      text-align: center;
+    }
+
+    .active {
+      color: #fff;
+      background-color: #9162ff;
+    }
+
+    .detailTitle {
+      font-size: 48px;
+      font-weight: 300;
+    }
+
+    .defaultItem {
+      width: calc(100% - 60px / 4);
+      height: 320px;
+      background: #d8cdff;
+      margin-right: 20px;
+    }
+
+    .defaultItem:nth-child(4n) {
+      margin-right: 0px;
+    }
+  </style>
+
+  <body>
+    <!-- 关于 -->
+    <!-- 容器：用于插入头部 -->
+    <div id="headerContainer"></div>
+
+    <!-- 中间独有的内容 -->
+    <main>
+      <div class="w-full h-[400px] bg-[#330080] mt-[84px] relative">
+        <div class="m-auto w-[1241px] h-[400px] pt-[85px] relative z-10">
+          <img class="h-[231px]" src="./img//frame27.png" />
+        </div>
+        <img class="absolute h-[400px] left-0 top-0" src="./img/aboutB1.png" />
+        <img class="absolute h-[400px] right-0 top-0" src="./img/aboutB2.png" />
+      </div>
+      <div class="bg-[#ebe6fa] h-[72px] py-[16px]">
+        <div
+          class="flex items-center justify-center h-[40px] w-[1040px] m-auto"
+          id="navCont"
+        ></div>
+      </div>
+      <div class="bg-white mt-[75px] mb-[160px]">
+        <div class="w-[1080px] m-auto">
+          <div class="detail" data-id="0">
+            <div class="detailTitle" style="color: #711fff">大赛名称</div>
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)]"
+            >
+              中文名称：<span class="font-medium"
+                >全国青少年人工智能辅助生成数字艺术创作者大赛</span
+              >，英文翻译为AIGC National Youth<br />
+              Generative Digital Art Creators Competition of
+              China（缩写为AIGCNYACC）
+            </div>
+
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)]"
+            >
+              大赛官网：www.aigcnyacc.com是大赛官方信息发布的唯一官网。自媒体缩写为“AIGCNYACC”。
+            </div>
+
+            <div class="detailTitle mt-[40px] text-[#711FFF]">大赛简介</div>
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              大赛是根据《教育部办公厅关于公布2025—2028学年面向中小学生的全国性竞赛活动的通知》（
+              <span class="font-semibold">教监管厅函〔2025〕7号</span>
+              ）的通知要求，以及<span class="font-semibold"
+                >文化和旅游部艺术发展中心</span
+              >（以下简称“中心”）的相关管理规定，获得认可的<span
+                class="font-semibold"
+                >全国性竞赛活动</span
+              >。
+              <br />
+              <br />
+              大赛由<span class="font-semibold"
+                >中心主办，数字艺术与区块链文化和旅游部艺术发展中心实验室技术支持</span
+              >，是一项<span class="font-semibold">面向全国中小学生</span>开展的
+              “人工智能＋艺术”（普及性的人工智能技术辅助文艺创作生产）的教育实践活动，<span
+                class="font-semibold"
+                >每年举办一届</span
+              >。
+              <br />
+              <br />
+              为贯彻国家相关战略、规划、通知和意见，培养适应新时代要求的创新型人才，引导学生理解创新与人工智能技术的关系，提升运用人工智能辅助创作艺术作品的实践能力。大赛注重引导和培养学生运用人工智能的素养和技能，激发学生对任务式､项目式､问题式学习的兴趣，增强青少年对区域文化的认知与未来发展规划的理解，熟悉或掌握“人工智能+艺术”的表达方式。鼓励广泛参与文化和旅游领域人工智能辅助生成艺术作品的探究与实践，推动人工智能技术辅助文艺创作生产与应用，促进人工智能与文化和旅游深度融合。
+            </div>
+            <div class="detailTitle mt-[40px]" style="color: #711fff">
+              大赛目标
+            </div>
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              通过“以赛促学、以赛促用、以赛带教、以赛引才”的方式，推动国家文化数字化数字标识体系的建设。通过竞赛激发青少年的好奇心和想象力，将“人工智能+艺术”与学生的个人生活、校园生活和社会生活有机结合，丰富学生对人工智能的体验与实践，提升学生的应用与创新能力，培育一批具备“人工智能+艺术”潜质的青少年群体，为文化和旅游领域新质生产力的发展提供坚实的人才储备。
+            </div>
+
+
+            <div class="detailTitle mt-[40px]" style="color: #711fff">
+              参与人群
+            </div>
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              大赛的参赛对象为中国大陆地区（港澳台除外）小学、初中、高中、中职在校学生。
+            </div>
+
+
+
+            <div class="detailTitle mt-[40px]" style="color: #711fff">
+              赛项设置
+            </div>
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              （一）小学阶段：1.AI与图像生成表达；2.AI与影像生成表达；3.AI与音频生成表达；4.AI与文本生成表达(诗歌和戏剧)。
+              <br><br>
+              （二）初中阶段：1.AI与造型艺术；2.AI与影像艺术；3.AI与数字动漫艺术；4.AI与设计艺术；5.AI与非物质文化遗产；6.AI与音频艺术；7.AI与诗歌和戏剧。
+              <br><br>
+              （三）高中阶段：1.AI与造型艺术；2.AI与摄影艺术；3.AI与数字动漫艺术；4.AI与影像艺术；5.AI与视觉传达；6.AI 与产品设计艺术；7.AI与数字媒体艺术；8.AI与非物质文化遗产；9.AI与音频艺术；10.AI与诗歌和戏剧。
+              <br><br>
+              （四）中等职业阶段：1.AI与造型艺术；2.AI与摄影艺术；3.AI与数字动漫艺术；4.AI与影像艺术；5.AI与视觉传达；6.AI 与产品设计艺术；7.AI与数字媒体艺术；8.AI与非物质文化遗产；9.AI与音频艺术；10.AI与诗歌和戏剧。
+            </div>
+
+
+
+            <div class="detailTitle mt-[40px]" style="color: #711fff">
+              大赛奖项设置
+            </div>
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              大赛分省赛和国赛两个环节；奖项设置为一等奖、二等奖、三等奖、优胜奖。
+              <br><br>
+              省赛一等奖、二等奖、三等奖、优胜奖进入国赛。
+              <br><br>
+              国赛在一等奖中设置：最佳创意奖、最佳技术应用奖、最佳文化传承奖、最具潜力奖、最佳团队合作奖、最佳创新团队奖等。
+              <br><br>
+              对于大赛开展过程中表现优异的单位和组织，授予优秀组织学校、创新实践教育基地、人工智能教育示范团队、优秀社会实践活动组织等奖项。
+              <br><br>
+              各省级赛区高中、中职组特别设置行业应用创新奖、最具商业价值奖、职业技能卓越奖、产教融合示范奖等奖项。
+              <br><br>
+              各省级赛区开展过程中，对表现优异的个人设置优秀指导教师、教学创新标兵、人工智能教育先锋等奖项。
+            </div>
+
+
+
+
+
+            <div class="detailTitle mt-[40px]" style="color: #711fff">
+              大赛奖项和证书
+            </div>
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              （一）省赛获奖比例：一等奖5%；二等奖10%；三等奖15%；优胜奖20%。
+              <br><br>
+              （二）国赛获奖比例：一等奖5%（含特等奖：最佳创意奖、最佳技术应用奖、最佳文化传承奖、最具潜力奖、最佳团队合作奖、最佳创新团队奖等）；二等奖10%；三等奖15%；优胜奖20%。
+              <br><br>
+              （三）证书：“创作者注册登记证书”+“艺术品一物一码溯源注册登记证书”+“社会实践证书”三张数字证书，获奖学生另外增加一张奖项证书；国赛未获奖者可申领“全国决赛入围证书”。（所有证书均为文化艺术链数字证书）
+            </div>
+
+
+
+            <div class="detailTitle mt-[40px]" style="color: #711fff">
+              奖项评选
+            </div>
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              省赛和国赛均在组委会统一指导和监管下组织实施评审（详细见后续公告）。
+              <br><br>
+              相关评选信息数据量化；评审过程数字化；评审流程可溯源。
+              <br><br>
+              （一）评审老师抽选制度
+              <br><br>
+              评审阅卷老师采用专家库抽选方式组成。<br><br>
+              1.省赛评审阅卷老师由省内专家与其他省专家共同组成。<br><br>
+              2.国赛评审阅卷老师由全国各省专家共同组成。<br><br>
+              3.评审阅卷老师具体人数根据报名人数动态管理。<br><br>
+              （二）双盲评审制度<br><br>
+              1.参赛者及作品匿名化：所有参赛作品在提交后将进行匿名处理，去除作者姓名、学校、指导教师等个人或机构信息；<br><br>
+              2.评审专家评审过程匿名化。<br><br>
+              (三)作品平均分制度<br><br>
+              1.每张作品由三位评审阅卷老师评审，取平均分为最后得分。<br><br>
+              2.以赛项为单位统计作品排名，按规则确定奖项归属。<br><br>
+              3.参赛者对评审结果提出异议的，按程序进行仲裁。
+            </div>
+
+
+
+            <!-- <img class="mt-[20px]" src="./img/aboutN1_2.svg"> -->
+            <!-- <div class="detailTitle mt-[40px]" style="color: #711fff">
+              参赛对象
+            </div>
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              大赛的参赛对象为中国大陆地区（港澳台除外）小学、初中、高中、中职在校学生。
+            </div> -->
+            <!-- <img class="mt-[20px]" src="./img/aboutN1_3.svg"> -->
+            <!-- <div class="detailTitle mt-[40px]" style="color: #711fff">
+              组织方式
+            </div>
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              大赛分为省级选拔赛（以下简称：“省赛”）和全国决赛（以下简称：“国赛”）。
+              <br /><br />
+              选拔赛由大赛组委会领导下的省级组织机构参与共同组织实施，依据每学年各省实际情况，以线下或者线上形式举办，具体以当届通知为准。
+              <br /><br />
+              全国决赛由大赛组委会负责组织实施，每学年原则上以线上或线下形式举办一次，
+              具体时间与形式以当届通知为准。
+            </div> -->
+            <!-- <img class="mt-[20px]" src="./img/aboutN1_4.svg"> -->
+            <!-- <div class="detailTitle mt-[40px]" style="color: #711fff">
+              组织流程
+            </div>
+            <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              每届大赛的组织流程包括：文件会签、大赛通知发布、创作者注册登记、报名比赛、作品存证、提交作品、大赛评审、公示复核、结果公示、数字证书发放、证书验证查询等。
+            </div>
+            <div class="detailTitle mt-[40px]" style="color: #711fff">
+              评比方式
+            </div> -->
+            <!-- <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              大赛由评审专家依据组委会相关规定严格执行评比工作。
+            </div>
+            <div class="detailTitle mt-[40px]" style="color: #711fff">
+              奖项设置
+            </div> -->
+            <!-- <div
+              class="text-[24px] mt-[20px] font-normal leading-10 text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              主办单位设立的奖项是经过教育部备案的，为本届大赛的赛事荣誉表彰。
+              <br /><br />
+              大赛分省赛和国赛两个环节，奖项设置分别为一等奖、二等奖、三等奖、优胜奖。
+              <br /><br />
+              省赛一等奖、二等奖、三等奖、优胜奖进入国赛。
+              <br /><br />
+              国赛在一等奖中设置：最佳创意奖、最佳技术应用奖、最佳文化传承奖、最具潜力奖、最佳团队合作奖、最佳创新团队奖等。
+              <br /><br />
+              对于大赛开展过程中表现优异的单位和组织，授予优秀组织学校、创新实践教育基地、人工智能教育示范团队、优秀社会实践活动组织等奖项。
+              <br /><br />
+              各省级赛区高中组、中职组特别设置行业应用创新奖、最具商业价值奖、职业技能卓越奖、产教融合示范奖等奖项。
+              <br /><br />
+              各省级赛区开展过程中，对表现优异的个人设置优秀指导教师、教学创新标兵、人工智能教育先锋等奖项。
+            </div> -->
+            <!-- <div class="detailTitle mt-[40px]" style="color: #711FFF;">申报方式</div>
+                    <div class="text-[24px] font-medium leading-[40px] py-[20px]"
+                        style="color: var(---80, rgba(0, 0, 0, 0.80));">（一）赛区申报</div>
+                    <div class="text-[24px] leading-[40px]" style="color: var(---80, rgba(0, 0, 0, 0.80));">
+                        <div>1.申报单位信息登记表；</div>
+                        <div class="mt-[10px]">2.营业执照；</div>
+                        <div class="mt-[10px]">3.法人身份证信息（正反页）；</div>
+                        <div class="mt-[10px]">4.单位介绍（500字）；</div>
+                        <div class="mt-[10px]">5.参与组织或者承办其他白名单赛事证明材料；</div>
+                        <div class="mt-[10px]">6.参与组织或者实施的文化艺术活动材料；</div>
+                        <div class="mt-[10px]">7.诚信材料，包括法人以及股东无失信记录；</div>
+                        <div class="mt-[10px]">8.企业无欠薪。</div>
+                    </div>
+                    <div class="text-[24px] font-medium leading-[40px] py-[20px]"
+                        style="color: var(---80, rgba(0, 0, 0, 0.80));">（二）材料提交方式</div>
+                    <div class="text-[24px] leading-[40px]" style="color: var(---80, rgba(0, 0, 0, 0.80));">
+                        <div class="mt-[10px]">请于截止日期前，将上述报名材料发送至指定邮箱：aigcnyacc@dartblab.com。</div>
+                        <div class="mt-[10px]">邮件名称格式：</div>
+                        <div class="mt-[10px]">1.赛区申报：赛区名称—申报单位名称。</div>
+                        <div class="mt-[10px]">2.材料格式：扫描件为PDF格式，其他单个文件不超过20MB。</div>
+                    </div>
+                    <div class="detailTitle mt-[40px]" style="color: #711FFF;">时间和流程</div>
+                    <div class="text-[24px] leading-[40px]" style="color: var(---80, rgba(0, 0, 0, 0.80));">
+                        <div class="mt-[10px]">申请时间：公布之日起至—2025年11月18日</div>
+                        <div class="mt-[10px]">遴选时间：2025年11月18—11月24日</div>
+                        <div class="mt-[10px]">申报流程：申报初审——综合面试（视频会议）——线下会谈——工作函确认——公示</div>
+                    </div>
+                    <div class="detailTitle mt-[40px]" style="color: #711FFF;">注意事项</div>
+                    <div class="text-[24px] leading-[40px]" style="color: var(---80, rgba(0, 0, 0, 0.80));">
+                        <div class="mt-[10px]">凡在申报中作假舞弊者，一律取消其资格。</div>
+                        <div class="mt-[10px]">在大赛网站上线之前，相关公告信息仅通过中心或者实验室的微信公众号发布信息，组委会不委托任何第三方代理相关事宜。</div>
+                    </div>
+                    <div class="detailTitle mt-[40px]" style="color: #711FFF;">其他说明</div>
+                    <div class="text-[24px] leading-[40px]" style="color: var(---80, rgba(0, 0, 0, 0.80));">
+                        <div class="mt-[10px]">解释权归大赛组委会。</div>
+                    </div>
+                    <div class="detailTitle mt-[40px]" style="color: #711FFF;">附件</div>
+                    <div class="mt-[20px] text-[24px] leading-[40px]" style="color: var(---60, rgba(0, 0, 0, 0.60));">
+                        <a href="https://aigcfiles.oss-cn-beijing.aliyuncs.com/docs/js02f5d0140e3e4c538ce2fc49a6516bdf.docx"
+                            download="《赛项内容与赛区承办类别介绍》.docx">
+                            <div class="flex items-center mb-[12px]">
+                                <img src="./img/word.svg" class="w-[24px] h-[24px]">
+                                <div class="text-[24px] leading-[40px]" style="color: var(---60, rgba(0, 0, 0, 0.60));">
+                                    《赛项内容与赛区承办类别介绍》.docx</div>
+                            </div>
+                        </a>
+                        <a href="https://aigcfiles.oss-cn-beijing.aliyuncs.com/docs/zd268a6be111ce429095a004a7b023ff71.docx"
+                            download="《赛事合作单位遴选管理制度》.docx">
+                            <div class="flex items-center mb-[12px]">
+                                <img src="./img/word.svg" class="w-[24px] h-[24px]">
+                                <div class="text-[24px] leading-[40px]" style="color: var(---60, rgba(0, 0, 0, 0.60));">
+                                    《赛事合作单位遴选管理制度》.docx</div>
+                            </div>
+                        </a>
+                        <a href="https://aigcfiles.oss-cn-beijing.aliyuncs.com/docs/djbc08dfc2c68d74ffcb841d8dbf4e45d99.docx"
+                            download="《申报单位信息登记表》.docx">
+                            <div class="flex items-center mb-[12px]">
+                                <img src="./img/word.svg" class="w-[24px] h-[24px]">
+                                <div class="text-[24px] leading-[40px]" style="color: var(---60, rgba(0, 0, 0, 0.60));">
+                                    《申报单位信息登记表》.docx</div>
+                            </div>
+                        </a>
+                        <a href="https://aigcfiles.oss-cn-beijing.aliyuncs.com/docs/cns28dfcc1e2d934e909c2d04a8c2e24221.docx"
+                            download="《承诺书》.docx">
+                            <div class="flex items-center">
+                                <img src="./img/word.svg" class="w-[24px] h-[24px]">
+                                <div class="text-[24px] leading-[40px]" style="color: var(---60, rgba(0, 0, 0, 0.60));">
+                                    《承诺书》.docx</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="mt-[40px] text-[24px] leading-[40px] text-right"
+                        style="color: var(---80, rgba(0, 0, 0, 0.80));">
+                        <div>全国青少年人工智能辅助生成数字艺术创作者大赛组委会</div>
+                        <div class="mt-[12px]">2025年11月9日</div>
+                    </div> -->
+            <!-- <img class="mt-[20px]" src="./img/aboutN1_5.svg"> -->
+          </div>
+          <div class="detail hidden text-center mt-[5px]" data-id="1">
+
+            <div
+              class="flex flex-wrap mt-[40px] gap-[16px]"
+              id="cardContainer"
+            ></div>
+            <!-- 图片查看器 -->
+            <div
+              id="imageViewer"
+              class="fixed inset-0 z-[9999] h-[100vh] hidden bg-black/40 flex flex-col items-center justify-center"
+            >
+              <button
+                id="closeViewer"
+                class="absolute cursor-pointer right-[42px] top-6 text-white text-4xl font-bold z-50"
+              >
+                &times;
+              </button>
+              <div
+                class="relative w-full max-w-full h-[100vh] flex items-center justify-center"
+              >
+                <!-- 左箭头 -->
+                <button
+                  id="prevBtn"
+                  class="absolute left-[32px] cursor-pointer z-20 w-[40px] h-[40px] rounded-full bg-white/65 text-white text-3xl flex items-center justify-center hover:bg-white/30 transition-all"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    viewBox="0 0 40 40"
+                    fill="none"
+                  >
+                    <path
+                      d="M20.0003 13.3332L13.3337 19.9998M13.3337 19.9998L20.0003 26.6665M13.3337 19.9998L26.667 19.9998"
+                      stroke="black"
+                      stroke-opacity="0.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                <!-- 图片：限制最大宽高，不超出屏幕 -->
+                <img
+                  id="viewImage"
+                  class="w-[565px] h-[800px] object-contain"
+                  src=""
+                  alt="预览"
+                />
+
+                <!-- 右箭头 -->
+                <button
+                  id="nextBtn"
+                  class="absolute right-[32px] cursor-pointer z-20 w-[40px] h-[40px] rounded-full bg-white/65 text-white text-3xl flex items-center justify-center hover:bg-white/30 transition-all"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="40"
+                    height="40"
+                    viewBox="0 0 40 40"
+                    fill="none"
+                  >
+                    <path
+                      d="M20 26.6665L26.6667 19.9998M26.6667 19.9998L20 13.3332M26.6667 19.9998L13.3333 19.9998"
+                      stroke="black"
+                      stroke-opacity="0.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                id="indicatorBox"
+                class="flex mb-[20px] items-center flex gap-4"
+              ></div>
+            </div>
+            <div id="articles">
+              <div
+                class="mt-[40px] mb-[24px] text-left text-[40px] font-light text-[rgba(0,0,0,0.8)]"
+              >
+                章程附件
+              </div>
+              <div
+                class="gap-x-[12px] gap-y-[24px] flex flex-wrap"
+                id="fileListContainer"
+              ></div>
+            </div>
+          </div>
+          <div class="detail hidden text-left mt-[5px]" data-id="2">
+            <div class="w-full flex text-left">
+              <div class="font-light text-[64px] text-[#711fff]">
+                组委会简介
+              </div>
+            </div>
+            <div
+              class="mt-[48px] font-normal text-[rgba(0,0,0,0.8)] text-[16px]"
+            >
+              大赛组织委员会（以下简称“组委会”）由文化和旅游部艺术发展中心组建；具体成员由中心领导、中心相关处室、中心数字艺术与区块链实验室有关负责人组成。组委会设主任1名，副主任1-3名，秘书长1人，委员若干名。
+            </div>
+            <div
+              class="mt-[16px] font-normal text-[rgba(0,0,0,0.8)] text-[16px]"
+              style="line-height: 2"
+            >
+              组委会是大赛的最高领导决策机构，主要职责包括：
+              <br />
+              （一）确定大赛总体规划和战略；
+              <br />
+              （二）确定大赛主题和内容；
+              <br />
+              （三）监督大赛的筹备和执行过程；
+              <br />
+              （四）处理大赛中的重大问题和突发事件。
+            </div>
+            <div class="mt-[16px]">详见大赛章程附件2</div>
+            <div class="mt-[48px] flex h-[60px]">
+              <div class="text-[40px] font-light text-[#711fff]">
+                组委会成员
+              </div>
+              <div
+                class="ml-[8px] flex pb-[10px] items-end text-[12px] text-[rgba(0,0,0,0.8)]"
+              >
+                （按照姓氏笔画排序）
+              </div>
+            </div>
+            <div class="mt-[24px] flex gap-x-[60px] gap-y-[8px] flex-wrap">
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+            </div>
+            <div class="w-full flex text-left">
+              <div class="font-light text-[64px] mt-[80px] text-[#711fff]">
+                执委会简介
+              </div>
+            </div>
+            <div
+              class="mt-[48px] font-normal text-[rgba(0,0,0,0.8)] text-[16px]"
+            >
+              执委会是大赛的执行机构。具体成员由中心领导、数字艺术与区块链实验室、中心相关处室、大赛组织单位等组成。
+              执委会设主任1名，副主任1-3名，成员若干名。
+            </div>
+            <div
+              class="mt-[16px] font-normal text-[rgba(0,0,0,0.8)] text-[16px]"
+              style="line-height: 2"
+            >
+              主要职责：
+              <br />
+              （一）执行大赛相关管理办法并开展日常工作协调；
+              <br />
+              （二）编制赛事总体方案，制定大赛规则及实施计划；
+              <br />
+              （三）负责与大赛各相关单位沟通、协调，开展赛事计划进度管理；
+              <br />
+              （四）遴选专家，组建专家库； （五）组织赛项申报与遴选；
+              <br />
+              （六）组织专家主题、评审和评价； （七）配合监委会监督各赛区工作；
+              <br />
+              （八）统筹大赛同期活动；
+              <br />
+              （九）聘请法律顾问，对赛事规则、程序、经费管理等进行合法、合规性审查，负责处理相关法律事务；
+              <br />
+              （十）汇总比赛相关资料，并存档备案； （十一）向组委会做工作报告；
+              <br />
+              （十二）执行组委会交办的其他工作。
+              <div class="mt-[6px]">详见大赛章程附件2</div>
+            </div>
+            <div class="mt-[48px] flex h-[60px]">
+              <div class="text-[40px] font-light text-[#711fff]">
+                执委会成员
+              </div>
+              <div
+                class="ml-[8px] flex pb-[10px] items-end text-[12px] text-[rgba(0,0,0,0.8)]"
+              >
+                （按照姓氏笔画排序）
+              </div>
+            </div>
+            <div class="mt-[24px] flex gap-x-[60px] gap-y-[8px] flex-wrap">
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+            </div>
+            <div
+              class="w-full flex text-left font-light text-[64px] mt-[80px] text-[#711fff]"
+            >
+              监委会简介
+            </div>
+            <div
+              class="mt-[48px] font-normal text-[rgba(0,0,0,0.8)] text-[16px]"
+            >
+              监委会是大赛的监督机构。由文化和旅游部艺术发展中心组建，具体成员由中心领导、中心相关处室组成。监委会设主任1名，副主任1-3名，委员若干。（详见附件3《大赛公正监督管理办法》）
+            </div>
+            <div class="mt-[16px]">见大赛章程附件2</div>
+            <div
+              class="mt-[16px] font-normal text-[rgba(0,0,0,0.8)] text-[16px]"
+              style="line-height: 2"
+            >
+              主要职责：
+              <br />
+              （一）执行大赛相关管理办法并开展日常工作协调；
+              <br />
+              （二）编制赛事总体方案，制定大赛规则及实施计划；
+              <br />
+              （三）负责与大赛各相关单位沟通、协调，开展赛事计划进度管理；
+              <br />
+              （四）遴选专家，组建专家库； （五）组织赛项申报与遴选；
+              <br />
+              （六）组织专家主题、评审和评价； （七）配合监委会监督各赛区工作；
+              <br />
+              （八）统筹大赛同期活动；
+              <br />
+              （九）聘请法律顾问，对赛事规则、程序、经费管理等进行合法、合规性审查，负责处理相关法律事务；
+              <br />
+              （十）汇总比赛相关资料，并存档备案； （十一）向组委会做工作报告；
+              <br />
+              （十二）执行组委会交办的其他工作。
+              <div class="mt-[6px]">详见大赛章程附件2</div>
+            </div>
+            <div class="mt-[48px] flex h-[60px]">
+              <div class="text-[40px] font-light text-[#711fff]">
+                监委会成员
+              </div>
+              <div
+                class="ml-[8px] flex pb-[10px] items-end text-[12px] text-[rgba(0,0,0,0.8)]"
+              >
+                （按照姓氏笔画排序）
+              </div>
+            </div>
+            <div class="mt-[24px] flex gap-x-[60px] gap-y-[8px] flex-wrap">
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+            </div>
+          </div>
+
+          <div class="detail hidden text-left" data-id="3">
+            <div class="text-[64px] font-light text-[#711fff]">专家库简介</div>
+            <div
+              class="mt-[35px] text-[16px] text-[rgba(0,0,0,0.8)] text-justify"
+            >
+              大赛设立专家库，专家库内可设专家委员会(以下简称“专家委员会”)，由执委会负责确认遴选名单，经大赛组委会审定通过后组成。
+              <br /><br />
+              专家库的组成：大专院校科研院所相关专家35%；从事一线教学的管理专家、学者、教师占比不低于45%；相关专业的艺术家、文化科技融合专家10%；AI技术专家5%；文化艺术产业相关从业者等组成专家5%。
+              <br /><br />
+              专家的选聘，应以熟悉中小学教育教学情况和了解青少年成长规律的优秀一线教师或相关领域的探索者以及中小学教育相关领域的研究专家为主。专家的综合背景不以“唯论文、唯职称、唯学历、唯奖项”为能力评判标准，“人工智能＋艺术”专家库人才应以创新价值、能力、贡献为导向；专家参与的主题和评奖阅卷等重要环节应建立专家库随机抽选专家机制。
+            </div>
+            <div
+              class="mt-[16px] font-normal text-[rgba(0,0,0,0.8)] text-[16px]"
+              style="line-height: 2"
+            >
+              专家的主要职责包括：
+              <br />
+              （一）为大赛发展规划等工作提供咨询意见；
+              <br />
+              （二）组织各赛项主题和参与阅卷；
+              <br />
+              （三）评审参赛作品，提出专业意见；
+              <br />
+              （四）参与赛事成果转化、学术交流等相关工作；
+              <br />
+              （五）为大赛的其他工作提供专业意见。
+            </div>
+            <div class="mt-[8px]">详见大赛章程附件7</div>
+            <div class="mt-[48px] flex h-[60px]">
+              <div class="text-[40px] font-light text-[#711fff]">
+                专家库成员
+              </div>
+              <div
+                class="ml-[8px] flex pb-[10px] items-end text-[12px] text-[rgba(0,0,0,0.8)]"
+              >
+                （按照姓氏笔画排序）
+              </div>
+            </div>
+            <div class="mt-[24px] flex gap-x-[60px] gap-y-[8px] flex-wrap">
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+              <div class="text-[16px] text-[rgba(0,0,0,0.8)] font-light">
+                名称
+              </div>
+            </div>
+          </div>
+          <div class="detail hidden text-left" data-id="4">
+            <!-- <div class="mt-[50px] text-[#711FFF] text-[64px] font-light">专家委员会简介</div>
+                    <div class="mt-[30px] text-base font-light">大赛专家是指全国青少年人工智能辅助生成 数字艺术创作者大赛组委会(以下简称“组委会”)根据工作 需要，聘请从事咨询、评审、监督、评价等工作的教育专家、 艺术专家、文化科技融合专家、管理专家和财务专家等组大赛设立专家委员会(以下简称:专家委员会)， 由主办单位遴选国内外高等院校、科研院所、重点企业、AIGC 领域权威专家，经大赛组委会审定通过组成。专家委员会成员日常以专家库方式实行动态管理。</div>
+                    <div class="mt-[40px]   font-light">
+                        <span class=" text-[40px]">专家库成员</span>
+                        <span style="color: var(---80, rgba(0, 0, 0, 0.80));" class="text-xs">（按照姓氏笔画排序）</span>
+                    </div> -->
+            <div class="w-full flex items-center justify-center">
+              <img
+                src="./img/frame251.png"
+                class="h-[306px] mt-[116px] m-auto"
+                style="display: inline-block"
+                alt=""
+              />
+            </div>
+          </div>
+          <div class="detail hidden text-left" data-id="5">
+            <div class="w-full flex items-center justify-center">
+              <img
+                src="./img/frame251.png"
+                class="h-[306px] mt-[116px] m-auto"
+                style="display: inline-block"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 容器：用于插入底部 -->
+    <div id="footerContainer"></div>
+
+    <!-- 动态加载公共部分 -->
+    <script type="module">
+
+      // 加载公共文件的函数
+      async function loadCommonPart(url, containerId) {
+        try {
+          const response = await fetch(url);
+          const html = await response.text();
+          document.getElementById(containerId).innerHTML = html;
+          if (containerId === "headerContainer") {
+            const { initHeader } = await import("./header.js");
+            setTimeout(initHeader, 10);
+          }
+        } catch (error) {
+          console.error("加载公共部分失败：", error);
+        }
+      }
+      let currentRealIndex = 0;
+      const viewer = document.getElementById("imageViewer");
+      const viewImage = document.getElementById("viewImage");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const indicatorBox = document.getElementById("indicatorBox");
+      const closeViewer = document.getElementById("closeViewer");
+      const cardContainer = document.getElementById("cardContainer");
+      loadCommonPart("./header.html", "headerContainer");
+      loadCommonPart("./footer.html", "footerContainer");
+      let list = ["大赛简介"];
+      let nadIdx = "0";
+
+
+      function loadList() {
+        const navCont = document.getElementById("navCont");
+        navCont.addEventListener("click", function (e) {
+          let target = e.target;
+          while (target && target !== navCont) {
+            if (target.classList && target.classList.contains("navItem")) {
+              const uniqueId = target.getAttribute("data-id");
+              handleNavClick(uniqueId);
+              return;
+            }
+            target = target.parentNode;
+          }
+        });
+        list.forEach((area, index) => {
+          const div = document.createElement("div");
+          div.setAttribute("data-id", index);
+          div.className = `cursor-pointer navItem ${nadIdx == index ? "active" : ""}`;
+          div.innerHTML = `${area}
+                `;
+          navCont.appendChild(div);
+        });
+      }
+      loadList();
+
+
+      // 左右切换
+      prevBtn.onclick = () => {
+        currentRealIndex = getPrevClickableIndex(currentRealIndex);
+        updateViewer();
+      };
+
+      nextBtn.onclick = () => {
+        currentRealIndex = getNextClickableIndex(currentRealIndex);
+        updateViewer();
+      };
+      closeViewer.onclick = closeViewerPanel;
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeViewerPanel();
+      });
+
+      function handleDocumentClick(item, index) {
+        if (item.type === "download") {
+          const linkUrl = hrefDowcumentList.filter(
+            (y) => y.name === item.name,
+          )[0]?.url;
+          window.open(linkUrl, "_blank");
+        } else if (item.type === "link") {
+          if (articlesView) {
+            articlesView.style.display = "none";
+          }
+          if (articlesTitle) {
+            articlesTitle.innerHTML = item.name;
+          }
+          const checkList = documenDetailsList.filter(
+            (y) => y.name === item.name,
+          );
+          if (checkList) {
+            dataList = checkList?.[0]?.list || [];
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }
+        }
+      }
+
+    </script>
+  </body>
+</html>

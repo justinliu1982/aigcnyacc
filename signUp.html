@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>参赛报名</title>
+    <script src="./browser@4.js"></script>
+    <style>
+      @media (max-width: 1440px) {
+        .left_img {
+          left: 0;
+          top: 30%;
+          z-index: 2;
+          width: 780px;
+          height: 806px;
+        }
+        .right_img {
+          right: 0;
+          top: 28%;
+          z-index: 1;
+          width: 820px;
+          height: 479px;
+        }
+        .width_view_top {
+          width: 1200px !important;
+        }
+        .width_view_content {
+          width: 1200px !important;
+        }
+      }
+      @media (min-width: 1441px) {
+        .left_img {
+          left: 0;
+          top: 30%;
+          z-index: 2;
+          width: 730px;
+          height: 746px;
+        }
+        .right_img {
+          right: 0;
+          top: 28%;
+          z-index: 1;
+          width: 1000px;
+          height: 589px;
+        }
+        .width_view_top {
+          width: 1440px !important;
+        }
+        .width_view_content {
+          width: 1440px !important;
+        }
+      }
+      * {
+        line-height: normal;
+      }
+      .item_content {
+        border-radius: 36px;
+        border: 1px solid var(--Color-2, #711fff);
+        background: rgba(113, 31, 255, 0.2);
+        box-shadow: 4px 8px 20px 4px rgba(0, 0, 0, 0.16);
+      }
+      html {
+        font-family:
+          "PingFang SC", "Roboto", "Microsoft YaHei", "Helvetica Neue",
+          sans-serif;
+      }
+      /* 进度条过渡效果 */
+      .progress-bar {
+        transition: width 0.3s ease;
+      }
+      /* 待定状态下左侧时间块自适应宽度 */
+      .pending-start-block {
+        width: auto !important;
+        min-width: 181px;
+        padding-right: 15px;
+      }
+      .pending-start-block span {
+        white-space: nowrap;
+      }
+      .width_250 {
+        width: 250px;
+        max-width: 250px;
+      }
+      .width_148 {
+        max-width: 148px;
+        width: 148px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 容器：用于插入头部 -->
+    <div id="headerContainer"></div>
+
+    <!-- 中间独有的内容 -->
+    <main class="text-center h-full w-full" style="background: #4900b8">
+      <div class="h-[700px]">
+        <div class="h-[300px] w-full relative">
+          <img
+            src="./img/left_cs.png"
+            class="absolute left_img object-cover"
+            alt=""
+          />
+          <img
+            src="./img/right_cs.png"
+            class="absolute object-cover right_img"
+            alt=""
+          />
+          <div class="width_view_top m-auto pt-[200px] z-20 relative">
+            <div class="flex items-center">
+              <img src="./img/LOGO-B.svg" class="h-[88px]" alt="" />
+            </div>
+            <div
+              class="text-white text-left text-[56px] mt-[22px] leading-[68px]"
+            >
+              <div>第一届全国青少年人工智能辅助生成数字艺术创作者大赛</div>
+              <div class="text-2xl mt-[25px]">
+                AIGC National Youth Generative Digital Art Creators Competition
+                of China
+              </div>
+            </div>
+            <div class="flex">
+              <div class="text-[24px] text-[#fff] font-light mt-[32px] flex items-center">参赛指南</div>
+              <div
+                id="raceId"
+                class="w-[191px] h-[56px] ml-[32px] mt-[32px] flex relative cursor-pointer items-center justify-center text-white"
+                style="
+                  border-radius: 32px;
+                  border: 1px solid var(--Color-2, #711fff);
+                  background: rgba(108, 41, 255, 0.4);
+                "
+              >
+                <svg
+                  class="absolute"
+                  style="left: 10px"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="40"
+                  height="40"
+                  viewBox="0 0 40 40"
+                  fill="none"
+                >
+                  <circle
+                    cx="20"
+                    cy="20"
+                    r="19.5"
+                    stroke="white"
+                    stroke-opacity="0.8"
+                  />
+                  <path
+                    d="M20.0007 13.3333L26.6673 20M26.6673 20L20.0007 26.6667M26.6673 20L13.334 20"
+                    stroke="white"
+                    stroke-opacity="0.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <div
+                  class="w-full h-full flex justify-center items-center text-[24px] font-light ml-11"
+                >
+                  赛项介绍
+                </div>
+              </div>
+              <div
+                id="participate"
+                class="w-[287px] h-[56px]  ml-[32px] mt-[32px] flex relative cursor-pointer items-center justify-center text-white"
+                style="
+                  border-radius: 32px;
+                  border: 1px solid var(--Color-2, #711fff);
+                  background: rgba(108, 41, 255, 0.4);
+                "
+              >
+                <svg
+                  class="absolute"
+                  style="left: 10px"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="40"
+                  height="40"
+                  viewBox="0 0 40 40"
+                  fill="none"
+                >
+                  <circle
+                    cx="20"
+                    cy="20"
+                    r="19.5"
+                    stroke="white"
+                    stroke-opacity="0.8"
+                  />
+                  <path
+                    d="M20.0007 13.3333L26.6673 20M26.6673 20L20.0007 26.6667M26.6673 20L13.334 20"
+                    stroke="white"
+                    stroke-opacity="0.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <div
+                  class="w-full h-full flex justify-center items-center text-[24px] font-light ml-11"
+                >
+                  参赛作品技术规范
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 赛事列表容器 -->
+      <div class="w-full relative z-[10]" id="matchesContainer"></div>
+      <div class="h-[100px]"></div>
+    </main>
+
+    <!-- 容器：用于插入底部 -->
+    <div id="footerContainer"></div>
+
+    <script>
+      const registrationUrl = "/sxzfe/PcBaom/#/registration/national/personal/submit"; // 报名跳转地址
+      const participateBtn = document.getElementById("participate");
+      participateBtn.addEventListener("click", () => {
+        // window.location.href = '/signUpDetails.html?id=signUp';
+        window.location.href = "./signUpDetails.html?id=signUp";
+      });
+      const raceIdBtn = document.getElementById("raceId");
+      raceIdBtn.addEventListener("click", () => {
+        // window.location.href = '/signUpDetails.html?id=raceId';
+        window.location.href = "./signUpDetails.html?id=signUp&type=raceId";
+      });
+      (function () {
+        // ----- 工具函数（日期计算，支持 YYYY-MM-DD 和 YYYY-MM-DD HH:mm 格式）-----
+        // 将日期字符串转为 Date 对象（北京时间）
+        function parseDateStr(dateStr) {
+          if (!dateStr) return null;
+          // 匹配 YYYY-MM-DD HH:mm 格式
+          const withTimeMatch = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{1,2}):(\d{2})$/);
+          if (withTimeMatch) {
+            const [, y, m, d, h, min] = withTimeMatch;
+            return new Date(+y, +m - 1, +d, +h, +min);
+          }
+          // 匹配 YYYY-MM-DD 格式（无时间，默认当天 00:00）
+          const dateOnlyMatch = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+          if (dateOnlyMatch) {
+            const [, y, m, d] = dateOnlyMatch;
+            return new Date(+y, +m - 1, +d, 0, 0);
+          }
+          return null;
+        }
+
+        // 校验日期字符串格式（支持 YYYY-MM-DD 或 YYYY-MM-DD HH:mm）
+        function isValidDateStr(dateStr) {
+          return /^\d{4}-\d{2}-\d{2}(\s+\d{1,2}:\d{2})?$/.test(dateStr);
+        }
+
+        // 判断目标日期是否在当前时间之后
+        function isDateGreaterThanToday(dateStr) {
+          if (!dateStr || !isValidDateStr(dateStr)) return false;
+          const targetDate = parseDateStr(dateStr);
+          if (!targetDate) return false;
+          const now = new Date();
+          return targetDate > now;
+        }
+
+        // 计算目标日期与当前时间的相差天数（正数表示未来，负数表示过去）
+        function getDaysDiffWithToday(dateStr) {
+          if (!dateStr || !isValidDateStr(dateStr)) return null;
+          const targetDate = parseDateStr(dateStr);
+          if (!targetDate) return null;
+          const now = new Date();
+          const diffTime = targetDate - now;
+          return Math.round(diffTime / 86400000);
+        }
+
+        function enrichMatchStatus(match) {
+          const { startDate, endDate } = match;
+          if (!isValidDateStr(startDate) || !isValidDateStr(endDate)) {
+            match.status = "日期格式错误";
+            match.desc = "请检查日期格式";
+            match.progressPercent = 0;
+            match.isBeforeStart = false;
+            return;
+          }
+
+          const now = new Date();
+          const startObj = parseDateStr(startDate);
+          const endObj = parseDateStr(endDate);
+
+          // 直接用时间戳比较，精确到毫秒
+          const isStartAfterToday = startObj > now;
+          const isEndBeforeToday = endObj <= now;
+
+          // 记录是否未开始（报名未开始）
+          match.isBeforeStart = isStartAfterToday;
+
+          let totalMs = endObj - startObj;
+          let totalDays = Math.round(totalMs / 86400000) || 1;
+          totalDays = totalDays <= 0 ? 1 : totalDays;
+          let passedDays = 0;
+          if (isStartAfterToday) {
+            passedDays = 0;
+          } else if (isEndBeforeToday) {
+            passedDays = totalDays;
+          } else {
+            // 已过去的天数 = 总天数 - 剩余天数
+            const remainingMs = endObj - now;
+            const remainingDays = remainingMs / 86400000;
+            passedDays = totalDays - remainingDays;
+            if (passedDays < 0) passedDays = 0;
+            if (passedDays > totalDays) passedDays = totalDays;
+          }
+          let progressPercent =
+            totalDays > 0 ? (passedDays / totalDays) * 100 : 0;
+          progressPercent = Math.min(100, Math.max(0, progressPercent));
+          match.progressPercent = progressPercent.toFixed(1);
+
+          if (isStartAfterToday) {
+            match.status = "未开始";
+            match.desc = getDaysDiffWithToday(startDate);
+          } else if (isEndBeforeToday) {
+            match.status = "已结束";
+            match.desc = Math.abs(getDaysDiffWithToday(endDate));
+          } else {
+            match.status = "报名中";
+            match.desc = getDaysDiffWithToday(endDate);
+          }
+        }
+
+        // ========== 赛事数据（在这里增删改查即可，页面自动渲染）==========
+        const matchList = [
+          {
+            id: 4,
+            name: "国赛作品报名提交",
+            startDate: "2026-08-01",
+            endDate: "2026-08-15 20:00",
+            pending: false, // 是否是文案通知没有日期 用来隐藏日期的
+            pendingText: "敬候大赛组委会通知",
+            viewStartDate: "2026.08.01",
+            viewEndDate: "2026.08.15 20:00",
+            classWidth: true, // 控制左边日期的宽度
+            rightTime:true
+          },
+          {
+            id: 1,
+            name: "内地就读的外籍及港澳台地区学生注册报名",
+            startDate: "2026-06-26 12:00",
+            endDate: "2026-06-29 12:00",
+            pending: false,
+            pendingText: "",
+            viewStartDate: "2026.06.26 12:00",
+            viewEndDate: "2026.06.29 12:00",
+            classWidth: false,
+            rightTime:true
+          },
+          {
+            id: 2,
+            name: "中国内地学生注册报名",
+            startDate: "2026-04-28",
+            endDate: "2026-06-20 20:00",
+            pending: false,
+            pendingText: "即将开放报名",
+            viewStartDate: "2026.04.28",
+            viewEndDate: "2026.06.20 20:00",
+            classWidth: true,
+            rightTime:true
+          },
+          {
+            id: 3,
+            name: "省赛作品报名提交",
+            startDate: "2026-05-22",
+            endDate: "2026-06-20 20:00",
+            pending: false,
+            pendingText: "敬候大赛组委会通知",
+            viewStartDate: "2026.05.22",
+            viewEndDate: "2026.06.20 20:00",
+            classWidth: true,
+            rightTime:true
+          },
+          
+        ];
+
+        // 预处理：计算每个赛事的状态
+        matchList.forEach((match) => {
+          if (match.pending) {
+            match.status = "待定";
+            match.progressPercent = 0;
+            match.isBeforeStart = false;
+          } else {
+            enrichMatchStatus(match);
+          }
+        });
+
+        // ========== 动态生成所有赛事卡片（完全保留原有DOM结构和样式）==========
+        const container = document.getElementById("matchesContainer");
+
+        function generateAllCards() {
+          if (!container) return;
+
+          let cardsHtml = "";
+          for (let i = 0; i < matchList.length; i++) {
+            const match = matchList[i];
+            const isPending = match.pending;
+            const formatDate = (dateStr) =>
+              dateStr ? dateStr.replace(/-/g, ".") : "";
+
+            // ========== 1. pending为true时的处理 ==========
+            if (isPending) {
+              // 左侧时间块内容：只显示pendingText
+              const leftTimeContent = match.pendingText || "待定";
+              // 右侧时间块：完全隐藏（不显示）
+              const rightBlockStyle = 'style="display: none;"';
+              // 剩余天数区域：隐藏
+              const remainingStyle = 'style="display: none;"';
+              // 左侧父级移除flex-1
+              const startParentClass = "ml-2 text-center";
+              // 左侧时间块添加pending-start-block类
+              const startBlockClass =
+                "pending-start-block h-[48px] flex items-center";
+              // 进度条宽度0%，颜色纯色
+              const progressWidth = "0%";
+              const progressBg = "#711FFF";
+              // 进度条容器上边距：12px（与待定状态一致）
+              const progressMarginTop = "12px";
+              // 按钮：未开始样式，无链接
+              const buttonHtml = `<div class="w-[160px]"><div id="btn_${i}" class="w-[160px] h-[80px] flex justify-center items-center text-white text-xl cursor-default" style="border-radius: 24px; background: #711FFF;">未开始</div></div>`;
+
+              cardsHtml += `
+              <div class="width_view_content h-[300px] mb-[60px] m-auto" id="matchCard_${i}">
+                <div class="text-left mt-[60px] mb-[60px]">
+                  <div class="flex">
+                    <svg class="mt-2" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                      <path d="M61.9999 2L62 62M62 62L2 61.9999M62 62L2.00009 2.00008" stroke="white" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span id="name_${i}" class="text-[rgba(255,255,255,0.8)] pl-5 text-[64px] font-light">${match.name}</span>
+                  </div>
+                  <div class="w-full flex-col item_content h-[140px] mt-[40px] px-8 flex items-center">
+                    <div class="flex w-full mt-10 items-center">
+                      <div class="flex-1 flex flex-col w-full">
+                        <div class="flex w-full">
+                          <div id="startParent_${i}" class="${startParentClass}">
+                            <div id="startBlock_${i}" class="${startBlockClass}" style="border-radius: 32px; background: rgba(108, 41, 255, 0.4);">
+                              <svg class="ml-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="11.5" stroke="white" stroke-opacity="0.8" />
+                                <path d="M12 8L16 12M16 12L12 16M16 12L8 12" stroke="white" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round" />
+                              </svg>
+                              <span id="startTime_${i}" class="text-white text-2xl font-light pl-3">${leftTimeContent}</span>
+                            </div>
+                          </div>
+                          <div id="remainingInfo_${i}" class="w-[60%] text-center text-white" ${remainingStyle}>
+                            还剩 <span id="remainingDay_${i}" class="text-5xl">0</span> 天
+                          </div>
+                        </div>
+                        <div id="progressContainer_${i}" class="w-[99%] h-[20px]" style="border-radius: 20px; background: rgba(113, 31, 255, 0.6); margin-top: ${progressMarginTop};">
+                          <div id="progress_${i}" class="progress-bar w-[${progressWidth}] h-full" style="border-radius: 20px; background: ${progressBg};"></div>
+                        </div>
+                      </div>
+                      ${buttonHtml}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+            }
+            // ========== 2. pending为false时的处理 ==========
+            else {
+              const isBeforeStart = match.isBeforeStart; // 是否未开始（当前时间没到报名开始时间）
+              const isRegistrationOpen = match.status === "报名中"; // 是否报名中
+
+              // 左侧时间块内容：显示开始日期
+              const leftTimeContent = formatDate(match.startDate);
+              // 右侧时间块：正常显示
+              const rightBlockStyle = "";
+              // 右侧时间块内容
+              const rightTimeContent = formatDate(match.endDate);
+
+              // 左侧父级：正常模式添加flex-1
+              const startParentClass = "ml-2 text-center flex-1";
+              // 左侧时间块：固定宽度
+              const startBlockClass = match.classWidth
+                ? "w-[180px] h-[48px] flex items-center"
+                : "w-[240px] h-[48px] flex items-center";
+              //123123123123
+
+              // ========== 2.1 如果当前时间没有到报名开始时间 ==========
+              let remainingStyle = "";
+              let progressMarginTop = "";
+              let progressWidth = match.progressPercent + "%";
+              let progressBg =
+                "linear-gradient(270deg, #16c1ff 0%, #a893ff 100%)";
+              let buttonHtml = "";
+
+              if (isBeforeStart) {
+                // 未开始状态：隐藏剩余天数区域
+                remainingStyle = 'style="display: none;"';
+                // 进度条上边距：12px（与待定状态类似，但稍微不同以符合原始设计）
+                progressMarginTop = "12px";
+                // 按钮：显示"未开始"，无链接
+                buttonHtml = `<div class="w-[160px]"><div id="btn_${i}" class="w-[160px] h-[80px] flex justify-center items-center text-white text-xl cursor-default" style="border-radius: 24px; background: #711FFF;">
+                    未开始
+                  </div></div>`;
+              }
+              // ========== 2.2 报名中状态（可报名） ==========
+              else if (isRegistrationOpen) {
+                // 报名中：显示剩余天数
+                remainingStyle = "";
+                // 进度条上边距：0
+                progressMarginTop = "0";
+                // 按钮：显示"现在报名"，带链接
+                // buttonHtml = `<a href="./signUpDetails.html?id=signUp" id="link_${i}" style="text-decoration: none"><div class="w-[160px]"><div id="btn_${i}" class="w-[160px] h-[80px] flex justify-center items-center text-black/80 text-xl cursor-pointer" style="border-radius: 24px; background: linear-gradient(180deg, #16c1ff 0%, #a893ff 100%);">现在报名</div></div></a>`;
+                buttonHtml = `<a id="link_${i}" href=${registrationUrl} style="text-decoration: none"><div class="w-[160px]"><div id="btn_${i}" class="w-[160px] h-[80px] flex justify-center items-center text-black/80 text-xl cursor-pointer" style="border-radius: 24px; background: linear-gradient(180deg, #16c1ff 0%, #a893ff 100%);">现在报名</div></div></a>`;
+              }
+              // ========== 2.3 已结束状态 ==========
+              else {
+                // 已结束：隐藏剩余天数区域
+                remainingStyle = 'style="display: none;"';
+                // 进度条上边距：12px
+                progressMarginTop = "12px";
+                // 按钮：显示"已结束"，无链接
+                buttonHtml = `<div class="w-[160px]"><div id="btn_${i}" class="w-[160px] h-[80px] flex justify-center items-center text-white text-xl cursor-default" style="border-radius: 24px; background: #711FFF;">已结束</div></div>`;
+              }
+
+              cardsHtml += `
+              <div class="width_view_content h-[300px] mb-[60px] m-auto" id="matchCard_${i}">
+                <div class="text-left mt-[60px] mb-[60px]">
+                  <div class="flex">
+                    <svg class="mt-2" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                      <path d="M61.9999 2L62 62M62 62L2 61.9999M62 62L2.00009 2.00008" stroke="white" stroke-opacity="0.8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span id="name_${i}" class="text-[rgba(255,255,255,0.8)] pl-5 text-[64px] font-light">${
+                      match.name
+                    }</span>
+                  </div>
+                  <div class="w-full flex-col item_content h-[140px] mt-[40px] px-8 flex items-center">
+                    <div class="flex w-full mt-10 items-center">
+                      <div class="flex-1 flex flex-col w-full">
+                        <div class="flex w-full">
+                          <div id="startParent_${i}">
+                            <div id="startBlock_${i}" class="${startBlockClass}" style="border-radius: 32px; background: rgba(108, 41, 255, 0.4);">
+                              <svg class="ml-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="11.5" stroke="white" stroke-opacity="0.8" />
+                                <path d="M12 8L16 12M16 12L12 16M16 12L8 12" stroke="white" stroke-opacity="0.8" stroke-linecap="round" stroke-linejoin="round" />
+                              </svg>
+                              <span id="startTime_${i}" class="text-white text-2xl font-light pl-3">${
+                                match.viewStartDate
+                              }</span>
+                            </div>
+                          </div>
+                          <div id="remainingInfo_${i}" class="w-[60%] text-center text-white" ${remainingStyle} style="height:60px;">
+                            <span class="text-[rgba(255,255,255,0.8)] font-light">还剩</span> <span id="remainingDay_${i}" style="line-height:0.5;" class="text-[72px]">${
+                              isRegistrationOpen ? match.desc : 0
+                            }</span> <span class="text-[rgba(255,255,255,0.8)] font-light">天</span>
+                          </div>
+                          <div class="flex-1 flex justify-end">
+                            <div id="endBlock_${i}" class="${match.rightTime ? 'w-[241px]' : 'w-[181px]'} h-[48px] mr-3 flex items-center" style="border-radius: 32px; background: rgba(108, 41, 255, 0.4);" ${rightBlockStyle}>
+                              
+                              <img src="./img/left_icon_jiantou.png" class="ml-2" />
+                              <span id="endTime_${i}" class="text-white text-2xl pl-3 font-light">${
+                                match.viewEndDate
+                              }</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div id="progressContainer_${i}" class="w-[99%] h-[20px]" style="border-radius: 20px; background: rgba(113, 31, 255, 0.6); margin-top: ${progressMarginTop};">
+                          <div id="progress_${i}" class="progress-bar w-[${progressWidth}] h-full" style="border-radius: 20px; background: ${progressBg};"></div>
+                        </div>
+                      </div>
+                      ${buttonHtml}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+            }
+          }
+
+          container.innerHTML = cardsHtml;
+        }
+
+        // 渲染所有赛事
+        generateAllCards();
+
+        // 提供刷新函数，方便动态更新（例如日期变化时调用）
+        function refreshAllMatches() {
+          // 重新计算状态
+          matchList.forEach((match) => {
+            if (match.pending) {
+              match.status = "待定";
+              match.progressPercent = 0;
+              match.isBeforeStart = false;
+            } else {
+              enrichMatchStatus(match);
+            }
+          });
+          // 重新生成卡片
+          generateAllCards();
+        }
+
+        // 暴露给全局，方便调试和动态更新
+        window.matchListData = matchList;
+        window.refreshMatches = refreshAllMatches;
+
+        // 可选：每天定时刷新一次，确保剩余天数准确（但不强制，避免性能问题）
+        // 如果需要自动刷新，取消下面注释即可
+        // setInterval(() => {
+        //   refreshAllMatches();
+        // }, 86400000); // 24小时刷新一次
+
+        // ----- 公共头尾加载（完全保留）-----
+        async function loadCommonPart(url, containerId) {
+          try {
+            const response = await fetch(url);
+            const html = await response.text();
+            document.getElementById(containerId).innerHTML = html;
+            if (containerId === "headerContainer") {
+              const { initHeader } = await import("./header.js");
+              setTimeout(initHeader, 10);
+            }
+          } catch (error) {
+            console.error("加载公共部分失败：", error);
+          }
+        }
+        loadCommonPart("./header.html", "headerContainer");
+        loadCommonPart("./footer.html", "footerContainer");
+      })();
+    </script>
+  </body>
+</html>

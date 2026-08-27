@@ -1,0 +1,346 @@
+/* 创作者注册登记证书 - 竖版 2480×3508 */
+@font-face {
+  font-family: "Certificate Source Han Serif";
+  src: url("./img/zhengshu/SourceHanSerifCN-VF.otf.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: block;
+}
+
+.creator-certificate {
+  --cert-width: 2480px;
+  --cert-height: 3508px;
+  --cert-body-size: 50px;
+  --cert-body-color: #1a221f;
+  position: relative;
+  width: var(--cert-width);
+  height: var(--cert-height);
+  overflow: hidden;
+  pointer-events: none;
+  box-sizing: border-box;
+  background: #fff url("./img/zhengshu/creator_img.png") no-repeat;
+  background-size: var(--cert-width) var(--cert-height);
+  color: var(--cert-body-color);
+  font-family: "Certificate Source Han Serif", serif;
+}
+
+.creator-certificate [data-field] {
+  position: absolute;
+  box-sizing: border-box;
+  margin: 0;
+  color: var(--cert-body-color);
+  font-size: var(--cert-body-size);
+  font-weight: 400;
+  line-height: 1.28;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.creator-recipient {
+  position: relative !important;
+  width: 1727px;
+  margin: 1103px auto 0 !important;
+  text-align: center;
+  font-size: 216px !important;
+  font-weight: 500 !important;
+  color: #4a56c5 !important;
+}
+
+.creator-subtitle {
+  position: relative !important;
+  width: 1727px;
+  margin: 136px auto 0 !important;
+  text-align: center;
+  font-size: 46px !important;
+  font-weight: 500 !important;
+  color: #3E3A39 !important;
+}
+
+.creator-unique-id {
+  position: relative !important;
+  width: 1727px;
+  margin: 71px auto 0 !important;
+  text-align: center;
+  font-size: 50px !important;
+  color: #4a56c5 !important;
+  white-space: nowrap;
+  font-weight: 700 !important;
+}
+
+.creator-evaluation-id {
+  position: relative !important;
+  width: 1727px;
+  margin: 69px auto 0 !important;
+  text-align: center;
+  font-size: 50px !important;
+  color: #4a56c5 !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+}
+
+/* 圆弧文字 SVG 容器（447×447 匹配圆大小） */
+.creator-arc-left {
+  position: absolute;
+  top: 2670px;
+  left: 335px;
+  width: 447px;
+  height: 447px;
+  pointer-events: none;
+  color: #fff !important;
+}
+.creator-arc-right {
+  position: absolute;
+  top: 2670px;
+  left: 335px;
+  width: 447px;
+  height: 447px;
+  pointer-events: none;
+}
+
+/* 一物一码圆弧文字 SVG 容器（与创作者定位一致） */
+.product-arc-left {
+  position: absolute;
+  top: 2700px;
+  left: 320px;
+  width: 447px;
+  height: 447px;
+  pointer-events: none;
+}
+.product-arc-right {
+  position: absolute;
+  top: 2700px;
+  left: 310px;
+  width: 447px;
+  height: 447px;
+  pointer-events: none;
+}
+
+.creator-hash-wrapper {
+  position: relative !important;
+  width: 1727px;
+  margin: 68px auto 0 !important;
+  font-size: 41.6px !important;
+  color: #3d3939 !important;
+  font-weight: 400 !important;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.creator-hash-label {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.creator-hash-value {
+  text-align: left;
+  word-break: break-all;
+}
+.creator-hash-wrapper .creator-hash {
+  position: static !important;
+  display: inline;
+  margin: 0 !important;
+  font-size: inherit !important;
+  color: inherit !important;
+  font-weight: inherit !important;
+  word-break: inherit;
+  line-height: inherit;
+}
+.creator-registration-number {
+  left: 1670px !important;
+  top: 205px !important;
+  font-size: 41.6px !important;
+  color: #767f87 !important;
+  font-weight: bold !important;
+}
+
+
+.creator-container {
+  width: 400px;
+  overflow: hidden;
+}
+
+.creator-circle {
+  float: left !important;
+  width: 150px !important;
+  height: 150px !important;
+  border-radius: 50% !important;
+  background: #4a90d9 !important;
+  shape-outside: circle(50%) !important;
+  /* 关键属性：让文字沿圆形环绕 */
+  margin: 10px 20px 10px 0 !important;
+  clip-path: circle(50%) !important;
+  /* 裁剪显示为圆，非必须 */
+}
+.creator-circle-text {
+  font-size: 15px;
+      line-height: 1.8;
+      color: #333;
+      text-align: justify;
+}
+
+/* ===== 一物一码溯源登记证书 ===== */
+.product-trace-certificate {
+  --cert-width: 2480px;
+  --cert-height: 3508px;
+  --cert-body-size: 50px;
+  --cert-body-color: #1a221f;
+  position: relative;
+  width: var(--cert-width);
+  height: var(--cert-height);
+  overflow: hidden;
+  pointer-events: none;
+  box-sizing: border-box;
+  background: #fff url("./img/zhengshu/one_product_people_dr.png") no-repeat;
+  background-size: var(--cert-width) var(--cert-height);
+  color: var(--cert-body-color);
+  font-family: "Certificate Source Han Serif", serif;
+}
+
+/* 基础样式（不包含 position，由各自规则控制） */
+.product-trace-certificate [data-field] {
+  box-sizing: border-box;
+  margin: 0;
+  color: var(--cert-body-color);
+  font-size: var(--cert-body-size);
+  font-weight: 400;
+  line-height: 1.28;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* 年月日 - 一物一码（绝对定位，自行调整） */
+.product_trace_year {
+  position: absolute !important;
+  top: 3083px !important;
+  left: 1490px;
+  font-size: 41.6px !important;
+  color: #3f3b3a !important;
+  font-weight: 700 !important;
+}
+.product_trace_month {
+  position: absolute !important;
+  top: 3083px !important;
+  left: 1650px;
+  font-size: 41.6px !important;
+  color: #3f3b3a !important;
+  font-weight: bold !important;
+}
+.product_trace_day {
+  position: absolute !important;
+  top: 3083px !important;
+  left: 1737px;
+  font-size: 41.6px !important;
+  color: #3f3b3a !important;
+  font-weight: bold !important;
+}
+
+/* 年月日 - 创作者（绝对定位，自行调整） */
+.creator_year {
+  position: absolute !important;
+  top: 3053px !important;
+  left: 1420px;
+  font-size: 41.6px !important;
+  color: #3f3b3a !important;
+  font-weight: 700 !important;
+}
+.creator_month {
+  position: absolute !important;
+  top: 3053px !important;
+  left: 1580px;
+  font-size: 41.6px !important;
+  color: #3f3b3a !important;
+  font-weight: bold !important;
+}
+.creator_day {
+  position: absolute !important;
+  top: 3053px !important;
+  left: 1670px;
+  font-size: 41.6px !important;
+  color: #3f3b3a !important;
+  font-weight: bold !important;
+}
+
+/* 仍使用绝对定位的顶部元素 */
+.product-trace-registration-number {
+  position: absolute !important;
+  left: 1470px !important;
+  top: 190px !important;
+  font-size: 41.6px !important;
+  color: #767f87 !important;
+  font-weight: bold !important;
+}
+.product_product_art_id { 
+  position: absolute !important;
+  font-size: 45.83px !important;
+  color:#3E3ABA !important;
+  font-weight: bold !important;
+  left:308px !important;
+  top: 697px !important;
+}
+.product_trace_to_the_source {
+  position: absolute !important;
+  font-size: 45.83px !important;
+  color:#3E3ABA !important;
+  font-weight: bold !important;
+  left:1240px !important;
+  top: 697px !important;
+}
+
+/* ===== 右侧图片面板（绝对定位） ===== */
+.product-right-panel {
+  position: absolute;
+  top: 841.55px;
+  left: 1027px;
+}
+.product-right-panel .product_img {
+  position: relative;
+  width: 1166.51px;
+  height: 1166.51px;
+  margin-top: 7px;
+  background-color: red !important;
+}
+
+/* ===== 左侧信息面板（绝对定位容器，内部相对定位自然流动） ===== */
+.product-left-panel {
+  position: absolute;
+  top: 841.55px;
+  left: 308.29px;
+}
+
+.product-left-panel [data-field] {
+  position: relative;
+  font-size: 41.66px !important;
+  line-height: 1.28;
+}
+
+/* 标题样式 */
+.product-trace-title {
+  color: #767F87 !important;
+  font-weight: 500 !important;
+}
+
+/* 内容样式 */
+.product-trace-content {
+  color: #3E3A39 !important;
+  font-weight: 500;
+  margin-top: 10px;
+  width: 632px;
+}
+
+/* 内容后面紧跟的标题：间距 38px */
+.product-trace-content + .product-trace-title {
+  margin-top: 42px;
+}
+
+/* 哈希内容、说明内容和所有权人内容宽度设为 1895px */
+.product_trace_hash_content,
+.product_trace_desc_content,
+.product_owner_content {
+  width: 1895px;
+}
+
+/* 溯源注册登记说明标题需要更大间距（哈希值换行后约40px） */
+.product_trace_desc_text {
+  margin-top: 35px !important;
+}

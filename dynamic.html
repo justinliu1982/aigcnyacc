@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大赛动态</title>
+    <script src="./browser@4.js"></script>
+</head>
+<style>
+    * {
+        line-height: normal;
+    }
+    html {
+      font-family: "PingFang SC", 
+                    "Roboto",
+                    "Microsoft YaHei", 
+                    "Helvetica Neue", 
+
+    }
+    .navItem {
+        color: var(---60, rgba(0, 0, 0, 0.60));
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 44px;
+        width: 140px;
+        text-align: center;
+    }
+
+    .active {
+        color: #fff;
+        border-radius: 30px;
+        background: var(--Color, #9162FF);
+    }
+    .banner_bg {
+        background-image: url('./img/competition_bg.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position:  0 ;
+    }
+    .hover_item {
+        cursor: pointer;
+    }
+
+    /* 新增：统一选项卡样式 */
+    .tab-item {
+        width: 190px;
+        height: 44px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        border-radius: 30px;
+        color: rgba(0, 0, 0, 0.6);
+        transition: all 0.2s;
+    }
+    .tab-item.active {
+        background: var(--Color, #9162FF);
+        color: #fff;
+    }
+</style>
+
+<body>
+    <div id="headerContainer"></div>
+
+    <main class="text-center">
+        <div class="h-[280px] mt-[84px] flex justify-center items-center banner_bg bg-[#4900B8] ">
+            <div class="w-[800px] h-[60px] rounded-[40px] cursor-pointer px-3 gap-[8px] flex  items-center" style="background: var(--Color-6, #EBE6FA);">
+                <!-- 去掉行内样式，只保留 class + data-type -->
+                <div class="tab-item active" data-type="all">全部动态</div>
+                <div class="tab-item" data-type="notice">公告通知</div>
+                <div class="tab-item" data-type="news">赛事新闻</div>
+                <div class="tab-item" data-type="inspect">巡查巡检</div>
+            </div>
+        </div>
+
+        <!-- 内容包裹层 -->
+        <div id="contentWrapper" class="w-[1241px] m-auto">
+            <div id="contentList" class="flex items-center flex-col">
+                <a href="./gradeQuery.html?id=dynamic">
+                    <div class="w-[1196px] hover_item flex mt-[80px] items-center px-4 pt-5 pb-5 pb-3 hover_item" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);background:  #FFF;border-radius: 20px;">
+                        <div class="flex-1 text-left pr-10">
+                            <div class="text-xl">关于"全国青少年人工智能辅助生成数字艺术创作者大赛"省赛成绩查询的通知</div>
+                            <div class="mt-[20px]">
+                                <span class="px-3 py-1 text-white rounded-xl text-xs" style="background-color: #ff6265;">公告通知</span>
+                                <span class="pl-3 text-black/60 text-xs">2026.07.17</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="./expertDetails.html?id=dynamic">
+                    <div class="w-[1196px] hover_item flex mt-[40px] items-center px-4 pt-5 pb-5 pb-3 hover_item" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);background:  #FFF;border-radius: 20px;">
+                        <div class="flex-1 text-left pr-10">
+                            <div class="text-xl">关于“AIGCNYACC专家库入库推荐与申报”的通知</div>
+                            <!-- <div class="text-sm mt-4 text-black/40">
+                                
+                            </div> -->
+                            <div class="mt-[20px]">
+                                <span class="px-3 py-1 text-white rounded-xl text-xs" style="background-color: #ff6265;">公告通知</span>
+                                <span class="pl-3 text-black/60 text-xs">2026.06.08</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="./competitionTheme.html?id=dynamic">
+                    <div class="w-[1196px] hover_item flex mt-[40px] items-center px-4 pt-5 pb-5 pb-3 hover_item" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);background:  #FFF;border-radius: 20px;">
+                        <div class="flex-1 text-left pr-10">
+                            <div class="text-xl">“全国青少年人工智能辅助生成数字艺术创作者大赛”主题公布通知</div>
+                            <div class="mt-[20px]">
+                                <span class="px-3 py-1 text-white rounded-xl text-xs" style="background-color: #ff6265;">公告通知</span>
+                                <span class="pl-3 text-black/60 text-xs">2026.05.29</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="./announcementPc.html?id=dynamic">
+                    <div class="w-[1196px] hover_item flex mt-[40px] items-center px-4 pt-5 pb-5 pb-3 hover_item" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);background:  #FFF;border-radius: 20px;">
+                        <div class="flex-1 text-left pr-10">
+                            <div class="text-xl">第一届“全国青少年人工智能辅助生成数字艺术创作者大赛”个人官网报名电脑端操作说明</div>
+                            <div class="mt-[20px]">
+                                <span class="px-3 py-1 text-white rounded-xl text-xs" style="background-color: #ff6265;">公告通知</span>
+                                <span class="pl-3 text-black/60 text-xs">2026.05.28</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="./mobileAnnouncement.html?id=dynamic">
+                    <div class="w-[1196px] hover_item flex mt-[40px] items-center px-4 pt-5 pb-5 pb-3 hover_item" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);background:  #FFF;border-radius: 20px;">
+                        <div class="flex-1 text-left pr-10">
+                            <div class="text-xl">第一届全国青少年人工智能辅助生成数字艺术创作者大赛报名手机版图解速览</div>
+                            <div class="mt-[20px]">
+                                <span class="px-3 py-1 text-white rounded-xl text-xs" style="background-color: #ff6265;">公告通知</span>
+                                <span class="pl-3 text-black/60 text-xs">2026.05.22</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="./dynDetailsList0.html?id=dynamic">
+                    <div class="w-[1196px] hover_item flex mt-[40px] items-center px-4 pt-5 pb-5 pb-3 hover_item" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);background:  #FFF;border-radius: 20px;">
+                        <div class="flex-1 text-left pr-10">
+                            <div class="text-xl">“全国青少年人工智能辅助生成数字艺术创作者大赛”通知</div>
+                            <div class="text-sm mt-4 text-black/40">
+                                全国青少年人工智能辅助生成数宇艺术创作者大赛”通知各有关单位:根据《教育部办公厅关于公布2025一2028学年面向中小学生的全国性党赛活动的通知(教监管厅函[2025]7号)》的通知要求
+                            </div>
+                            <div class="mt-[20px]">
+                                <span class="px-3 py-1 text-white rounded-xl text-xs" style="background-color: #ff6265;">公告通知</span>
+                                <span class="pl-3 text-black/60 text-xs">2026.03.24</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="./dynDetailsList2.html?id=dynamic">
+                    <div class="w-[1196px] hover_item flex mt-[40px] items-center px-4 pt-5 pb-5 pb-3 hover_item" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);background:  #FFF;border-radius: 20px;">
+                        <div class="flex-1 text-left pr-10">
+                            <div class="text-xl">关于第一届“全国青少年人工智能辅助生成数字艺术创作者大赛”第一批组织单位名单公示</div>
+                            <div class="text-sm mt-4 text-black/40">
+                                各省市自治区及相关单位：为确保“全国青少年人工智能辅助生成数字艺术创作者大赛”顺利推进，根据教育部《面向中小学生的全国性竞赛活动管理办法》（教监管厅函〔2022〕4号）及相关活动要求，大赛执委会于2025年11月9日启动了赛事合作单位遴选工作。经大赛执委会筹备组专家综合遴选，报组委会认可，现公布第一批“全国青少年人工智能辅助生成数字...·
+                            </div>
+                            <div class="mt-[20px]">
+                                <span class="px-3 py-1 text-white rounded-xl text-xs" style="background-color: #ff6265;">公告通知</span>
+                                <span class="pl-3 text-black/60 text-xs">2025.12.23</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="./dynDetailsList1.html?id=dynamic">
+                    <div class="w-[1196px] hover_item flex mt-[40px] items-center px-4 pt-5 pb-5 pb-3" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);background: var(---100, #FFF);border-radius: 20px;">
+                        <div class="flex-1 text-left pr-10">
+                            <div class="text-xl">第一届“全国青少年人工智能辅助生成数字艺术创作者大赛”公告</div>
+                            <div class="text-sm mt-4 text-black/40">
+                                根据《教育部办公厅关于公布2025—2028学年面向中小学生的全国性竞赛活动的通知（教监管厅函〔2025〕7号）》的通知要求，以及文化和旅游部艺术发展中心（以下简称“中心”）的相关管理规定，现将本次竞赛活动具体内容通知如下：一、大赛名称中文名称：全国青少年人工智能辅助生成数字艺术创作者大赛，英文翻译为AIGC National Youth Generative ...
+                            </div>
+                            <div class="mt-[20px]">
+                                <span class="px-3 py-1 text-white rounded-xl text-xs" style="background-color: #ff6265;">公告通知</span>
+                                <span class="pl-3 text-black/60 text-xs">2025.11.03</span>
+                            </div>
+                        </div>
+        
+                    </div>
+                </a>
+                <a href="./dynDetailsList3.html?id=dynamic">
+                    <div class="w-[1196px] hover_item flex mt-[40px] items-center px-4 pt-5 pb-5 pb-3" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);background: var(---100, #FFF);border-radius: 20px;">
+                        <div class="flex-1 text-left pr-10">
+                            <div class="text-xl" style="color:#711FFF">实验室筹建的“全国青少年人工智能辅助生成数字艺术创作者大赛”入选教育部2025-2028学年面向中小学生的全国性竞赛活动</div>
+                            <div class="text-sm mt-4 text-black/40">
+                                数字艺术与区块链实验室筹建的“全国青少年人工智能辅助生成数字艺术创作者大赛”入选教育部2025-2028学年面向中小学生的全国性竞赛活动。
+                            </div>
+                            <div class="mt-[100px]">
+                                <span class="px-3 py-1 text-white rounded-xl text-xs" style="background-color: #ff6265;">公告通知</span>
+                                <span class="pl-3 text-black/60 text-xs">2025.10.30</span>
+                            </div>
+                        </div>
+                        <div class="w-[280px] h-[200px] items-center" style="border-radius: 4px;background: var(--Color, #9162FF);">
+                            <img src="./img/dynamic_img.png" alt="">    
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="h-[100px]"></div>
+        </div>
+    </main>
+
+    <div id="footerContainer"></div>
+
+    <script>
+        // 加载公共头部底部
+        async function loadCommonPart(url, containerId) {
+            try {
+                const response = await fetch(url);
+                const html = await response.text();
+                document.getElementById(containerId).innerHTML = html;
+                if (containerId === 'headerContainer') {
+                    const { initHeader } = await import('./header.js');
+                    setTimeout(initHeader, 10);
+                }
+            } catch (error) {
+                console.error('加载公共部分失败：', error);
+            }
+        }
+
+        // 选项卡切换（正常切换高亮）
+        function initTabSwitch() {
+            const tabs = document.querySelectorAll('.tab-item');
+            const wrapper = document.getElementById('contentWrapper');
+            const contentList = document.getElementById('contentList');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 清空所有选中
+                    tabs.forEach(item => item.classList.remove('active'));
+                    // 给当前点击的添加选中
+                    tab.classList.add('active');
+
+                    const type = tab.dataset.type;
+                    if (type === 'all' || type === 'notice') {
+                        contentList.style.display = 'flex';
+                        wrapper.style.height = 'auto';
+                    } else {
+                        contentList.style.display = 'none';
+                        wrapper.style.height = '300px';
+                    }
+                });
+            });
+        }
+
+        // 初始化
+        loadCommonPart('./header.html', 'headerContainer');
+        loadCommonPart('./footer.html', 'footerContainer');
+        window.addEventListener('DOMContentLoaded', initTabSwitch);
+    </script>
+</body>
+</html>

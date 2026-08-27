@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>大赛奖项设置</title>
+    <script src="https://www.shuixingzhou.com/static/www/js/jquery-3.6.0.min.js"></script>
+    <script src="./browser@4.js"></script>
+  </head>
+  <style>
+    * {
+      line-height: normal;
+    }
+
+    .awardsTitle {
+      background: var(--Color-5, #d8cdff);
+      box-shadow: 4px 4px 24px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .awardsItem {
+      width: calc((100% - 120px) / 4);
+      margin-right: 40px;
+      margin-bottom: 40px;
+      border-radius: 24px;
+      background: var(---100, #fff);
+
+      /* 卡片投影 */
+      box-shadow: 4px 4px 24px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .awardsItem:nth-child(4n) {
+      margin-right: 0;
+    }
+    .award_content {
+      background-image: url("./img/award_bg.png");
+      background-position: 0 0;
+      background-size: 30%;
+      background-repeat: no-repeat;
+      background-position: 100% 0;
+    }
+    .trophy_content {
+      background-image: url("./img/trophy.png");
+      background-position: 95% 0;
+      background-repeat: no-repeat;
+    }
+    .trophy_item {
+      font-size: 24px;
+      color: var(---80, rgba(0, 0, 0, 0.8));
+      text-align: center;
+      font-size: 24px;
+      background-color: var(--Color-8, #f7f5ff);
+      font-weight: 400;
+      font-style: normal;
+      position: relative;
+    }
+    .trophy_item:hover {
+      background-color: var(--Color, #9162ff);
+      color: #fff;
+      transition: all 0.3s;
+      cursor: pointer;
+      visibility: visible;
+    }
+    .trophy_item:hover .item_svg {
+      position: absolute;
+      visibility: visible;
+      right: 10px;
+    }
+    .item_svg {
+      visibility: hidden;
+      position: absolute;
+      right: 10px;
+    }
+    /* 省赛时隐藏的区域样式 */
+    .hide-on-province {
+      transition: all 0.3s ease;
+    }
+    .hide-on-province.hide {
+      display: none;
+    }
+  </style>
+
+  <body>
+    <!-- 关于 -->
+    <!-- 容器：用于插入头部 -->
+    <div id="headerContainer"></div>
+
+    <!-- 中间独有的内容 -->
+    <main class="text-center">
+      <div
+        class="h-[280px] mt-[84px] overflow-hidden text-white"
+        style="background-color: var(--Color-3, #4900b8)"
+      >
+        <div class="award_content w-full h-full">
+          <div class="trophy_content w-full h-full flex items-center">
+            <div
+              class="w-[1241px] m-auto flex flex-col justify-center text-left"
+            >
+              <div class="text-[56px]">大赛奖项设置</div>
+              <div class="text-base pt-5">
+                大赛奖项证书分为参赛选手类奖项，高中组、中职组特设奖项（国赛奖项），教师奖项，学校奖项。
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-[80px] w-[1320px] m-auto">
+        <!-- 参赛选手类模块 -->
+        <div class="player-awards-module">
+          <div
+            class="h-[80px] pl-[32px] pr-[16px] py-[10px] flex items-center justify-between rounded-3xl"
+            style="
+              background: #9162ff;
+              box-shadow: 4px 4px 24px 4px rgba(0, 0, 0, 0.08);
+            "
+          >
+            <div class="flex">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                fill="none"
+              >
+                <path
+                  d="M14 4H36C37.6569 4 39 5.34315 39 7V22C39 29.732 32.732 36 25 36C17.268 36 11 29.732 11 22V7C11 5.34315 12.3431 4 14 4Z"
+                  stroke="white"
+                  stroke-width="2"
+                />
+                <line
+                  x1="25"
+                  y1="36"
+                  x2="25"
+                  y2="44"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="7"
+                  y1="12"
+                  x2="7"
+                  y2="22"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="43"
+                  y1="12"
+                  x2="43"
+                  y2="22"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="34"
+                  y1="45"
+                  x2="16"
+                  y2="45"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <div class="text-[40px] text-white font-light pl-3">参赛选手类</div>
+            </div>
+            <div
+              class="w-[120px] h-[40px] p-[2px] flex player-tab-group"
+              style="background: rgba(113, 31, 255, 1); border-radius: 18px"
+            >
+              <div
+                data-role="tab"
+                data-type="province"
+                data-module="player"
+                class="flex-1 w-[48px] text-sm h-[36px] text-[16px] cursor-pointer flex items-center justify-center rounded-3xl"
+                style="color: rgba(255,255,255,0.8)"
+              >
+                省赛
+              </div>
+              <div
+                data-role="tab"
+                data-type="national"
+                data-module="player"
+                class="flex-1 w-[48px] text-sm h-[36px] text-[16px] cursor-pointer flex items-center justify-center rounded-3xl text-black/60 bg-white"
+              >
+                国赛
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-[#E0D6FF] rounded-3xl player-content"
+            style="box-shadow: 4px 4px 24px 4px rgba(0, 0, 0, 0.08)"
+          >
+            <div class="mt-[32px] rounded-3xl">
+              <div class="h-[8px]"></div>
+              <div class="flex mb-[8px]">
+                <div class="flex-1"></div>
+                <div
+                  class="flex-1 text-[32px] font-normal h-[64px]"
+                  style="color: #6e38eb; line-height: 64px"
+                >
+                  参赛选手类奖项
+                </div>
+                <div
+                  class="flex-1 flex justify-end items-center tab-group first-tab-group pr-2"
+                ></div>
+              </div>
+              <div class="flex px-2 gap-2">
+                <div
+                  class="h-[80px] w-[320px] flex items-center first-module-first trophy_item"
+                  style="border-radius: 4px 4px 4px 16px"
+                >
+                  <div
+                    class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                  >
+                    一等奖
+                  </div>
+                  <div class="item_svg">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="11.5"
+                        fill="#9162FF"
+                        stroke="white"
+                      />
+                      <path
+                        d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                        stroke="white"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="h-[80px] w-[320px] flex items-center trophy_item"
+                  style="border-radius: 4px 4px 4px 4px"
+                >
+                  <div
+                    class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                  >
+                    二等奖
+                  </div>
+                  <div class="item_svg">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="11.5"
+                        fill="#9162FF"
+                        stroke="white"
+                      />
+                      <path
+                        d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                        stroke="white"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="h-[80px] w-[320px] flex items-center trophy_item"
+                  style="border-radius: 4px 4px 4px 4px"
+                >
+                  <div
+                    class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                  >
+                    三等奖
+                  </div>
+                  <div class="item_svg">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="11.5"
+                        fill="#9162FF"
+                        stroke="white"
+                      />
+                      <path
+                        d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                        stroke="white"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="h-[80px] w-[320px] flex items-center trophy_item"
+                  style="border-radius: 4px 4px 16px 4px"
+                >
+                  <div
+                    class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                  >
+                    优胜奖
+                  </div>
+                  <div class="item_svg">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="11.5"
+                        fill="#9162FF"
+                        stroke="white"
+                      />
+                      <path
+                        d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                        stroke="white"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 特等奖区域 - 国赛时显示，省赛时隐藏 -->
+            <div class="hide-on-province">
+              <div class="my-[8px] bg-[#d8cdff] mx-[8px] rounded-2xl flex">
+                <div class="flex-1"></div>
+                <div
+                  class="flex-1 text-[28px] text-[#6e38eb] flex justify-center items-center h-[64px] font-normal py-[10px]"
+                >
+                  一等奖中设置以下奖项
+                </div>
+                <div class="flex-1"></div>
+              </div>
+              <div class="flex px-2 gap-[8px]">
+                <div
+                  class="h-[80px] w-[320px] flex items-center trophy_item rounded"
+                >
+                  <div
+                    class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                  >
+                    最佳创意奖
+                  </div>
+                  <div class="item_svg">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="11.5"
+                        fill="#9162FF"
+                        stroke="white"
+                      />
+                      <path
+                        d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                        stroke="white"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="h-[80px] w-[320px] flex items-center trophy_item rounded"
+                >
+                  <div
+                    class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                  >
+                    最佳技术应用奖
+                  </div>
+                  <div class="item_svg">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="11.5"
+                        fill="#9162FF"
+                        stroke="white"
+                      />
+                      <path
+                        d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                        stroke="white"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="h-[80px] w-[320px] flex items-center trophy_item rounded"
+                >
+                  <div
+                    class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                  >
+                    最佳文化传承奖
+                  </div>
+                  <div class="item_svg">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="11.5"
+                        fill="#9162FF"
+                        stroke="white"
+                      />
+                      <path
+                        d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                        stroke="white"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="h-[80px] w-[320px] flex items-center trophy_item rounded"
+                >
+                  <div
+                    class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                  >
+                    最具潜力奖
+                  </div>
+                  <div class="item_svg">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="11.5"
+                        fill="#9162FF"
+                        stroke="white"
+                      />
+                      <path
+                        d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                        stroke="white"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="flex px-2 gap-[8px] mt-[8px]">
+                <div
+                  class="h-[80px] flex-1 flex items-center trophy_item rounded"
+                  style="border-radius: 4px 4px 4px 16px"
+                >
+                  <div
+                    class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                  >
+                    最佳团队合作奖
+                  </div>
+                  <div class="item_svg">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="11.5"
+                        fill="#9162FF"
+                        stroke="white"
+                      />
+                      <path
+                        d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                        stroke="white"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div
+                  class="h-[80px] flex-1 flex items-center trophy_item"
+                  style="border-radius: 4px 4px 16px 4px"
+                >
+                  <div
+                    class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                  >
+                    最佳创新团队奖
+                  </div>
+                  <div class="item_svg">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="11.5"
+                        fill="#9162FF"
+                        stroke="white"
+                      />
+                      <path
+                        d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                        stroke="white"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <div class="h-[8px]"></div>
+          </div>
+        </div>
+
+        <!-- 高中组、职业教育组特设奖模块 - 省赛时隐藏 -->
+        <div class="hide-on-province">
+          <div
+            class="mt-[32px] h-[152px] rounded-3xl"
+            style="
+              background: #e0d6ff;
+              box-shadow: 4px 4px 24px 4px rgba(0, 0, 0, 0.08);
+            "
+          >
+            <div class="flex">
+              <div class="flex-1"></div>
+              <div
+                class="flex-1 text-[32px] font-light py-[10px]"
+                style="color: #6e38eb"
+              >
+                高中组、中职组特设奖项
+              </div>
+              <div class="flex-1"></div>
+            </div>
+            <div class="flex px-2 gap-[8px]">
+              <div
+                class="h-[80px] w-[320px] flex items-center trophy_item"
+                style="border-radius: 4px 4px 4px 16px"
+              >
+                <div
+                  class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                >
+                  行业应用创新奖
+                </div>
+                <div class="item_svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="11.5"
+                      fill="#9162FF"
+                      stroke="white"
+                    />
+                    <path
+                      d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="h-[80px] w-[320px] flex items-center trophy_item"
+                style="border-radius: 4px 4px 4px 4px"
+              >
+                <div
+                  class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                >
+                  最具商业价值奖
+                </div>
+                <div class="item_svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="11.5"
+                      fill="#9162FF"
+                      stroke="white"
+                    />
+                    <path
+                      d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="h-[80px] w-[320px] flex items-center trophy_item"
+                style="border-radius: 4px 4px 4px 4px"
+              >
+                <div
+                  class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                >
+                  职业技能卓越奖
+                </div>
+                <div class="item_svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="11.5"
+                      fill="#9162FF"
+                      stroke="white"
+                    />
+                    <path
+                      d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="h-[80px] w-[320px] flex items-center trophy_item"
+                style="border-radius: 4px 4px 16px 4px"
+              >
+                <div
+                  class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                >
+                  产教融合示范奖
+                </div>
+                <div class="item_svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="11.5"
+                      fill="#9162FF"
+                      stroke="white"
+                    />
+                    <path
+                      d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 教师类模块 -->
+        <div class="teacher-awards-module">
+          <div
+            class="h-[80px] mt-[100px] pl-[32px] pr-[16px] flex items-center rounded-3xl"
+            style="
+              background: #9162ff;
+              box-shadow: 4px 4px 24px 4px rgba(0, 0, 0, 0.08);
+            "
+          >
+            <div class="flex">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                fill="none"
+              >
+                <path
+                  d="M14 4H36C37.6569 4 39 5.34315 39 7V22C39 29.732 32.732 36 25 36C17.268 36 11 29.732 11 22V7C11 5.34315 12.3431 4 14 4Z"
+                  stroke="white"
+                  stroke-width="2"
+                />
+                <line
+                  x1="25"
+                  y1="36"
+                  x2="25"
+                  y2="44"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="7"
+                  y1="12"
+                  x2="7"
+                  y2="22"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="43"
+                  y1="12"
+                  x2="43"
+                  y2="22"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="34"
+                  y1="45"
+                  x2="16"
+                  y2="45"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <div class="text-[40px] text-white font-light pl-3">教师类</div>
+            </div>
+            <div class="flex-1"></div>
+            <div
+              class="w-[120px] h-[40px] p-[2px] flex teacher-tab-group"
+              style="background: rgba(113, 31, 255, 1); border-radius: 18px"
+            >
+              <div
+                data-role="tab"
+                data-type="province"
+                data-module="teacher"
+                class="flex-1 w-[48px] text-sm h-[36px] flex text-[16px] cursor-pointer items-center justify-center rounded-3xl"
+                style="color: rgba(255,255,255,0.8)"
+              >
+                省赛
+              </div>
+              <div
+                data-role="tab"
+                data-type="national"
+                data-module="teacher"
+                class="flex-1 w-[48px] text-sm h-[36px] text-[16px] cursor-pointer flex items-center justify-center rounded-3xl text-black/60 bg-white"
+              >
+                国赛
+              </div>
+            </div>
+          </div>
+          <div
+            class="mt-[32px] h-[152px] rounded-3xl"
+            style="
+              background: #e0d6ff;
+              box-shadow: 4px 4px 24px 4px rgba(0, 0, 0, 0.08);
+            "
+          >
+            <div class="flex">
+              <div class="flex-1"></div>
+              <div
+                class="flex-1 text-[32px] font-light py-[10px]"
+                style="color: var(--Color-7, #6e38eb)"
+              >
+                教师奖项
+              </div>
+              <div class="flex-1"></div>
+            </div>
+            <div class="flex px-2 gap-[10px]">
+              <div
+                class="h-[80px] w-[429px] flex items-center trophy_item"
+                style="border-radius: 4px 4px 4px 16px"
+              >
+                <div
+                  class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                >
+                  人工智能教育先锋
+                </div>
+                <div class="item_svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="11.5"
+                      fill="#9162FF"
+                      stroke="white"
+                    />
+                    <path
+                      d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="h-[80px] w-[429px] flex items-center trophy_item"
+                style="border-radius: 4px 4px 4px 4px"
+              >
+                <div
+                  class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                >
+                  教学创新标兵
+                </div>
+                <div class="item_svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="11.5"
+                      fill="#9162FF"
+                      stroke="white"
+                    />
+                    <path
+                      d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="h-[80px] w-[429px] flex items-center trophy_item"
+                style="border-radius: 4px 4px 16px 4px"
+              >
+                <div
+                  class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                >
+                  优秀指导教师
+                </div>
+                <div class="item_svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="11.5"
+                      fill="#9162FF"
+                      stroke="white"
+                    />
+                    <path
+                      d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 学校类模块 -->
+        <div class="school-awards-module">
+          <div
+            class="h-[80px] mt-[102px] pl-[32px] pr-[16px] flex items-center rounded-3xl"
+            style="
+              background: #9162ff;
+              box-shadow: 4px 4px 24px 4px rgba(0, 0, 0, 0.08);
+            "
+          >
+            <div class="flex">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                fill="none"
+              >
+                <path
+                  d="M14 4H36C37.6569 4 39 5.34315 39 7V22C39 29.732 32.732 36 25 36C17.268 36 11 29.732 11 22V7C11 5.34315 12.3431 4 14 4Z"
+                  stroke="white"
+                  stroke-width="2"
+                />
+                <line
+                  x1="25"
+                  y1="36"
+                  x2="25"
+                  y2="44"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="7"
+                  y1="12"
+                  x2="7"
+                  y2="22"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="43"
+                  y1="12"
+                  x2="43"
+                  y2="22"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="34"
+                  y1="45"
+                  x2="16"
+                  y2="45"
+                  stroke="white"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <div class="text-[40px] text-white font-light pl-3">学校类</div>
+            </div>
+            <div class="flex-1"></div>
+            <div
+              class="w-[120px] h-[40px] p-[2px] flex school-tab-group"
+              style="background: rgba(113, 31, 255, 1); border-radius: 18px"
+            >
+              <div
+                data-role="tab"
+                data-type="province"
+                data-module="school"
+                class="flex-1 w-[48px] text-sm h-[36px] flex text-[16px] cursor-pointer items-center justify-center rounded-3xl"
+                style="color: rgba(255,255,255,0.8)"
+              >
+                省赛
+              </div>
+              <div
+                data-role="tab"
+                data-type="national"
+                data-module="school"
+                class="flex-1 w-[48px] text-sm h-[36px] flex text-[16px] cursor-pointer items-center justify-center rounded-3xl text-black/60 bg-white"
+              >
+                国赛
+              </div>
+            </div>
+          </div>
+          <div
+            class="mt-[32px] mb-[120px] h-[152px] rounded-3xl"
+            style="
+              background: #e0d6ff;
+              box-shadow: 4px 4px 24px 4px rgba(0, 0, 0, 0.08);
+            "
+          >
+            <div class="flex">
+              <div class="flex-1"></div>
+              <div
+                class="flex-1 text-[32px] font-light py-[10px]"
+                style="color: #6e38eb"
+              >
+                学校奖项
+              </div>
+              <div class="flex-1"></div>
+            </div>
+            <div class="flex px-2 gap-[8px]">
+              <div
+                class="h-[80px] w-[320px] flex items-center trophy_item"
+                style="border-radius: 4px 4px 4px 16px"
+              >
+                <div
+                  class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                >
+                  优秀组织学校
+                </div>
+                <div class="item_svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="11.5"
+                      fill="#9162FF"
+                      stroke="white"
+                    />
+                    <path
+                      d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="h-[80px] w-[320px] flex items-center trophy_item"
+                style="border-radius: 4px 4px 4px 4px"
+              >
+                <div
+                  class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                >
+                  创新实践教育基地
+                </div>
+                <div class="item_svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="11.5"
+                      fill="#9162FF"
+                      stroke="white"
+                    />
+                    <path
+                      d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="h-[80px] w-[320px] flex items-center trophy_item"
+                style="border-radius: 4px 4px 4px 4px"
+              >
+                <div
+                  class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                >
+                  人工智能教育示范团队
+                </div>
+                <div class="item_svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="11.5"
+                      fill="#9162FF"
+                      stroke="white"
+                    />
+                    <path
+                      d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="h-[80px] w-[320px] flex items-center trophy_item"
+                style="border-radius: 4px 4px 16px 4px"
+              >
+                <div
+                  class="flex-1 text-2xl not-italic font-normal text-[rgba(0,0,0,0.8)]"
+                >
+                  优秀社会实践活动组织
+                </div>
+                <div class="item_svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="11.5"
+                      fill="#9162FF"
+                      stroke="white"
+                    />
+                    <path
+                      d="M12 8L16 12M16 12L12 16M16 12L8 12"
+                      stroke="white"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 容器：用于插入底部 -->
+    <div id="footerContainer"></div>
+
+    <!-- 动态加载公共部分 -->
+    <script>
+      // 初始化所有tab切换功能
+      function initTabs() {
+        // 参赛选手类切换
+        const playerTabs = document.querySelectorAll('.player-tab-group [data-role="tab"]');
+        const hideOnProvinceElements = document.querySelectorAll('.hide-on-province');
+        
+        playerTabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+            const type = this.getAttribute('data-type');
+            const parentGroup = this.closest('.player-tab-group');
+            const allTabs = parentGroup.querySelectorAll('[data-role="tab"]');
+            
+            // 更新样式
+            allTabs.forEach(t => {
+              if (t === this) {
+                t.classList.add('bg-white');
+                t.classList.remove('text-white');
+                t.classList.add('text-black/60');
+                t.style.color = '';
+              } else {
+                t.classList.remove('bg-white');
+                t.classList.remove('text-black/60');
+                t.style.color = 'rgba(255,255,255,0.8)';
+              }
+            });
+            
+            // 根据类型控制需要隐藏的区域
+            if (type === 'national') {
+              // 国赛：显示所有隐藏区域
+              hideOnProvinceElements.forEach(el => {
+                el.classList.remove('hide');
+              });
+            } else if (type === 'province') {
+              // 省赛：隐藏所有指定区域
+              hideOnProvinceElements.forEach(el => {
+                el.classList.add('hide');
+              });
+            }
+          });
+        });
+        
+        // 教师类切换（仅样式切换，内容无变化）
+        const teacherTabs = document.querySelectorAll('.teacher-tab-group [data-role="tab"]');
+        teacherTabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+            const parentGroup = this.closest('.teacher-tab-group');
+            const allTabs = parentGroup.querySelectorAll('[data-role="tab"]');
+            
+            allTabs.forEach(t => {
+              if (t === this) {
+                t.classList.add('bg-white');
+                t.classList.remove('text-white');
+                t.classList.add('text-black/60');
+                t.style.color = '';
+              } else {
+                t.classList.remove('bg-white');
+                t.classList.remove('text-black/60');
+                t.style.color = 'rgba(255,255,255,0.8)';
+              }
+            });
+          });
+        });
+        
+        // 学校类切换（仅样式切换，内容无变化）
+        const schoolTabs = document.querySelectorAll('.school-tab-group [data-role="tab"]');
+        schoolTabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+            const parentGroup = this.closest('.school-tab-group');
+            const allTabs = parentGroup.querySelectorAll('[data-role="tab"]');
+            
+            allTabs.forEach(t => {
+              if (t === this) {
+                t.classList.add('bg-white');
+                t.classList.remove('text-white');
+                t.classList.add('text-black/60');
+                t.style.color = '';
+              } else {
+                t.classList.remove('bg-white');
+                t.classList.remove('text-black/60');
+                t.style.color = 'rgba(255,255,255,0.8)';
+              }
+            });
+          });
+        });
+      }
+      
+      // 加载公共文件的函数
+      async function loadCommonPart(url, containerId) {
+        try {
+          const response = await fetch(url);
+          const html = await response.text();
+          document.getElementById(containerId).innerHTML = html;
+          if (containerId === "headerContainer") {
+            // 动态导入 header.js
+            const { initHeader } = await import("./header.js");
+            // 给一点延迟确保 DOM 完全渲染
+            setTimeout(initHeader, 10);
+          }
+        } catch (error) {
+          console.error("加载公共部分失败：", error);
+        }
+      }
+
+      // 加载头部和底部
+      loadCommonPart("./header.html", "headerContainer");
+      loadCommonPart("./footer.html", "footerContainer");
+      
+      // 等待DOM完全加载后初始化tab功能
+      document.addEventListener('DOMContentLoaded', function() {
+        initTabs();
+      });
+    </script>
+  </body>
+</html>

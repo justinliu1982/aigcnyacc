@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>赛项设置</title>
+    <script src="./browser@4.js"></script>
+  </head>
+  <style>
+    * {
+      line-height: normal;
+    }
+    html {
+      font-family: "PingFang SC", "Roboto", "Microsoft YaHei", "Helvetica Neue";
+    }
+  </style>
+
+  <body>
+    <!-- 关于 -->
+    <!-- 容器：用于插入头部 -->
+    <div id="headerContainer"></div>
+
+    <!-- 中间独有的内容 -->
+    <main class="text-center mt-[84px] mb-[120px]">
+      <!-- <img src="./img/frame251.png" class="h-[306px]" style="display: inline-block;" alt=""> -->
+      <div
+        class="bg-[#4900B8] h-[240px] flex justify-center text-white items-center flex-col"
+      >
+        <div id="titleContent" class="text-[56px] font-semibold">
+          AI与图像生成表达
+        </div>
+        <div id="titleTip" class="mt-[16px] text-[20px]">小学阶段</div>
+      </div>
+      <div class="w-[1040px] m-auto">
+        <div
+          class="mt-[86.5px] text-left text-[48px] text-[#711fff] font-light"
+        >
+          赛项介绍
+        </div>
+        <div
+          id="contentText"
+          class="text-left mt-[20px] text-[rgba(0,0,0,0.8)] text-[20px]"
+        ></div>
+        <!-- <div
+          class="mt-[86.5px] text-left text-[48px] text-[#711fff] font-light"
+        >
+          公益课程
+        </div>
+        <div class="mt-[26.5px]">
+          <div class="w-full h-[480px] bg-[#9162ff]"></div>
+        </div> -->
+      </div>
+    </main>
+
+    <!-- 容器：用于插入底部 -->
+    <div id="footerContainer"></div>
+
+    <!-- 动态加载公共部分 -->
+    <script>
+
+      // 加载公共文件的函数
+      async function loadCommonPart(url, containerId) {
+        try {
+          const response = await fetch(url);
+          const html = await response.text();
+          document.getElementById(containerId).innerHTML = html;
+          if (containerId === "headerContainer") {
+            // 动态导入 header.js
+            const { initHeader } = await import("./header.js");
+            // 给一点延迟确保 DOM 完全渲染
+            setTimeout(initHeader, 10);
+          }
+        } catch (error) {
+          console.error("加载公共部分失败：", error);
+        }
+      }
+      const getList = async function () {
+        const { eventList } = await import("./header.js");
+        const textId = sessionStorage.getItem('textId');
+        const contentHtmlList = eventList.filter((item) => item.id === textId);
+
+        const titleContentHtml = document.getElementById("titleContent");
+        titleContentHtml.innerHTML = contentHtmlList[0].name;
+        const titleTipText = document.getElementById("titleTip");
+        titleTipText.innerHTML = contentHtmlList[0].tipText;
+
+        const container = document.getElementById("contentText");
+        if (container) {
+          let html =
+            '<div class="text-left mt-[20px] text-[rgba(0,0,0,0.8)] text-[20px]">';
+
+          contentHtmlList[0].list.forEach((content) => {
+            html += `<div class="mt-[28px]"  style="line-height:1.5;">${content}</div>`;
+          });
+          html += "</div>";
+          container.innerHTML = html;
+        }
+      };
+      getList();
+      // 加载头部和底部
+      loadCommonPart("./header.html", "headerContainer");
+      loadCommonPart("./footer.html", "footerContainer");
+    </script>
+  </body>
+</html>

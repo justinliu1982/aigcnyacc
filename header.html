@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全国青少年人工智能辅助生成数字艺术创作者大赛</title>
+</head>
+
+<style>
+    nav>a {
+        margin-right: 24px;
+    }
+
+    nav>a:last-of-type {
+        margin-right: 0;
+    }
+    html {
+      font-family: "PingFang SC",
+                    "Roboto",
+                    "Microsoft YaHei",
+                    "Helvetica Neue",
+
+    }
+    .fixedHeader {
+        position: fixed;
+        width: 100%;
+        z-index: 50;
+        left: 0;
+        top: 0;
+        transition: background 1s;
+    }
+
+    .header1 {
+        color: var(---90, rgba(255, 255, 255, 0.90)) !important;
+        background: linear-gradient(180deg, rgba(73, 0, 184, 0.80) 0%, rgba(73, 0, 184, 0.60) 50%, rgba(73, 0, 184, 0.00) 100%);
+    }
+
+    .header2 {
+        color: var(---80, rgba(0, 0, 0, 0.80));
+        background: #fff;
+    }
+
+
+    .addChecked1 {
+        color: #fff;
+    }
+
+    .addChecked2 {
+        color: #711fff;
+    }
+
+    .ownNavItem.addChecked1::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -10px;
+        width: 4px;
+        height: 4px;
+        background: linear-gradient(180deg, #16C1FF 0%, #A893FF 100%);
+        border-radius: 50%;
+    }
+
+    .ownNavItem.addChecked1::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: -10px;
+        width: calc(100% - 6px);
+        height: 4px;
+        background: linear-gradient(180deg, #16C1FF 0%, #A893FF 100%);
+        border-radius: 2px;
+    }
+
+    .ownNavItem.addChecked2::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -10px;
+        width: 4px;
+        height: 4px;
+        background: linear-gradient(180deg, #C062FF 0%, #9072FF 100%);
+        border-radius: 50%;
+    }
+
+    .ownNavItem.addChecked2::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: -10px;
+        width: calc(100% - 6px);
+        height: 4px;
+        background: linear-gradient(180deg, #C062FF 0%, #9072FF 100%);
+        border-radius: 2px;
+    }
+</style>
+
+<body>
+    <header id="header" class="bg-white h-[84px] py-[22px] px-[32px] flex">
+        <div id="logo1">
+            <img src="./img/logo1.svg">
+        </div>
+        <div class="hidden" id="logo2">
+            <img src="./img/logo2.svg">
+        </div>
+        <!-- 版本号 v=0815 -->
+        <div class="flex flex-1 pt-[7px] justify-center">
+            <nav id="nav1" class="flex text-[14px] font-medium">
+                <a href="./index.html?v=0815">
+                    <div class="ownNavItem relative" id="index">首页</div>
+                </a>
+                <a href="./matchSetting.html?id=match&v=0815">
+                    <div class="ownNavItem relative" id="match">赛项设置</div>
+                </a>
+                <a href="./awardsSetting.html?id=awards&v=0815">
+                    <div class="ownNavItem relative" id="awards">奖项设置</div>
+                </a>
+                <a href="./area.html?id=area&v=0815">
+                    <div class="ownNavItem relative" id="area">赛区分布</div>
+                </a>
+                <a href="./signUp.html?id=signUp&v=0815">
+                    <div class="ownNavItem relative" id="signUp">参赛报名</div>
+                </a>
+                <a href="./dynamic.html?id=dynamic&v=0815">
+                    <div class="ownNavItem relative" id="dynamic">大赛动态</div>
+                </a>
+                <a href="./about.html?id=about&v=0815">
+                    <div class="ownNavItem relative" id="about">关于大赛</div>
+                </a>
+                <a href="./inquire.html?id=inquire&v=0815">
+                    <div class="ownNavItem relative" id="inquire">获奖查询</div>
+                </a>
+                <a href="./contact.html?id=contact&v=0815">
+                    <div class="ownNavItem relative" id="contact">联系我们</div>
+                </a>
+            </nav>
+        </div>
+        <div id="login1"  class="hidden relative">
+            <img src="./img/login2.svg" class="w-[108px] h-[38px]">
+            <!-- <img src="./img/login2.svg" class="w-[108px] h-[38px]"> -->
+             <div class="w-[108px] h-[38px] flex opacity-50 z-[999] top-0 absolute">
+                <a href="/sxzfe/PcBaom/#/account/registration" class="flex-1 block"></a>
+                <a href="/sxzfe/PcBaom/#/account/register" class="flex-1 block"></a>
+            </div>
+        </div>
+        <div class="hidden relative" id="login2">
+            <div class="w-[108px] h-[38px] flex opacity-50 z-[999] top-0 absolute">
+                <a href="/sxzfe/PcBaom/#/account/registration" class="flex-1 block"></a>
+                <a href="/sxzfe/PcBaom/#/account/register" class="flex-1 block"></a>
+            </div>
+            <img src="./img/login1.svg" class="w-[108px] h-[38px]">
+        </div>
+    </header>
+</body>
+
+</html>

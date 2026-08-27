@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大赛动态</title>
+    <script src="./browser@4.js"></script>
+</head>
+<style>
+    * {
+        line-height: normal;
+    }
+    html {
+      font-family: "PingFang SC",
+                    "Roboto",
+                    "Microsoft YaHei",
+                    "Helvetica Neue",
+
+    }
+    .navItem {
+        color: var(---60, rgba(0, 0, 0, 0.60));
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 44px;
+        width: 140px;
+        text-align: center;
+    }
+
+    .active {
+        color: #fff;
+        border-radius: 30px;
+        background: var(--Color, #9162FF);
+    }
+    .banner_bg {
+        background-image: url('./img/competition_bg.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position:  0 ;
+    }
+    .hover_item {
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <!-- 关于 -->
+    <!-- 容器：用于插入头部 -->
+    <div id="headerContainer"></div>
+
+    <!-- 中间独有的内容 -->
+    <main class="text-center">
+        <div class="w-[800px] mt-[84px] m-auto">
+            <div class="flex items-center">
+                <span class="text-xs text-white px-3 py-1" style="border-radius: 4px;
+                background: #FF6265;">公告通知</span>
+                <span class="ml-10 text-black/60 text-xs">发布时间：2025-11-09 10:30</span>
+                <span class="ml-10 text-black/60 text-xs">来源：文化和旅游部艺术发展中心数字艺术与区块链实验室</span>
+            </div>
+            <div class="mt-10 font-medium text-[32px] text-left">第一届“全国青少年人工智能辅助生成数字艺术创作者大赛”公告</div>
+            <div class="mt-10 text-left text-black/60 text-sm">根据《教育部办公厅关于公布2025—2028学年面向中小学生的全国性竞赛活动的通知（教监管厅函〔2025〕7号）》的通知要求，以及文化和旅游部艺术发展中心（以下简称“中心”）的相关管理规定，现将本次竞赛活动具体内容通知如下：</div>
+            <div class="mt-10">
+                <div class="text-[20px] font-medium font-medium text-black/80 text-left">一、大赛名称</div>
+                <div class="mt-[12px] font-normal text-black/60 text-[16px] indent-8 text-left">中文名称：全国青少年人工智能辅助生成数字艺术创作者大赛，英文翻译为AIGC National Youth Generative Digital Art Creators Competition of China（缩写为AIGCNYACC）</div>
+
+                <div class="text-[20px] mt-[40px] font-medium font-medium text-black/80 text-left">二、大赛简介</div>
+                <div class="mt-[12px] font-normal text-black/60 text-[16px] indent-8 text-left">为贯彻国家相关战略、规划、通知和意见，培养适应新时代要求的创新型人才，引导学生理解创新与人工智能技术的关系，提升运用人工智能辅助创作艺术作品的实践能力。大赛注重引导和培养学生运用人工智能的素养和技能，激发学生对任务式､项目式､问题式学习的兴趣，增强青少年对区域文化的认知与未来发展规划的理解，熟悉或掌握“人工智能+艺术”的表达方式。鼓励广泛参与文化和旅游领域人工智能辅助生成艺术作品的探究与实践，推动人工智能技术辅助文艺创作生产与应用，促进人工智能与文化和旅游深度融合。</div>
+
+                <div class="text-[20px] mt-[40px] font-medium font-medium text-black/80 text-left">三、大赛目标</div>
+                <div class="mt-[12px] font-normal text-black/60 text-[16px] indent-8 text-left">通过“以赛促研、以赛促用、以赛带教、以赛引才”的方式，推动国家文化数字化数字标识体系的建设；通过竞赛激发青少年的好奇心和想象力，将“人工智能+艺术”与学生的个人生活、校园生活和社会生活有机结合，丰富学生对人工智能的体验与实践，提升学生的应用与创新能力，培育一批具备“人工智能+艺术”潜质的青少年群体，为文化和旅游领域新质生产力的发展提供坚实的人才储备。</div>
+
+                <div class="text-[20px] mt-[40px] font-medium font-medium text-black/80 text-left">四、参与人群</div>
+                <div class="mt-[12px] font-normal text-black/60 text-[16px] indent-8 text-left">全国小学、初中、高中、中职在校学生。</div>
+
+                <div class="text-[20px] mt-[40px] font-medium font-medium text-black/80 text-left">五、赛项内容介绍</div>
+                <div class="mt-[12px] font-normal text-black/60 text-[16px] indent-8 text-left">赛项设置参照视听生产、传播、推送、综合应用等文化艺术产业的属性分类及学科分类，结合中心在文化艺术发展、普及、应用研究的职能，综合设立赛项，覆盖小学、初中、高中、中职四个学段。
+                    <br><br>
+                    <div class="indent-8">具体赛项涉及到“人工智能+图像艺术”、“人工智能+影像艺术”、“人工智能+音频艺术”、“人工智能+文本艺术（诗歌和戏剧）”四大方向，在此框架下设置为15个赛项；其中包括“人工智能+非物质文化遗产”等专题赛项。</div>
+                </div>
+
+                    <div class="text-[20px] mt-[40px] font-medium font-medium text-black/80 text-left">六、竞赛组织管理</div>
+                <div class="mt-[12px] font-normal text-black/60 text-[16px] indent-8 text-left">中心制定并发布《全国青少年人工智能辅助生成数字艺术创作者大赛章程》、附件以及配套管理文件；成立“全国青少年人工智能辅助生成数字艺术创作者大赛组委会”，组委会设置在文化和旅游部艺术发展中心数字艺术与区块链实验室，负责日常组织管理工作。</div>
+
+                <div class="text-[20px] mt-[40px] font-medium font-medium text-black/80 text-left">七、申报方式：</div>
+                <div class="mt-[12px] font-normal text-black/60 text-[16px] text-left">
+                    <!-- indent-8  -->
+                    <div class="indent-8">（一）赛区申报 <br><br></div>
+                    <div class="indent-8">1.申报单位信息登记表；<br><br></div>
+                    <div class="indent-8">2.营业执照<br><br></div>
+                    <div class="indent-8">3.法人身份证信息（正反页）；<br><br></div>
+                    <div class="indent-8">4.单位介绍（500字）；<br><br></div>
+                    <div class="indent-8">5.参与组织或者承办其他白名单赛事证明材料；<br><br></div>
+                    <div class="indent-8">6.参与组织或者实施的文化艺术活动材料；<br><br></div>
+                    <div class="indent-8">7.诚信材料，包括法人以及股东无失信记录；<br><br></div>
+                    <div class="indent-8">8.企业无欠薪。<br><br></div>
+                    <div class="indent-8">（二）材料提交方式材料提交方式：<br><br></div>
+                    <div class="indent-8">请于截止日期前，将上述报名材料发送至指定邮箱：aigcnyacc@dartblab.com。<br><br></div>
+                    <div class="indent-8">邮箱名称格式：<br><br></div>
+                    <div class="indent-8">1.赛区申报：赛区名称—申报单位名称。<br><br></div>
+                    <div class="indent-8">2.材料格式：扫描件为PDF格式，其他单个文件不超过20MB。<br><br></div>
+                </div>
+
+                    <div class="text-[20px] mt-[40px] font-medium font-medium text-black/80 text-left">八、时间和流程</div>
+                    <div class="mt-[12px] font-normal text-black/60 text-[16px] text-left">
+                        <div class="indent-8">1.申请时间：公布之日起至—2025年11月18日遴选时间：<br><br></div>
+                        <div class="indent-8">2025年11月18—11月24日<br><br></div>
+                        <div class="indent-8">申报流程：申报初审——综合面试（视频会议）——线下会谈——工作函确认——公示<br><br></div>
+                    </div>
+                    <div class="text-[20px] mt-[40px] font-medium font-medium text-black/80 text-left">九、注意事项</div>
+                    <div class="mt-[12px] font-normal text-black/60 text-[16px] text-left">
+                        <div class="indent-8">凡在申报中作假舞弊者，一律取消其资格。<br><br></div>
+                        <div class="indent-8">在大赛网站上线之前，相关公告信息仅通过中心或者实验室的微信公众号发布信息，组委会不委托任何第三方代理相关事宜。</div>
+                    </div>
+
+                    <div class="text-[20px] mt-[40px] font-medium font-medium text-black/80 text-left">十、其他说明</div>
+                    <div class="mt-[12px] font-normal text-black/60 text-[16px] indent-8 text-left">
+                        解释权归大赛组委会。
+                    </div>
+                </div>
+
+                <div class="text-[20px] text-black/80 font-medium text-left mt-10">附件</div>
+                <div class="pl-5 text-[16px] font-normal text-left mt-3" style="color:  #9162FF;">1.<a href="https://dasaifiles.oss-cn-beijing.aliyuncs.com/doc/bfbb4189-cc1b-4f15-9277-818ba06111f3.docx">《赛项内容与赛区承办类别介绍》.docx</a></div>
+                <div class="pl-5 text-[16px] font-normal text-left mt-3" style="color:  #9162FF;">2.<a href="https://dasaifiles.oss-cn-beijing.aliyuncs.com/doc/39b57207-7608-4bff-9393-35a1666688f8.docx">《赛事合作单位遴选管理制度》.docx</a></div>
+                <div class="pl-5 text-[16px] font-normal text-left mt-3" style="color:  #9162FF;">3.<a href="https://dasaifiles.oss-cn-beijing.aliyuncs.com/doc/8b618e34-a2df-4d50-b69d-48a24a8e0f09.docx">《申报单位信息登记表》.docx</a></div>
+                <div class="pl-5 text-[16px] font-normal text-left mt-3" style="color:  #9162FF;">4.<a href="https://dasaifiles.oss-cn-beijing.aliyuncs.com/doc/ed6aa373-ac5c-4eb0-ad4a-ab464a9a8c84.docx">《承诺书》.docx</a></div>
+
+                <div class="text-right mt-[40px] text-base text-black/80"> 全国青少年人工智能辅助生成数字艺术创作者大赛组委会</div>
+                <div class="text-right mt-[12px] text-black/80 text-base">2025年11月9日</div>
+                <div class="w-full h-[1px] bg-black/20 mt-[120px]">
+                </div>
+                <a href="./dynDetailsList2.html?id=dynamic">
+                <div class=" text-left pl-[20px] mt-[20px] text-black/80 text-sm font-normal">上一篇</div>
+            </a>
+                <a href="./dynDetailsList2.html?id=dynamic">
+                    <div class="w-[800px]  hover_item mt-[12px] flex items-center px-4 pt-5 pb-5 pb-3" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);background:  #FFF;border-radius: 20px;">
+                        <div class="flex-1 text-left pr-10">
+                            <div class="text-base">关于第一届“全国青少年人工智能辅助生成数字艺术创作者大赛”第一批组织单位名单公示</div>
+                            <div class="text-xs mt-4 text-black/40">
+                                各省市自治区及相关单位：为确保“全国青少年人工智能辅助生成数字艺术创作者大赛”顺利推进，根据教育部《面向中小学生的全国性竞赛活动管理办法》（教监管厅函〔2022〕4号）及相关活动要求，大赛执委会于2025年11月9日启动了赛事合作单位遴选工作。经大赛执委会筹...
+                            </div>
+                            <div class="mt-[10px]">
+                                <span class="px-3 py-1 text-white rounded-xl text-xs" style="background-color: #ff6265;">公告通知</span>
+                                <span class="pl-3 text-black/60 text-xs">2025.12.23</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <a href="./dynDetailsList3.html?id=dynamic">
+                <div class=" text-left mt-[20px] mb-[12px] pl-[20px] text-black/80 text-sm font-normal">下一篇</div>
+            </a>
+                <a href="./dynDetailsList3.html?id=dynamic">
+                    <div class="w-[800px] hover_item flex  mb-[150px] items-center px-4 pt-5 pb-5 pb-3" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);background: var(---100, #FFF);border-radius: 20px;">
+                        <div class="flex-1 text-left pr-10">
+                            <div class="text-base">实验室筹建的“全国青少年人工智能辅助生成数字艺术创作者大赛”入选教育部2025-2028学年面向中小学生的全国性竞赛活动</div>
+                            <div class="text-xs mt-4 text-black/40">
+                                数字艺术与区块链实验室筹建的“全国青少年人工智能辅助生成数字艺术创作者大赛”入选教育部...
+                            </div>
+                            <div class="mt-[10px]">
+                                <span class="px-3 py-1 text-white rounded-xl text-xs" style="background-color: #ff6265;">公告通知</span>
+                                <span class="pl-3 text-black/60 text-xs">2025.10.30</span>
+                            </div>
+                        </div>
+                        <div class="w-[148px] h-[102px] items-center" style="border-radius: 4px;
+                        background: var(--Color, #9162FF);">
+                        <img src="./img/dynamic_img.png" alt="">
+                    </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- 容器：用于插入底部 -->
+    <div id="footerContainer"></div>
+
+    <!-- 动态加载公共部分 -->
+    <script>
+        // 加载公共文件的函数
+        async function loadCommonPart(url, containerId) {
+            try {
+                const response = await fetch(url);
+                const html = await response.text();
+                document.getElementById(containerId).innerHTML = html;
+                if (containerId === 'headerContainer') {
+                    // 动态导入 header.js
+                    const { initHeader } = await import('./header.js');
+                    // 给一点延迟确保 DOM 完全渲染
+                    setTimeout(initHeader, 10);
+                }
+            } catch (error) {
+                console.error('加载公共部分失败：', error);
+            }
+        }
+
+        // 加载头部和底部
+        loadCommonPart('./header.html', 'headerContainer');
+        loadCommonPart('./footer.html', 'footerContainer');
+    </script>
+</body>
+
+</html>

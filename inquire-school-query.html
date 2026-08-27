@@ -1,0 +1,603 @@
+<!-- ===== 组织学校奖项查询 ===== -->
+<div
+  x-cloak
+  x-data="{
+   showContent: typeof window !== 'undefined' && window.showSchoolQueryContent !== undefined ? window.showSchoolQueryContent : true,
+  uploadModalVisible: false,
+  uploadModalTitle: '授权书上传',
+  uploadModalWidth: 711,
+  uploadModalHeight: 'auto',
+  uploadShowDownload: true,
+  uploadDownloadList: [
+    { name: '授权书模板', icon: './img/word_icon.png', url: './template/authorization.docx' }
+  ],
+  schoolAwards: [
+    { img: './img/school_results_icon1.png', color: '#3489ff', name: '人工智能教育示范团队' },
+    { img: './img/school_results_icon2.png', color: '#e06b39', name: '创新实践教育基地' },
+    { img: './img/school_results_icon3.png', color: '#a65cec', name: '优秀组织学校' },
+    { img: './img/school_results_icon4.png', color: '#10934f', name: '优秀社会实践活动组织' }
+  ],
+  schoolCertModalVisible: false,
+  openSchoolCertModal() {
+    this.schoolCertModalVisible = true;
+  },
+  closeSchoolCertModal() {
+    this.schoolCertModalVisible = false;
+  },
+  openUploadModal(title, height, downloadList) {
+    this.uploadModalTitle = title;
+    this.uploadModalWidth = 711;
+    this.uploadModalHeight = height !== undefined ? height : 'auto';
+    if (downloadList) {
+      this.uploadDownloadList = downloadList;
+    }
+    this.uploadModalVisible = true;
+  },
+
+  closeUploadModal() {
+    this.uploadModalVisible = false;
+  }
+}"
+>
+  <!-- 404 占位 -->
+  <div
+    x-show="!showContent"
+    class="flex flex-col items-center justify-center"
+    style="width: 480px; height: 306px; background: #EBE6FA; border-radius: 80px; margin: 60px auto 0 auto;"
+  >
+    <div
+      style="font-size: 20px; font-weight: 400; color: rgba(0, 0, 0, 0.80); text-align: center; line-height: 1.5;"
+    >
+      功能即将开放
+    </div>
+    <img
+      src="./img/404_icon.png"
+      alt="404"
+      style="margin-top: 16px; width: auto; height: auto;"
+    />
+  </div>
+  <!-- 正常内容 -->
+  <div x-show="showContent">
+  <!-- 查询表单区域 -->
+  <div
+    x-show="!schoolQuerySubmitted"
+    class="p-[30px] w-[1100px] bg-[#EBE6FA]"
+    style="border-radius: 32px; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08)"
+  >
+    <!-- 两行四列表单布局 -->
+    <div class="flex flex-col gap-[24px]">
+      <!-- ===== 第一行：比赛年份 | 阶段 | 申请联系人 | 手机号 ===== -->
+      <div class="flex gap-[24px]">
+        <!-- 比赛年份 230px -->
+        <div
+          class="text-sm w-[230px] flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white flex-shrink-0"
+        >
+          <span
+            style="border-right: 1px solid #9162ff"
+            class="pr-2 text-black/60 flex-shrink-0"
+            >比赛年份</span
+          >
+          <div class="select-arrow-wrapper flex-1 min-w-0">
+            <select
+              class="border-0 pl-3 pr-3 outline-none bg-transparent p-0 leading-normal w-auto m-0 text-base"
+              style="color: #9162ff"
+            >
+              <option value="" disabled selected>2026</option>
+              <option value="province">2026</option>
+            </select>
+          </div>
+        </div>
+        <!-- 阶段 230px -->
+        <div
+          class="text-sm w-[230px] flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white flex-shrink-0"
+        >
+          <span
+            class="pr-2 text-black/60 flex-shrink-0"
+            style="border-right: 1px solid #9162ff"
+            >阶段</span
+          >
+          <div class="select-arrow-wrapper flex-1 min-w-0">
+            <select
+              class="border-0 pl-3 outline-none bg-transparent p-0 leading-normal w-auto m-0 text-base"
+              style="color: #9162ff; font-size: 16px"
+            >
+              <option value="" disabled selected>全国决赛</option>
+              <option value="province">全国决赛</option>
+              <option value="province">省选拔赛</option>
+            </select>
+          </div>
+        </div>
+        <!-- 申请联系人 235px -->
+        <div
+          class="text-sm w-[235px] flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white flex-shrink-0"
+        >
+          <span
+            class="pr-2 text-black/60 flex-shrink-0"
+            style="border-right: 1px solid #9162ff"
+            >申请联系人</span
+          >
+          <input
+            class="flex-1 ml-2 text-[16px] border-0 outline-none focus:outline-none!important focus:ring-0!important"
+            type="text"
+            placeholder="输入姓名"
+            x-model="schoolQueryContact"
+          />
+        </div>
+        <!-- 手机号 270px -->
+        <div
+          class="text-sm w-[270px] flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white flex-shrink-0"
+        >
+          <span
+            class="pr-2 text-black/60 flex-shrink-0"
+            style="border-right: 1px solid #9162ff"
+            >手机号码</span
+          >
+          <input
+            class="flex-1 ml-2 text-[16px] border-0 outline-none focus:outline-none!important focus:ring-0!important"
+            type="text"
+            placeholder="输入手机号码"
+            x-model="schoolQueryPhone"
+          />
+        </div>
+      </div>
+
+      <!-- ===== 第二行：组织学校名称 | 邮箱 | 输入验证码 | 获取验证码按钮 ===== -->
+      <div class="flex gap-[24px]">
+        <!-- 组织学校名称 350px -->
+        <div
+          class="text-sm w-[350px] flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white flex-shrink-0"
+        >
+          <span
+            class="pr-2 text-black/60 flex-shrink-0"
+            style="border-right: 1px solid #9162ff"
+            >组织学校名称</span
+          >
+          <input
+            class="flex-1 ml-2 text-[16px] border-0 outline-none focus:outline-none!important focus:ring-0!important"
+            type="text"
+            placeholder="输入单位名称"
+            x-model="schoolQueryName"
+          />
+        </div>
+        <!-- 邮箱 300px -->
+        <div
+          class="text-sm w-[300px] flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white flex-shrink-0"
+        >
+          <span
+            class="pr-2 text-black/60 flex-shrink-0"
+            style="border-right: 1px solid #9162ff"
+            >邮箱</span
+          >
+          <input
+            class="flex-1 ml-2 text-[16px] border-0 outline-none focus:outline-none!important focus:ring-0!important"
+            type="text"
+            placeholder="输入邮箱地址"
+            x-model="schoolQueryEmail"
+          />
+        </div>
+        <!-- 输入验证码 204px -->
+        <div
+          class="text-sm w-[204px] flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white flex-shrink-0"
+        >
+          <span
+            class="pr-2 text-black/60 flex-shrink-0"
+            style="border-right: 1px solid #9162ff"
+            >验证码</span
+          >
+          <input
+            class="flex-1 ml-2 text-[16px] border-0 outline-none focus:outline-none!important focus:ring-0!important"
+            type="text"
+            placeholder="输入验证码"
+            x-model="schoolQueryCode"
+          />
+        </div>
+        <!-- 获取验证码按钮 114px -->
+        <div
+          class="flex-shrink-0 w-[114px] h-[48px] flex items-center justify-center text-[13px] font-medium cursor-pointer text-white whitespace-nowrap"
+          style="
+            border-radius: 16px;
+            background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%);
+          "
+          @click="sendSchoolQueryVerifyCode()"
+          x-text="schoolQueryVerifyCodeBtnText"
+        ></div>
+      </div>
+    </div>
+    <div class="flex flex-col">
+      <div class="mt-[24px] text-base text-black/80 font-normal">说明</div>
+      <div class="text-sm text-black/60 mt-[4px]">
+        请填写组织单位名称和联系信息，查询奖项申请结果。
+      </div>
+    </div>
+  </div>
+
+  <!-- 组织学校奖项查询 - 提交成功展示区域 -->
+  <div x-show="schoolQuerySubmitted">
+    <!-- 顶部：返回查询 -->
+    <div class="flex justify-end mb-[20px]">
+      <div
+        class="px-[20px] h-[38px] flex items-center justify-center text-[16px] font-medium cursor-pointer bg-[rgba(240, 235, 251, 1)]"
+        style="
+          border-radius: 30px;
+          border: 1px solid rgba(145, 98, 255, 1);
+          color: rgba(145, 98, 255, 1);
+        "
+        @click="schoolQuerySubmitted = false; showQueryBtn = true; showQueryTabs = true"
+      >
+        <img src="./img/return_icon_img.png" class="w-[18px] h-[18px]" />
+        <span class="pl-[10px]">返回查询</span>
+      </div>
+    </div>
+
+    <!-- 白色卡片 -->
+    <div
+      class="bg-white p-[40px] rounded-[32px] mt-[29px] relative"
+      style="border: 5px solid rgba(201, 179, 252, 1)"
+    >
+      <div class="absolute w-[380px] top-[-25px] left-1/2 -translate-x-1/2">
+        <img
+          src="./img/award_icon.png"
+          alt="award icon"
+          class="w-[380px] h-[67px]"
+          onerror="this.style.display = 'none'"
+        />
+        <div
+          class="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-2/2 text-[rgba(135,66,219,1)] text-[22px] font-medium"
+        >
+          组织学校查询结果
+        </div>
+      </div>
+      <!-- 标题区域 -->
+      <div class="text-center">
+        <div class="mt-[10px] text-[rgb(158,164,176)] text-[18px] font-medium">
+          组织学校：XX中学 ｜ 2026年全国决赛
+        </div>
+      </div>
+      <div class="mt-[28px]">
+        <div
+          class="w-[904px] m-auto text-[#8742DB] h-[60px] bg-[#EBE5FF] py-[10px] px-[54px] rounded-full flex items-center gap-[40px]"
+        >
+          <div>
+            <span class="text-[18px] font-medium">参赛总人数：</span>
+            <span class="tet-[28px] font-bold">68</span>
+          </div>
+          <div>|</div>
+          <div>
+            <span class="tet-[18px] font-medium">获奖人数：</span>
+            <span class="tet-[28px] font-bold">25</span>
+          </div>
+          <div>|</div>
+          <div>
+            <span class="tet-[18px] font-medium">获奖率：</span>
+            <span class="tet-[28px] font-bold">36.8%</span>
+          </div>
+          <div>|</div>
+          <div>
+            <span class="tet-[18px] font-medium ">一等奖人数：</span>
+            <span class="tet-[28px] font-bold">12</span>
+          </div>
+        </div>
+      </div>
+      <!-- 已获奖项区域 -->
+      <div class="mt-[43px]">
+        <!-- 分隔线 + 标签 -->
+        <div class="flex w-[896px] m-auto items-center">
+          <div
+            class="flex-1 h-[2px]"
+            style="
+              background: linear-gradient(
+                270deg,
+                #9162ff 0%,
+                rgba(145, 98, 255, 0) 100%
+              );
+            "
+          ></div>
+          <div
+            class="w-[10px] h-[10px] items-center justify-center flex"
+            style="
+              border-radius: 50%;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+            "
+          >
+            <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+          </div>
+          <div
+            class="flex-shrink-0 mx-[15px] w-[200px] h-[46px] relative"
+            style="
+              border-radius: 20px;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+              padding: 3px;
+            "
+          >
+            <div
+              class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]"
+              style="border-radius: 17px"
+            >
+              已获奖项
+            </div>
+          </div>
+          <div
+            class="w-[10px] h-[10px] items-center justify-center flex"
+            style="
+              border-radius: 50%;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+            "
+          >
+            <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+          </div>
+          <div
+            class="flex-1 h-[2px]"
+            style="
+              background: linear-gradient(
+                90deg,
+                #9162ff 0%,
+                rgba(145, 98, 255, 0) 100%
+              );
+            "
+          ></div>
+        </div>
+
+        <div class="mt-[50px] w-full flex justify-center gap-[30px] flex-wrap">
+          <template x-for="(award, index) in schoolAwards" :key="index">
+            <div class="w-[422px] h-[206px] relative">
+              <img
+                :src="award.img"
+                class="w-[422px] h-[206px]"
+                alt=""
+              />
+              <div
+                class="text-[18px] text-[#fff] font-medium absolute top-[18px] right-[60px]"
+              >
+                已获奖
+              </div>
+              <div
+                class="absolute text-[22px] top-[41px] font-medium left-[40px]"
+                :style="'color: ' + award.color"
+                x-text="award.name"
+              ></div>
+              <div class="absolute text-[16px] top-[81px] left-[40px]">
+                参赛68人/获奖42人
+              </div>
+              <div
+                class="absolute w-[98px] h-[36px] flex rounded-[100px] left-[40px] top-[127px] items-center justify-center bg-[#fff] cursor-pointer"
+                @click="openSchoolCertModal()"
+              >
+                <span class="text-[16px] font-medium" :style="'color: ' + award.color"
+                  >查看详情</span
+                >
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+      <!-- 证书申领记录区域 -->
+      <div class="mt-[80px]">
+        <div class="flex w-[896px] m-auto items-center">
+          <div
+            class="flex-1 h-[2px]"
+            style="
+              background: linear-gradient(
+                270deg,
+                #9162ff 0%,
+                rgba(145, 98, 255, 0) 100%
+              );
+            "
+          ></div>
+          <div
+            class="w-[10px] h-[10px] items-center justify-center flex"
+            style="
+              border-radius: 50%;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+            "
+          >
+            <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+          </div>
+          <div
+            class="flex-shrink-0 mx-[15px] w-[200px] h-[46px] relative"
+            style="
+              border-radius: 20px;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+              padding: 3px;
+            "
+          >
+            <div
+              class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]"
+              style="border-radius: 17px"
+            >
+              证书申领记录
+            </div>
+          </div>
+          <div
+            class="w-[10px] h-[10px] items-center justify-center flex"
+            style="
+              border-radius: 50%;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+            "
+          >
+            <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+          </div>
+          <div
+            class="flex-1 h-[2px]"
+            style="
+              background: linear-gradient(
+                90deg,
+                #9162ff 0%,
+                rgba(145, 98, 255, 0) 100%
+              );
+            "
+          ></div>
+        </div>
+      </div>
+      <div class="mt-[50px] w-[1020px] m-auto">
+        <template x-for="(cert, index) in claimCertList" :key="index">
+          <div class="w-full h-[90px] mb-[28px] rounded-[24px] bg-[#F4F6F8] flex relative">
+            <img class="w-[145px] h-[69px] absolute right-0 top-0" :src="cert.bgIcon" />
+            <div class="absolute text-[18px] text-white font-medium right-[32px] top-[8px]" x-text="cert.status"></div>
+            <img :src="cert.bgImg" class="w-[76px] h-[67px] ml-[28px] mt-[11px]" />
+            <div class="flex flex-col mt-[20px] ml-[24px]">
+              <div class="text-[18px]" x-text="cert.title"></div>
+              <div class="text-[#9EA4B0] text-[16px] mt-[6px]">
+                <span x-text="'《' + cert.workName + '》'"></span>
+                丨
+                <span x-text="'申领时间： ' + cert.claimTime"></span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 上传弹框（遮罩层） ===== -->
+  <div
+    x-show="uploadModalVisible"
+    class="fixed inset-0 z-50 flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.5)"
+    @click.self="closeUploadModal()"
+  >
+    <div
+      :style="'width: ' + uploadModalWidth + 'px; height: ' + (typeof uploadModalHeight === 'number' ? uploadModalHeight + 'px' : uploadModalHeight)"
+      class="p-[32px] bg-white rounded-[24px] relative"
+    >
+      <!-- 标题 + 关闭按钮 -->
+      <div class="flex items-center justify-between">
+        <div
+          class="text-[22px] font-medium text-[#8742DB]"
+          x-text="uploadModalTitle"
+        ></div>
+        <div
+          class="w-[30px] h-[30px] flex border-[2px] border-[#8742DB] items-center justify-center cursor-pointer text-[22px]"
+          style="border-radius: 50%"
+          @click="closeUploadModal()"
+        >
+          <img class="w-[11px] h-[11px]" src="./img/clone_icon_img.png" />
+        </div>
+      </div>
+      <!-- 分隔线 -->
+      <div class="h-[2px] bg-[#8742DB] w-full mt-[25px]"></div>
+      <!-- 内容区域 -->
+      <div class="mt-[24px]">
+        <!-- 可选下载区域 -->
+        <div x-show="uploadShowDownload" class="mb-[33px]">
+          <template x-for="(item, index) in uploadDownloadList" :key="index">
+            <a
+              :href="item.url"
+              download
+              class="flex items-center rounded-[12px] transition-colors cursor-pointer no-underline"
+            >
+              <img :src="item.icon" alt="" class="w-[50px] h-[50px]" />
+              <span
+                class="text-[18px] ml-[9px] border-b border-t-none border-l-none border-r-none"
+                x-text="item.name"
+              ></span>
+            </a>
+          </template>
+        </div>
+        <!-- 上传区域 -->
+        <div
+          class="w-full h-[262px] border-2 border-dashed border-[#8742DB] rounded-[16px] flex flex-col items-center cursor-pointer bg-[#F0EBFB] transition-colors"
+          @click="$refs.uploadInput.click()"
+        >
+          <img
+            src="./img/upload_icon.png"
+            class="w-[276px] h-[195px] mt-[17px]"
+          />
+          <input
+            type="file"
+            accept=".xlsx,.xls,.csv"
+            style="display: none"
+            x-ref="uploadInput"
+          />
+        </div>
+        <div
+          class="mt-[30px] bg-[#F4F6F8] flex items-center pl-[39px] h-[192px] rounded-[22px] text-[18px] text-[#696A6D]"
+          style="line-height: 35px"
+        >
+          文件要求： <br />
+          1、每行包含：学生姓名、身份证号 <br />
+          2、第一行为表头，数据从第二行开始 <br />
+          3、单次上传不超过500条记录<br />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 证书预览弹框（复用 inquire-teacher.html 样式） ===== -->
+  <div
+    x-show="schoolCertModalVisible"
+    class="fixed inset-0 z-50 flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.5)"
+    @click.self="closeSchoolCertModal()"
+  >
+    <div class="bg-white rounded-[24px] p-[32px]" style="width: 1100px;">
+      <!-- 第一行：标题 + 关闭按钮 -->
+      <div class="flex items-center justify-between">
+        <span class="text-[22px] font-medium" style="color: rgba(135, 66, 219, 1);">组织学校证书预览</span>
+        <div
+          class="w-[30px] h-[30px] flex items-center justify-center cursor-pointer"
+          style="border: 2px solid rgba(135, 66, 219, 1); border-radius: 50%;"
+          @click="closeSchoolCertModal()"
+        >
+          <img class="w-[11px] h-[11px]" src="./img/clone_icon_img.png" />
+        </div>
+      </div>
+      <!-- 第二行：横线 -->
+      <div class="mt-[25px] h-[2px] w-full" style="background: rgba(135, 66, 219, 1);"></div>
+      <!-- 第三行：证书图片区域 -->
+      <div class="mt-[20px] mx-auto p-[25px] flex gap-[15px] rounded-[16px]" style="background: rgba(240, 235, 251, 1);">
+        <div class="flex-1 h-[320px] flex items-center justify-center overflow-hidden">
+          <!-- <img src="./img/certificate_img.png" alt="证书预览" class="w-full h-full object-contain" onerror="this.style.display='none'" /> -->
+        </div>
+        <div class="flex-1 h-[320px] flex items-center justify-center overflow-hidden">
+          <!-- <img src="./img/certificate_img.png" alt="铜板证书预览" class="w-full h-full object-contain" onerror="this.style.display='none'" /> -->
+        </div>
+      </div>
+      <!-- 第四行：按钮 -->
+      <div class="mt-[30px] flex justify-center gap-[15px]">
+        <div
+          class="px-[30px] h-[48px] flex items-center justify-center text-[18px] font-medium text-white cursor-pointer rounded-[16px]"
+          style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); font-weight: 500;"
+        >
+          下载数字证书
+        </div>
+        <div
+          class="px-[30px] h-[48px] flex items-center justify-center text-[18px] font-medium text-white cursor-pointer rounded-[16px]"
+          style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); font-weight: 500;"
+        >
+          申领纸质证书
+        </div>
+        <div
+          class="px-[30px] h-[48px] flex items-center justify-center text-[18px] font-medium text-white cursor-pointer rounded-[16px]"
+          style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); font-weight: 500;"
+        >
+          申领铜板证书
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

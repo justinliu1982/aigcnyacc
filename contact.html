@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>联系我们</title>
+    <script src="./browser@4.js"></script>
+  </head>
+  <style>
+    * {
+      line-height: normal;
+    }
+    .banner {
+      background-image: url("./img/lxwm_bg.png");
+      background-repeat: no-repeat;
+      background-size: 100%;
+
+    }
+    html {
+      font-family: "PingFang SC", "Roboto", "Microsoft YaHei", "Helvetica Neue";
+    }
+  </style>
+
+  <body>
+    <!-- 关于 -->
+    <!-- 容器：用于插入头部 -->
+    <div id="headerContainer"></div>
+
+    <!-- 中间独有的内容 -->
+    <main class="text-center">
+      <div class="w-full h-[425px] banner mt-[80px]"></div>
+      <div class="w-[1420px] m-auto">
+        <div
+          class="mt-[100px] text-[52px] font-light text-black/60 text-left pb-3"
+          style="border-bottom: 1px solid var(--Color, #9162ff)"
+        >
+          联系我们
+        </div>
+        <div class="mt-[40px] text-[36px] font-light text-black/60 text-left">
+          大赛组委会
+        </div>
+        <div class="flex">
+          <div
+            class="flex-1 font-medium text-[20px] text-black/80 text-left mt-[16px]"
+          >
+            赛事咨询
+          </div>
+          <div
+            class="flex-1 font-medium text-[20px] text-black/80 text-left mt-[16px]"
+          >
+            投诉举报
+          </div>
+        </div>
+        <div class="flex">
+          <div
+            class="flex-1 font-normal text-[16px] text-black/80 text-left mt-[8px]"
+          >
+            电话：4009092003
+          </div>
+          <div
+            class="flex-1 font-normal text-[16px] text-black/80 text-left mt-[8px]"
+          >
+            电话：010 63526883
+          </div>
+        </div>
+        <div class="flex">
+          <div
+            class="flex-1 font-normal text-[16px] text-black/80 text-left mt-[8px]"
+          >
+            邮箱：info@aigcnyacc.com
+          </div>
+          <div
+            class="flex-1 font-normal text-[16px] text-black/80 text-left mt-[8px]"
+          >
+            邮箱：comp@aigcnyacc.com
+          </div>
+        </div>
+
+        <div class="mt-[44px] text-[36px] font-light text-black/60 text-left">
+          大赛合作
+        </div>
+        <div class="flex">
+          <div
+            class="flex-1 font-medium text-[20px] text-black/80 text-left mt-[16px]"
+          >
+            赛事合作
+          </div>
+        </div>
+        <div class="flex mb-[150px]">
+          <div
+            class="flex-1 font-normal text-base text-black/80 text-left mt-[8px]"
+          >
+            邮箱：org@aigcnyacc.com
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 容器：用于插入底部 -->
+    <div id="footerContainer"></div>
+
+    <!-- 动态加载公共部分 -->
+    <script>
+      // 加载公共文件的函数
+      async function loadCommonPart(url, containerId) {
+        try {
+          const response = await fetch(url);
+          const html = await response.text();
+          document.getElementById(containerId).innerHTML = html;
+          if (containerId === "headerContainer") {
+            // 动态导入 header.js
+            const { initHeader } = await import("./header.js");
+            // 给一点延迟确保 DOM 完全渲染
+            setTimeout(initHeader, 10);
+          }
+        } catch (error) {
+          console.error("加载公共部分失败：", error);
+        }
+      }
+
+      // 加载头部和底部
+      loadCommonPart("./header.html", "headerContainer");
+      loadCommonPart("./footer.html", "footerContainer");
+    </script>
+  </body>
+</html>

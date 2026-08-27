@@ -1,0 +1,278 @@
+/* Certificate editor: adjust only these variables and field rules for visual tuning. */
+@font-face {
+  font-family: "Certificate Source Han Serif";
+  src: url('./img/zhengshu/SourceHanSerifCN-VF.otf.woff2') format('woff2');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: block;
+}
+
+.award-certificate {
+  --certificate-width: 3508px;
+  --certificate-height: 2480px;
+  --certificate-body-size: 50px;
+  --certificate-award-size: 141px;
+  --certificate-body-color: #1A221F;
+  --certificate-recipient-color: #1B2320;
+  --certificate-award-color: #AE2E35;
+  --certificate-background-image: url('./img/zhengshu/studentOwn.png');
+  position: relative;
+  width: var(--certificate-width);
+  height: var(--certificate-height);
+  overflow: hidden;
+  pointer-events: none;
+  box-sizing: border-box;
+  background: #fff var(--certificate-background-image) no-repeat;
+  background-size: var(--certificate-width) var(--certificate-height);
+  color: var(--certificate-body-color);
+  font-family: "Certificate Source Han Serif", serif;
+}
+
+.award-certificate [data-field],
+.award-certificate .certificate-encouragement {
+  position: absolute;
+  box-sizing: border-box;
+  margin: 0;
+  color: var(--certificate-body-color);
+  font-size: var(--certificate-body-size);
+  font-weight: 400;
+  line-height: 1.28;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.certificate-watermark {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.certificate-recipient,
+.certificate-social-recipient {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+}
+
+.certificate-recipient {
+  left: 365px;
+  top: 811px;
+  color: var(--certificate-recipient-color) !important;
+  font-weight: 700 !important;
+  font-size: 58px !important
+}
+
+.certificate-work {
+  left: 453px;
+  top: 926px;
+}
+
+.award-certificate .certificate-description {
+  left: 355px;
+  top: 1015px;
+  width: 2788px;
+  text-indent: 2em;
+  line-height: 1.68;
+}
+
+.certificate-award {
+  left: 0;
+  top: 1161px;
+  width: 100%;
+  color: var(--certificate-award-color) !important;
+  font-size: var(--certificate-award-size) !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  text-align: center;
+}
+
+.certificate-encouragement {
+  left: 450px;
+  top: 1313px;
+}
+
+.certificate-code {
+  left: 450px;
+  top: 1397px;
+  width: 1200px;
+}
+
+
+.certificate-member {
+  display: none;
+  left: 450px;
+  top: 1317px;
+}
+
+.certificate-school {
+  left: 450px;
+  top: 1567px;
+}
+
+.certificate-teacher {
+  left: 450px;
+  top: 1482px;
+}
+
+.award-certificate .certificate-teacher {
+  width: 2788px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.award-certificate .certificate-school {
+  width: 2788px;
+  padding-left: 5em;
+  text-indent: -5em;
+  line-height: 1.68;
+  white-space: normal;
+}
+
+.certificate-hash {
+  left: 612px;
+  top: 1798px;
+  width: 1329px;
+  font-size: 36px !important;
+  color: #19211E;
+}
+
+.award-certificate.is-team .certificate-member {
+  display: block;
+}
+
+.award-certificate.is-team .certificate-recipient {
+  top: 699px;
+}
+
+.award-certificate.is-team {
+  --certificate-background-image: url('./img/zhengshu/studentTeam.png');
+}
+
+.award-certificate.is-team .certificate-work {
+  top: 799px;
+}
+
+.award-certificate.is-team .certificate-description {
+  top: 888px;
+}
+
+.award-certificate.is-team .certificate-award {
+  top: 1001px;
+}
+
+.award-certificate.is-team .certificate-encouragement {
+  top: 1140px;
+}
+
+.award-certificate.is-team .certificate-code {
+  top: 1225px;
+}
+
+.award-certificate.is-team .certificate-member {
+  top: 1309px;
+}
+
+.award-certificate.is-team .certificate-teacher {
+  top: 1393px;
+}
+
+.award-certificate.is-team .certificate-school {
+  top: 1476px;
+}
+
+.award-certificate.is-team .certificate-hash {
+  left: 612px;
+  top: 1831px;
+  font-size: 36px;
+  color: #19211E;
+}
+
+.award-certificate.is-social {
+  --certificate-background-image: url('./img/zhengshu/shehui.png');
+}
+
+.certificate-social-recipient {
+  left: 360px;
+  top: 910px;
+  font-weight: 700 !important;
+  font-size: 58px !important
+}
+
+/* .certificate-social-school {
+  left: 460px;
+  top: 1016px;
+} */
+
+.certificate-social-description {
+  left: 360px;
+  top: 1018px;
+  width: 2710px;
+  text-indent: 2em;
+  line-height: 1.68 !important;
+}
+
+.certificate-social-archive {
+  left: 460px;
+  top: 1210px;
+  width: 2500px;
+}
+
+.certificate-social-encouragement {
+  left: 460px;
+  top: 1298px;
+}
+
+.certificate-social-code {
+  left: 460px;
+  top: 1386px;
+  width: 1300px;
+}
+
+.award-certificate .certificate-social-hash {
+  left: 610px;
+  top: 1801px;
+  width: 1329px;
+  color: #19211E;
+  font-size: 36px !important;
+}
+
+.certificate-year,
+.certificate-month,
+.certificate-day,
+.certificate-social-year,
+.certificate-social-month,
+.certificate-social-day {
+  top: 2070px;
+  font-size: 42px !important;
+}
+
+.certificate-year {
+  left: 2477px;
+}
+
+.certificate-month {
+  left: 2653px;
+}
+
+.certificate-day {
+  left: 2753px;
+}
+
+
+
+
+.certificate-social-year {
+  left: 2477px;
+}
+
+.certificate-social-month {
+  left: 2653px;
+}
+
+.certificate-social-day {
+  left: 2753px;
+}

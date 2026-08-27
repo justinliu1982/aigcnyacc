@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>赛项设置</title>
+    <script src="./browser@4.js"></script>
+  </head>
+  <style>
+    * {
+      line-height: normal;
+    }
+    html {
+      font-family: "PingFang SC", "Roboto", "Microsoft YaHei", "Helvetica Neue";
+    }
+    .stageItem {
+      width: calc((100% - 80px) / 3);
+      height: 180px;
+      margin-right: 30px;
+      margin-top: 40px;
+
+      border-radius: 24px;
+      border: 1px solid var(--Color-2, #711fff);
+      background: var(---100, #fff);
+      color: var(---80, rgba(0, 0, 0, 0.8));
+
+      /* 卡片投影1 */
+      box-shadow: 4px 4px 16px 4px rgba(0, 0, 0, 0.12);
+      transition: all 0.25s;
+    }
+
+    .stageItem:hover {
+      background: #9162ff;
+      color: #fff;
+    }
+
+    .stageItem:hover .stageItemArrow {
+      stroke: #fff;
+    }
+
+    .stageItem:nth-child(-n + 3) {
+      margin-top: 0;
+    }
+
+    .stageItem:nth-child(3n) {
+      margin-right: 0;
+    }
+
+    .stageItemArrow {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      stroke: black;
+    }
+
+    .stageItemNer {
+      font-size: 24px;
+      font-weight: 500;
+      margin-left: 40px;
+      margin-top: 9px;
+      max-width: 196px;
+    }
+
+    .bannner-bg {
+      background-image: url(./img/image_1.png);
+    }
+  </style>
+
+  <body>
+    <!-- 赛事设置 -->
+    <!-- 容器：用于插入头部 -->
+    <div id="headerContainer"></div>
+
+    <!-- 中间独有的内容 -->
+    <main>
+      <div class="w-full h-[280px] bg-[#4900B8] mt-[84px]">
+        <div class="bannner-bg m-auto w-[1320px] h-[280px] pt-[80px]">
+          <div class="m-auto w-[1200px] min-w-[1200px] text-white">
+            <div class="text-[56px] leading-[68px] font-semibold">赛项设置</div>
+            <div class="mt-[16px] text-[16px]">
+              赛项设置参照视听生产、传播、推送、综合应用等文化艺术产业的属性分类及学科分类，结合中心在文化艺术发
+            </div>
+            <div class="text-[16px] mt-[4px]">
+              展､普及､应用研究的职能，综合设立赛项，覆盖小学､初中､高中､中职四个学段。
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-[#fafafa]">
+        <div class="w-[1320px] m-auto pt-[100px] pb-[160px]">
+          <img src="./img/frame311.png" class="mb-[100px]" alt="" />
+          <img src="./img/frame128.png" class="mb-[60px]" alt="" />
+          <div id="courseContainer" style="padding: 0 24px"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 容器：用于插入底部 -->
+    <div id="footerContainer"></div>
+
+    <!-- 动态加载公共部分 -->
+    <script>
+      // 加载公共文件的函数
+      async function loadCommonPart(url, containerId) {
+        try {
+          const response = await fetch(url);
+          const html = await response.text();
+          document.getElementById(containerId).innerHTML = html;
+          if (containerId === "headerContainer") {
+            // 动态导入 header.js
+            const { initHeader } = await import("./header.js");
+            // 给一点延迟确保 DOM 完全渲染
+            setTimeout(initHeader, 10);
+          }
+        } catch (error) {
+          console.error("加载公共部分失败：", error);
+        }
+      }
+
+      // 加载头部和底部
+      loadCommonPart("./header.html", "headerContainer");
+      loadCommonPart("./footer.html", "footerContainer");
+
+      function initList() {
+        let list = [
+          [
+            {
+              name: "小学阶段",
+              itemList: [
+                {
+                  name: "AI与图像生成表达",
+                  id: "primarySchool1",
+                  img: "./img/image.png",
+                },
+                {
+                  name: "AI与影像生成表达",
+                  id: "primarySchool2",
+                  img: "./img/image1.png",
+                },
+                {
+                  name: "AI与音频生成表达",
+                  id: "primarySchool3",
+                  img: "./img/image2.png",
+                },
+                {
+                  name: "AI与文本生成表达",
+                  id: "primarySchool4",
+                  img: "./img/image3.png",
+                  ner: "(诗歌和戏剧)",
+                },
+              ],
+              img: "./img/frame2.svg",
+            },
+          ],
+          [
+            {
+              name: "初中阶段",
+              itemList: [
+                {
+                  name: "AI与造型艺术",
+                  id: "juniorHighSchool1",
+                  img: "./img/image4.png",
+                },
+                {
+                  name: "AI与影像艺术",
+                  id: "juniorHighSchool2",
+                  img: "./img/image5.png",
+                },
+                {
+                  name: "AI与数字动漫艺术",
+                  id: "juniorHighSchool3",
+                  img: "./img/image6.png",
+                },
+                {
+                  name: "AI与设计艺术",
+                  id: "juniorHighSchool4",
+                  img: "./img/image7.png",
+                },
+                {
+                  name: "AI与非物质文化遗产",
+                  id: "juniorHighSchool5",
+                  img: "./img/image8.png",
+                },
+                {
+                  name: "AI与音频艺术",
+                  id: "juniorHighSchool6",
+                  img: "./img/image2.png",
+                },
+                {
+                  name: "AI与诗歌和戏剧",
+                  id: "juniorHighSchool7",
+                  img: "./img/image11.png",
+                },
+              ],
+              img: "./img/frame3.svg",
+            },
+          ],
+          [
+            {
+              name: "高中阶段",
+              itemList: [
+                {
+                  name: "AI与造型艺术",
+                  id: "highSchool1",
+                  img: "./img/image4.png",
+                },
+                {
+                  name: "AI与摄影艺术",
+                  id: "highSchool2",
+                  img: "./img/image1.png",
+                },
+                {
+                  name: "AI与数字动漫艺术",
+                  id: "highSchool3",
+                  img: "./img/image6.png",
+                },
+                {
+                  name: "AI与影像艺术",
+                  id: "highSchool4",
+                  img: "./img/image5.png",
+                },
+                {
+                  name: "AI与视觉传达",
+                  id: "highSchool5",
+                  img: "./img/image.png",
+                },
+                {
+                  name: "AI与产品设计艺术",
+                  id: "highSchool6",
+                  img: "./img/image7.png",
+                },
+                {
+                  name: "AI与数字媒体艺术",
+                  id: "highSchool7",
+                  img: "./img/image10.png",
+                },
+                {
+                  name: "AI与非物质文化遗产",
+                  id: "highSchool8",
+                  img: "./img/image8.png",
+                },
+                {
+                  name: "AI与音频艺术",
+                  id: "highSchool9",
+                  img: "./img/image2.png",
+                },
+                {
+                  name: "AI与诗歌和戏剧",
+                  id: "highSchool10",
+                  img: "./img/image11.png",
+                },
+              ],
+              img: "./img/frame4.svg",
+            },
+          ],
+          [
+            {
+              name: "中等职业阶段",
+              itemList: [
+                {
+                  name: "AI与造型艺术",
+                  id: "secondaryVocationalEducation1",
+                  img: "./img/image4.png",
+                },
+                {
+                  name: "AI与摄影艺术",
+                  id: "secondaryVocationalEducation2",
+                  img: "./img/image1.png",
+                },
+                {
+                  name: "AI与数字动漫艺术",
+                  id: "secondaryVocationalEducation3",
+                  img: "./img/image6.png",
+                },
+                {
+                  name: "AI与影像艺术",
+                  id: "secondaryVocationalEducation4",
+                  img: "./img/image5.png",
+                },
+                {
+                  name: "AI与视觉传达",
+                  id: "secondaryVocationalEducation5",
+                  img: "./img/image.png",
+                },
+                {
+                  name: "AI与产品设计艺术",
+                  id: "secondaryVocationalEducation6",
+                  img: "./img/image7.png",
+                },
+                {
+                  name: "AI与数字媒体艺术",
+                  id: "secondaryVocationalEducation7",
+                  img: "./img/image10.png",
+                },
+                {
+                  name: "AI与非物质文化遗产",
+                  id: "secondaryVocationalEducation8",
+                  img: "./img/image8.png",
+                },
+                {
+                  name: "AI与音频艺术",
+                  id: "secondaryVocationalEducation9",
+                  img: "./img/image2.png",
+                },
+                {
+                  name: "AI与诗歌和戏剧",
+                  id: "secondaryVocationalEducation10",
+                  img: "./img/image11.png",
+                },
+              ],
+              img: "./img/frame4.svg",
+            },
+          ],
+        ];
+        const container = document.getElementById("courseContainer");
+        let html = "";
+        list.forEach((stageArr) => {
+          const stage = stageArr[0]; // 取出每个阶段的对象
+          const stageName = stage.name;
+          const stageImg = stage.img;
+          const courseItems = stage.itemList;
+          html += `<div class="h-[50px] flex items-center">
+                    <img src="${stageImg}" class="w-[40px] h-[40px]" alt="">
+                    <div class="ml-[12px] text-[36px] font-light" style="color: var(---80, rgba(0, 0, 0, 0.80))">${stageName}
+                    </div>
+                </div>`;
+          html +=
+            '<a class="py-[40px] flex items-center flex-wrap">';
+          courseItems.forEach((course) => {
+            html += `
+                     <div class="stageItem p-[24px] cursor-pointer relative" data-id="${
+                       course.id
+                     }">
+                        <svg class="stageItemArrow" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="19.5" stroke-opacity="0.6"/>
+                            <path d="M20.0002 13.3333L26.6668 20M26.6668 20L20.0002 26.6666M26.6668 20L13.3335 20" stroke-opacity="0.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="stageItemNer">
+                            <div>${course.name}</div>
+                            ${course.ner ? `<div>${course.ner}</div>` : ""}
+                        </div>
+                        <img src="${
+                          course.img
+                        }" class="w-[120px] h-[120px] bottom-[22px] right-[22px] absolute" alt="">
+
+                    </div>
+                    `;
+          });
+          html += "</a>";
+        });
+        container.innerHTML = html;
+        container.addEventListener("click", (e) => {
+          const stageItem = e.target.closest(".stageItem");
+          if (stageItem) {
+            const courseId = stageItem.dataset.id;
+            sessionStorage.setItem('textId',courseId);
+            window.location.href = `./booth.html?id=match`;
+            
+          }
+        });
+      }
+      initList();
+    </script>
+  </body>
+</html>

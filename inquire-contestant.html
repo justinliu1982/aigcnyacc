@@ -1,0 +1,376 @@
+<!-- ===== 参赛者查询 ===== -->
+<div x-show="activeQueryType === 'contestant'">
+  <!-- 查询表单区域 -->
+  <div x-show="!contestantSubmitted" class="p-[30px] w-[1100px] bg-[#EBE6FA]"
+    style="border-radius: 32px; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08)">
+    <!-- 第一行：比赛年份、阶段、证件号码 -->
+    <div class="flex gap-[24px]">
+      <div
+        class="w-[290px] text-sm flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white">
+        <span style="border-right: 1px solid #9162ff" class="pr-2 text-black/60 flex-shrink-0">比赛年份</span>
+        <div class="select-arrow-wrapper flex-1 min-w-0">
+          <select class="border-0 pl-3 pr-3 outline-none bg-transparent p-0 leading-normal w-auto m-0 text-base"
+            style="color: #9162ff" x-model="matchYear">
+            <option value="" disabled>请选择年份</option>
+            <option value="2026">2026</option>
+          </select>
+        </div>
+      </div>
+      <div
+        class="w-[290px] text-sm flex items-center rounded-[16px] pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white">
+        <span class="pr-2 text-black/60 flex-shrink-0" style="border-right: 1px solid #9162ff">阶段</span>
+        <div class="select-arrow-wrapper flex-1 min-w-0">
+          <select class="border-0 pl-3 outline-none bg-transparent p-0 leading-normal w-auto m-0 text-base"
+            style="color: #9162ff; font-size: 16px" x-model="matchLevel">
+            <option value="" disabled>请选择阶段</option>
+            <option value="PROVINCE">省选拔赛</option>
+            <option value="NATIONAL">国赛</option>
+          </select>
+        </div>
+      </div>
+
+      <div
+        class="w-[412px] overflow-hidden rounded-[16px] text-sm flex items-center pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white">
+        <span class="pr-2 text-black/60" style="border-right: 1px solid #9162ff">参赛者姓名</span>
+        <input class="flex-1 ml-2 text-[16px] border-0 outline-none focus:outline-none!important focus:ring-0!important"
+          type="text" placeholder="输入完整姓名" x-model="contestantName" />
+      </div>
+    </div>
+    <!-- 第二行：证件号码、校验码、获取验证码 -->
+    <div class="flex gap-[24px] mt-[24px]">
+      <div
+        class="w-[604px] text-sm flex rounded-[16px] items-center pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white">
+        <span class="pr-2 text-black/60 flex-shrink-0" style="border-right: 1px solid #9162ff">证件号码</span>
+        <div class="select-arrow-wrapper" style="flex: none; width: 290px">
+          <select class="border-0 pl-3 outline-none bg-transparent p-0 leading-normal m-0 text-base"
+            style="color: #9162ff; font-size: 16px" x-model="certType">
+            <option value="" disabled>请选择证件类型</option>
+            <option value="ID">身份证</option>
+            <option value="PPT">护照</option>
+            <option value="MTP">港澳居民来往内地通行证(回乡证)</option>
+            <option value="RPHM">港澳居民居住证‌</option>
+            <option value="RPT">台湾居民居住证</option>
+            <option value="TPR">台胞证</option>
+          </select>
+        </div>
+        <input class="flex-1 ml-2 text-[16px] border-0 outline-none focus:outline-none!important focus:ring-0!important"
+          type="text" placeholder="输入证件号码" x-model="contestantId" />
+      </div>
+      <div
+        class="w-[412px] overflow-hidden rounded-[16px] text-sm flex items-center pl-[16px] pt-[16px] pb-[16px] pr-[5px] h-[48px] bg-white">
+        <span class="pr-2 text-black/60 flex-shrink-0" style="border-right: 1px solid #9162ff">校验码</span>
+        <input class="flex-1 ml-2 text-[16px] border-0 outline-none focus:outline-none!important focus:ring-0!important"
+          type="text" placeholder="输入校验码" x-model="contestantVerifyCode" />
+        <div class="flex-shrink-0 ml-[8px] w-[100px] h-[36px] flex items-center justify-center cursor-pointer"
+          style="overflow: hidden" @click="refreshCaptcha()">
+          <img :src="captchaImgSrc" alt="校验码" class="w-full h-full object-contain" />
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col">
+      <div class="mt-[24px] text-base text-black/80 font-normal">说明</div>
+      <div class="text-sm text-black/60 mt-[4px]">
+        请正确填写参赛者姓名和身份证号码，确保信息准确无误，以便顺利查询比赛成绩。
+      </div>
+    </div>
+  </div>
+
+  <!-- 参赛者查询 - 提交成功展示区域 -->
+  <div x-show="contestantSubmitted">
+    <div class="flex justify-end">
+      <div
+        class="w-[124px] h-[38px] flex items-center justify-center cursor-pointer text-white bg-[#F0EBFB] rounded-[30px] border border-[#9162FF]"
+        @click="contestantSubmitted = false; showQueryBtn = true; showQueryTabs = true; refreshCaptcha(); if (showViewCertModal) closeCertPreview()">
+        <img src="./img/return_icon_img.png" class="w-[18px] h-[18px]" alt="" />
+        <span class="pl-[8px] text-[#9162FF] text-[16px] font-medium">返回查询</span>
+      </div>
+    </div>
+
+    <!-- ===== 提交成功展示区域（共用外框和标题） ===== -->
+    <div class="bg-white p-[40px] rounded-[32px] mt-[29px] relative" style="border: 5px solid rgba(201, 179, 252, 1)">
+      <div class="absolute w-[380px] top-[-25px] left-1/2 -translate-x-1/2">
+        <img src="./img/award_icon.png" alt="award icon" class="w-[380px] h-[67px]"
+          onerror="this.style.display = 'none'" />
+        <div
+          class="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-2/2 text-[rgba(135,66,219,1)] text-[22px] font-medium">
+          参赛者获奖查询
+        </div>
+      </div>
+
+      <!-- 标题区域（取第一个作品的参赛者姓名和年份+阶段） -->
+      <div class="text-center" x-show="contestantAwardList.length > 0">
+        <div class="mt-[10px] text-[rgb(158,164,176)] text-[18px] font-medium">
+          参赛者：<span x-text="contestantAwardList.length > 0 ? contestantAwardList[0].reg_name : ''"></span>
+          ｜
+          <span
+            x-text="(matchYear || '') + '年' + (matchLevel === 'PROVINCE' ? '省选拔赛' : matchLevel === 'NATIONAL' ? '国赛' : '')"></span>
+        </div>
+        <div class="mt-[35px] mb-[30px] text-[#8742DB] font-medium text-[22px]"
+          x-show="matchLevel === 'PROVINCE' && contestantAwardList.length > 0 && contestantAwardList.some(a => a.is_reward === 'YES')">
+          恭喜<span
+            x-text="contestantAwardList.length > 0 ? contestantAwardList[0].reg_name : ''"></span>同学，入围"全国青少年人工智能辅助生成数字艺术创作者大赛"全国决赛资格！
+        </div>
+      </div>
+
+      <!-- Module 1: 已获奖项（遍历 contestantAwardList，逐条判断） -->
+      <div class="mt-[36px]" x-show="contestantAwardList.length > 0">
+        <!-- 分隔线 + 标签 我的参赛成绩 -->
+        <div class="flex w-[896px] m-auto items-center">
+          <div class="flex-1 h-[2px]" style="
+              background: linear-gradient(
+                270deg,
+                #9162ff 0%,
+                rgba(145, 98, 255, 0) 100%
+              );
+            "></div>
+          <div class="w-[10px] h-[10px] items-center justify-center flex" style="
+              border-radius: 50%;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+            ">
+            <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+          </div>
+          <div class="flex-shrink-0 mx-[15px] w-[200px] h-[46px] relative" style="
+              border-radius: 20px;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+              padding: 3px;
+            ">
+            <div
+              class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]"
+              style="border-radius: 17px">
+              我的参赛成绩
+            </div>
+          </div>
+          <div class="w-[10px] h-[10px] items-center justify-center flex" style="
+              border-radius: 50%;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+            ">
+            <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+          </div>
+          <div class="flex-1 h-[2px]" style="
+              background: linear-gradient(
+                90deg,
+                #9162ff 0%,
+                rgba(145, 98, 255, 0) 100%
+              );
+            "></div>
+        </div>
+
+        <!-- ===== 获奖作品列表 ===== -->
+        <div>
+          <!-- 遍历每个作品记录 -->
+          <template x-for="(award, index) in contestantAwardList" :key="index">
+            <div class="mt-[40px]">
+              <!--
+              保留：旧赛制的报名未完成卡片。当前赛制统一展示下方作品卡片。
+              <div x-show="isItemIncomplete(award)" class="w-[1020px] m-auto">
+                <div class="w-full flex justify-center rounded-t-[32px]" style="background: linear-gradient(to bottom right, #9072ff, #c062ff);">
+                  <div class="h-[58px] text-white flex items-center justify-center text-[18px] font-medium">无成绩记录</div>
+                </div>
+                <div class="w-full h-[62px] px-[20px] rounded-b-[32px] bg-white text-[rgba(0,0,0,0.6)] flex justify-center items-center font-medium text-[16px]" style="box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.08)">
+                  很遗憾，您的参赛信息没有提交完成，省赛报名失败，本届比赛无成绩。
+                </div>
+              </div>
+              -->
+              <div class="w-[1020px] m-auto">
+                <div class="w-full flex justify-center rounded-t-[32px]" style="
+                    background: linear-gradient(
+                      to bottom right,
+                      #9072ff,
+                      #c062ff
+                    );
+                  ">
+                  <div class="h-[58px] text-white flex items-center gap-[18px]">
+                    <span x-text="award.reg_work_name ? '《 ' + award.reg_work_name + ' 》' : '未上传作品'"></span>
+                    丨
+                    <span x-text="award.reg_group"></span>
+                    丨
+                    <span x-text="award.pretty_reward_level"></span>
+                  </div>
+                </div>
+                <div
+                  class="w-full h-[62px] px-[20px] rounded-b-[32px] bg-white text-[rgba(0,0,0,0.6)] flex justify-center items-center font-medium text-[16px]"
+                  style="box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.08)">
+                  <div x-show="award.is_team === 'NO' && award.is_reward=== 'YES' && matchLevel === 'PROVINCE'">
+                    你已入围"<span x-text="award.compitem_name"></span>"赛项（个人）-
+                    全国决赛资格！请准备此赛项全国决赛作品，报名开始后前往个人中心报名。
+                  </div>
+                  <div x-show="award.is_team === 'NO' && award.is_reward=== 'YES' && matchLevel !== 'PROVINCE'">
+                    可前往个人中心-我的成绩中查看成绩详情
+                  </div>
+                  <div x-show="award.is_team === 'YES' && award.is_reward=== 'YES'">
+                    你已入围"<span x-text="award.compitem_name"></span>"赛项（团队） -
+                    全国决赛资格！请准备此赛项全国决赛作品，报名开始后前往个人中心报名。
+                  </div>
+
+                  <div x-show="award.is_reward === 'NO'">
+                    "<span x-text="award.compitem_name"></span>"赛项（个人） -
+                    未能进入全国决赛。
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- 分隔线 + 标签 我的参赛证书 -->
+        <div class="flex w-[896px] m-auto items-center pt-[40px] pb-[50px]" x-show="hasValidRegistration">
+          <div class="flex-1 h-[2px]" style="
+              background: linear-gradient(
+                270deg,
+                #9162ff 0%,
+                rgba(145, 98, 255, 0) 100%
+              );
+            "></div>
+          <div class="w-[10px] h-[10px] items-center justify-center flex" style="
+              border-radius: 50%;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+            ">
+            <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+          </div>
+          <div class="flex-shrink-0 mx-[15px] w-[200px] h-[46px] relative" style="
+              border-radius: 20px;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+              padding: 3px;
+            ">
+            <div
+              class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]"
+              style="border-radius: 17px">
+              我的参赛证书
+            </div>
+          </div>
+          <div class="w-[10px] h-[10px] items-center justify-center flex" style="
+              border-radius: 50%;
+              background: linear-gradient(
+                180deg,
+                rgba(192, 98, 255, 1) 0%,
+                rgba(144, 114, 255, 1) 100%
+              );
+            ">
+            <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
+          </div>
+          <div class="flex-1 h-[2px]" style="
+              background: linear-gradient(
+                90deg,
+                #9162ff 0%,
+                rgba(145, 98, 255, 0) 100%
+              );
+            "></div>
+        </div>
+
+        <!-- 参赛证书的循环 -->
+        <div class="p-[12px] bg-[#f0ebfb] rounded-[32px]" style="box-shadow: 0px 4px 20px 0px #00000014"
+          x-show="hasValidRegistration">
+          <div class="p-[12px] rounded-[24px] bg-white gap-[10px] flex flex-wrap" x-show="hasAnyCertificateToShow">
+            <template x-for="(award, index) in contestantAwardList" :key="index">
+              <div class="w-[255px] h-[95px] cursor-pointer" x-show="isReward(award)" style="
+                  background-image: url('./img/zhengshu/award-winning-bg.png');
+                  background-size: cover;
+                " @click="openCertDetail('获奖证书', award)">
+                <div class="font-bold text-[14px] text-[#3ca783ff] pl-[86px] pt-[38px]">
+                  获奖证书
+                </div>
+                <div class="text-[14px] pl-[86px] pt-[2px] font-[400] text-black/60">
+                  <span x-text="award.reg_work_name ? '《' + award.reg_work_name + '》' : '未上传作品'"></span>
+                </div>
+              </div>
+            </template>
+            <template x-for="(award, index) in contestantAwardList" :key="index">
+              <div class="w-[327px] h-[92px] cursor-pointer" x-show="isProductTraceEligible(award)" style="
+                  background-image: url('./img/zhengshu/one-product-one-code-img.png');
+                  background-size: cover;
+                " @click="openComingSoon(isCommitReg(award) ? '即将开放下载' : '不符合申领条件，若有疑问请联系官方客服')">
+                <div class="text-[#cf7b00ff] font-bold text-[14px] pl-[91px] pt-[35px]">
+                  艺术品一物一码溯源注册登记证书
+                </div>
+                <div class="text-[14px] pl-[91px] pt-[2px] font-[400] text-black/60">
+                  <span x-text="award.reg_work_name ? '《' + award.reg_work_name + '》' : '未上传作品'"></span>
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <div class="p-[12px] mt-[8px] rounded-[24px] bg-white gap-[10px] flex flex-wrap">
+            <div class="w-[193px] h-[94px] cursor-pointer" style="
+                background-image: url('./img/zhengshu/social-practice-img.png');
+                background-size: cover;
+              "
+              @click="validSocialPracticeAward ? openCertDetail('社会实践证书', contestantAwardList[0]) : openComingSoon('不符合申领条件，若有疑问请联系官方客服')">
+              <div class="font-bold text-[14px] text-[#766ff9ff] pl-[88px] pt-[37px]">
+                社会实践证书
+              </div>
+              <div class="text-[14px] pl-[88px] pt-[2px] font-[400] text-black/60"
+                x-text="matchLevel === 'NATIONAL' ? '国赛' : '省选拔赛'"></div>
+            </div>
+            <div class="w-[240px] h-[93px] cursor-pointer" style="
+                background-image: url('./img/zhengshu/creator-img.png');
+                background-size: cover;
+              " @click="openComingSoon(isCommitReg(contestantAwardList[0]) ? '即将开放下载' : '不符合申领条件，若有疑问请联系官方客服')">
+              <div class="font-bold text-[14px] text-[#188cffff] pl-[88px] pt-[36px]">
+                创作者注册登记证书
+              </div>
+              <div class="text-[14px] pl-[88px] pt-[2px] font-[400] text-black/60">
+                <span x-text="contestantAwardList.length ? contestantAwardList[0].reg_name : ''"></span>
+              </div>
+            </div>
+          </div>
+          <div class="pt-[25.5px] w-full gap-[24px] pb-[17.5px] flex justify-end">
+            <div
+              class="flex-shrink-0 rounded-full py-[10px] px-[30px] flex items-center justify-center text-[18px] font-medium cursor-pointer text-white whitespace-nowrap"
+              style="
+                background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%);
+              " @click="openCertPreview()">
+              查看数字证书
+            </div>
+            <div
+              class="flex-shrink-0 rounded-full py-[10px] px-[30px] flex items-center justify-center text-[18px] font-medium cursor-pointer text-white whitespace-nowrap"
+              style="
+                background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%);
+              " @click="openCertList()">
+              申请纸质证书
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 数据为空时显示空状态 ===== -->
+      <div x-show="contestantAwardList.length === 0" class="flex flex-col items-center justify-center" style="
+          width: 480px;
+          height: 306px;
+          background: #ebe6fa;
+          border-radius: 80px;
+          margin: 60px auto 0 auto;
+        ">
+        <div style="
+            font-size: 20px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.8);
+            text-align: center;
+            line-height: 1.5;
+          ">
+          未查询到您的参赛记录，<br />请确认身份证和姓名是否一致
+        </div>
+        <img src="./img/404_icon.png" alt="404" style="margin-top: 16px; width: auto; height: auto" />
+      </div>
+    </div>
+  </div>
+</div>
