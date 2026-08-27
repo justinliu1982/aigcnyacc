@@ -98,9 +98,9 @@
       </div>
 
       <!-- 标题区域（取第一个作品的参赛者姓名和年份+阶段） -->
-      <div class="text-center" x-show="contestantAwardList.length > 0">
+      <div class="text-center">
         <div class="mt-[10px] text-[rgb(158,164,176)] text-[18px] font-medium">
-          参赛者：<span x-text="contestantAwardList.length > 0 ? contestantAwardList[0].reg_name : ''"></span>
+          参赛者：<span x-text="contestantAwardList.length > 0 ? contestantAwardList[0].reg_name : contestantName"></span>
           ｜
           <span
             x-text="(matchYear || '') + '年' + (matchLevel === 'PROVINCE' ? '省选拔赛' : matchLevel === 'NATIONAL' ? '国赛' : '')"></span>
@@ -352,24 +352,43 @@
         </div>
       </div>
 
-      <!-- ===== 数据为空时显示空状态 ===== -->
-      <div x-show="contestantAwardList.length === 0" class="flex flex-col items-center justify-center" style="
-          width: 480px;
-          height: 306px;
-          background: #ebe6fa;
-          border-radius: 80px;
-          margin: 60px auto 0 auto;
-        ">
-        <div style="
-            font-size: 20px;
-            font-weight: 400;
-            color: rgba(0, 0, 0, 0.8);
-            text-align: center;
-            line-height: 1.5;
-          ">
-          未查询到您的参赛记录，<br />请确认身份证和姓名是否一致
+      <!-- ===== 国赛空值状态（我的参赛成绩 / 我的参赛证书，点击标题切换显示） ===== -->
+      <div x-show="contestantAwardList.length === 0">
+        <!-- 我的参赛成绩 -->
+        <div class="flex w-[896px] m-auto items-center mt-[36px] cursor-pointer" @click="showScoresEmpty = !showScoresEmpty">
+          <div class="flex-1 h-[2px]" style="background: linear-gradient(270deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%);"></div>
+          <div class="w-[10px] h-[10px] rounded-full items-center justify-center flex" style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
+            <div class="w-[4px] h-[4px] bg-[#fff] rounded-full"></div>
+          </div>
+          <div class="flex-shrink-0 mx-[15px] w-[200px] h-[46px]" style="border-radius: 20px; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); padding: 3px;">
+            <div class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]" style="border-radius: 17px">我的参赛成绩</div>
+          </div>
+          <div class="w-[10px] h-[10px] rounded-full items-center justify-center flex" style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
+            <div class="w-[4px] h-[4px] bg-[#fff] rounded-full"></div>
+          </div>
+          <div class="flex-1 h-[2px]" style="background: linear-gradient(90deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%);"></div>
         </div>
-        <img src="./img/404_icon.png" alt="404" style="margin-top: 16px; width: auto; height: auto" />
+        <div x-show="showScoresEmpty" class="w-[1020px] m-auto mt-[40px]">
+          <div class="w-full h-[120px] rounded-[24px] bg-[#F5F5F5] flex items-center justify-center text-[16px] text-black/40">未查询到有效信息</div>
+        </div>
+
+        <!-- 我的参赛证书 -->
+        <div class="flex w-[896px] m-auto items-center pt-[40px] cursor-pointer" @click="showCertsEmpty = !showCertsEmpty">
+          <div class="flex-1 h-[2px]" style="background: linear-gradient(270deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%);"></div>
+          <div class="w-[10px] h-[10px] rounded-full items-center justify-center flex" style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
+            <div class="w-[4px] h-[4px] bg-[#fff] rounded-full"></div>
+          </div>
+          <div class="flex-shrink-0 mx-[15px] w-[200px] h-[46px]" style="border-radius: 20px; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); padding: 3px;">
+            <div class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]" style="border-radius: 17px">我的参赛证书</div>
+          </div>
+          <div class="w-[10px] h-[10px] rounded-full items-center justify-center flex" style="background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
+            <div class="w-[4px] h-[4px] bg-[#fff] rounded-full"></div>
+          </div>
+          <div class="flex-1 h-[2px]" style="background: linear-gradient(90deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%);"></div>
+        </div>
+        <div x-show="showCertsEmpty" class="w-[1020px] m-auto mt-[40px]">
+          <div class="w-full h-[120px] rounded-[24px] bg-[#F5F5F5] flex items-center justify-center text-[16px] text-black/40">未查询到有效信息</div>
+        </div>
       </div>
     </div>
   </div>
