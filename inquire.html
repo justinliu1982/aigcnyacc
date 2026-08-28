@@ -237,7 +237,7 @@
                   <div class="w-[156px] h-[42px] m-auto flex justify-center mt-[18px] items-center rounded-full"
                     :class="cert.type === 'generated' && previewCertImages[cert.field] ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'"
                     style="background: linear-gradient(to right, #9370ff, #b05bff);"
-                    @click="cert.type === 'generated' && previewCertImages[cert.field] ? downloadCertFromPreview(cert.field) : null">
+                    @click="cert.type === 'generated' && previewCertImages[cert.field] ? openDownloadConfirm(cert.field) : null">
                     <span class="text-[16px] text-white font-medium">下载数字证书</span>
                   </div>
                 </div>
@@ -397,12 +397,20 @@
             <div x-show="!hasCertValue" class="mt-[12px] text-center text-[16px] text-[#ff4d4d] font-medium">
               不符合申领条件，若有疑问请联系官方客服
             </div>
+            <!-- 信息确认行 -->
+            <div class="mt-[20px] flex items-start gap-[10px]">
+              <input type="checkbox" x-model="certDetailConfirmed" class="w-[16px] h-[16px] mt-[3px] flex-shrink-0" style="accent-color: #9162FF" />
+              <div>
+                <div class="text-[15px] font-medium text-black/80">确认无误</div>
+                <div class="mt-[2px] text-[13px] text-black/50">如有问题到个人中心-我的证书中进行修改</div>
+              </div>
+            </div>
             <div class="mt-[20px] flex justify-center gap-[24px]">
-              <!-- 下载数字证书按钮：有值时可点击下载，无值时禁用 -->
+              <!-- 下载数字证书按钮：确认无误后可点击下载 -->
               <div class="w-[156px] h-[42px] flex justify-center items-center rounded-full"
-                :class="hasCertValue ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'"
+                :class="(hasCertValue && certDetailConfirmed) ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'"
                 :style="'background: linear-gradient(to right, #9370ff, #b05bff);'"
-                @click="hasCertValue ? downloadCertImage() : null">
+                @click="(hasCertValue && certDetailConfirmed) ? downloadCertImage() : null">
                 <span class="text-[16px] text-white font-medium">下载数字证书</span>
               </div>
               <!-- 申领此证书按钮：逻辑同“申请纸质证书” -->
@@ -932,6 +940,30 @@
           @click="selectedCertKey ? confirmCertSelect() : null">申领此证书</div>
       </div>
     </div>
+
+    <!-- ===== 下载数字证书确认对话框 ===== -->
+    <div x-show="showDownloadConfirmModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50" @click.self="closeDownloadConfirm()">
+      <div class="relative w-[520px] p-[32px] bg-white rounded-[24px]">
+        <div class="flex items-center justify-between">
+          <div class="text-[20px] font-medium text-[#8742DB]">下载数字证书</div>
+          <div class="w-[30px] h-[30px] flex border-[2px] border-[#8742DB] items-center justify-center cursor-pointer text-[20px]" style="border-radius: 50%" @click="closeDownloadConfirm()">
+            <img class="w-[11px] h-[11px]" src="./img/clone_icon_img.png" />
+          </div>
+        </div>
+        <div class="h-[2px] bg-[#8742DB] w-full mt-[20px]"></div>
+        <div class="mt-[24px] flex items-start gap-[10px]">
+          <input type="checkbox" x-model="downloadConfirmed" class="w-[16px] h-[16px] mt-[3px] flex-shrink-0" style="accent-color: #9162FF" />
+          <div>
+            <div class="text-[15px] font-medium text-black/80">确认无误</div>
+            <div class="mt-[2px] text-[13px] text-black/50">如有问题到个人中心-我的证书中进行修改</div>
+          </div>
+        </div>
+        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium rounded-full text-white"
+          :class="downloadConfirmed ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'"
+          style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)"
+          @click="downloadConfirmed ? confirmDownload() : null">下载数字证书</div>
+      </div>
+    </div>
   </main>
 
   <!-- 容器：用于插入底部 -->
@@ -1264,6 +1296,7 @@
         // 证书详情弹框
         showCertDetailModal: false,
         certDetailTitle: '',
+        certDetailConfirmed: false,
         // 当前选中的证书 award 对象和证书类型
         currentCertAward: null,
         currentCertType: '',
@@ -1290,6 +1323,9 @@
 
         // 弹框
         showViewCertModal: false,
+        showDownloadConfirmModal: false,
+        downloadConfirmed: false,
+        pendingDownloadField: null,
         showContestantResultModal: false,
         showComingSoonModal: false,
         comingSoonMessage: "",
@@ -1669,6 +1705,23 @@
           document.body.removeChild(link);
         },
 
+        // 打开下载确认对话框（从证书预览弹框）
+        openDownloadConfirm(field) {
+          this.pendingDownloadField = field;
+          this.downloadConfirmed = false;
+          this.showDownloadConfirmModal = true;
+        },
+        closeDownloadConfirm() {
+          this.showDownloadConfirmModal = false;
+          this.pendingDownloadField = null;
+          this.downloadConfirmed = false;
+        },
+        confirmDownload() {
+          if (!this.downloadConfirmed || !this.pendingDownloadField) return;
+          this.downloadCertFromPreview(this.pendingDownloadField);
+          this.closeDownloadConfirm();
+        },
+
         // 打开证书详情弹框
         async openCertDetail(title, award) {
           const requestId = ++this.certRenderRequestId;
@@ -1677,6 +1730,7 @@
           this.releaseGeneratedCert();
           this.certDetailTitle = title;
           this.currentCertAward = award || null;
+          this.certDetailConfirmed = false;
 
           // 创作者注册登记证书 和 艺术品一物一码溯源注册登记证书：暂时注释生成方法，点击后弹出"即将开放下载"
           const isPlaceholderCertificate = title === '创作者注册登记证书'
