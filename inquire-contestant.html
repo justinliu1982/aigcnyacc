@@ -329,7 +329,7 @@
               <div class="text-[14px] pl-[88px] pt-[2px] font-[400] text-black/60"
                 x-text="matchLevel === 'NATIONAL' ? '国赛' : '省选拔赛'"></div>
             </div>
-            <div class="w-[240px] h-[93px] cursor-pointer" style="
+            <div class="w-[240px] h-[93px] cursor-pointer" x-show="matchLevel !== 'NATIONAL'" style="
                 background-image: url('./img/zhengshu/creator-img.png');
                 background-size: cover;
               " @click="openComingSoon(isCommitReg(contestantAwardList[0]) ? '即将开放下载' : '不符合申领条件，若有疑问请联系官方客服')">
