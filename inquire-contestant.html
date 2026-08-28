@@ -183,7 +183,7 @@
                 </div>
               </div>
               -->
-              <div class="w-[1020px] m-auto">
+              <div class="w-[1020px] m-auto cursor-pointer" @click="showNotWin = !showNotWin">
                 <div class="w-full flex justify-center rounded-t-[32px]" style="
                     background: linear-gradient(
                       to bottom right,
@@ -196,7 +196,7 @@
                     丨
                     <span x-text="award.reg_group"></span>
                     丨
-                    <span x-text="award.pretty_reward_level"></span>
+                    <span x-text="(matchLevel === 'NATIONAL' && showNotWin) ? '未获奖' : award.pretty_reward_level"></span>
                   </div>
                 </div>
                 <div
@@ -206,8 +206,11 @@
                     你已入围"<span x-text="award.compitem_name"></span>"赛项（个人）-
                     全国决赛资格！请准备此赛项全国决赛作品，报名开始后前往个人中心报名。
                   </div>
-                  <div x-show="award.is_team === 'NO' && award.is_reward=== 'YES' && matchLevel !== 'PROVINCE'">
+                  <div x-show="award.is_team === 'NO' && award.is_reward=== 'YES' && matchLevel !== 'PROVINCE' && !showNotWin">
                     可前往个人中心-我的成绩中查看成绩详情
+                  </div>
+                  <div x-show="matchLevel === 'NATIONAL' && showNotWin">
+                    本次未获奖，再接再厉，加油！
                   </div>
                   <div x-show="award.is_team === 'YES' && award.is_reward=== 'YES'">
                     你已入围"<span x-text="award.compitem_name"></span>"赛项（团队） -
