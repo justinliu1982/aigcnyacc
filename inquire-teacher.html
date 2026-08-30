@@ -9,9 +9,9 @@
 <body>
 <!-- ===== 指导老师查询 ===== -->
 <div>
-  <!-- 404 占位 -->
+  <!-- 404 占位（已停用） -->
   <div
-     x-show="typeof showTeacherContent !== 'undefined' && !showTeacherContent"
+     x-show="false"
     class="flex flex-col items-center justify-center"
     style="width: 480px; height: 306px; background: #EBE6FA; border-radius: 80px; margin: 60px auto 0 auto;"
   >
@@ -27,7 +27,7 @@
     />
   </div>
   <!-- 正常内容 -->
-   <div x-show="typeof showTeacherContent === 'undefined' || showTeacherContent">
+   <div x-show="true">
     <!-- 查询表单区域 -->
     <div x-show="!teacherSubmitted" class="p-[30px] w-[1100px] bg-[#EBE6FA]" style="border-radius: 32px; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);">
       <!-- 第一行：比赛年份、阶段 -->
