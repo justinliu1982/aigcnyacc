@@ -540,7 +540,7 @@
       </div>
     </div>
     <!-- ===== 敬请期待弹框（遮罩层） ===== -->
-    <div x-show="showComingSoonModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div x-show="showComingSoonModal" class="fixed inset-0 z-[80] flex items-center justify-center bg-black/50">
       <div class="relative bg-white w-[680px] h-[480px] p-[20px] rounded-[32px]">
         <img src="./img/clone_icon_img_border.png" class="absolute cursor-pointer w-[30px] h-[30px]"
           style="right: 40px; top: 30px; z-index: 10;" @click="showComingSoonModal = false" alt="关闭" />
@@ -977,11 +977,14 @@
           </div>
         </div>
         <div class="h-[2px] bg-[#8742DB] w-full mt-[20px]"></div>
-        <div class="mt-[24px] flex items-start gap-[10px]">
+        <div class="mt-[20px] w-full h-[240px] bg-[#F0EBFB] rounded-[16px] flex items-center justify-center overflow-hidden">
+          <img src="./img/certificate_img.png" class="max-h-[220px] object-contain" onerror="this.style.display='none'" />
+        </div>
+        <div class="mt-[20px] flex items-start gap-[10px]">
           <input type="checkbox" x-model="teacherDownloadConfirmed" class="w-[16px] h-[16px] mt-[3px] flex-shrink-0" style="accent-color: #9162FF" />
           <div>
             <div class="text-[15px] font-medium text-black/80">确认无误</div>
-            <div class="mt-[2px] text-[13px] text-black/50">如有问题到个人中心-我的证书中进行修改</div>
+            <div class="mt-[2px] text-[13px] text-black/50">如有疑义请联系大赛官方客服</div>
           </div>
         </div>
         <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium rounded-full text-white"
