@@ -941,6 +941,65 @@
       </div>
     </div>
 
+    <!-- ===== 指导老师证书详情对话框 ===== -->
+    <div x-show="showTeacherCertModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" @click.self="closeTeacherCertDetail()">
+      <div class="relative w-[680px] p-[40px] bg-white rounded-[24px]">
+        <div class="flex items-center justify-between">
+          <div class="text-[22px] font-medium text-[#8742DB]">指导老师证书详情</div>
+          <div class="w-[30px] h-[30px] flex border-[2px] border-[#8742DB] items-center justify-center cursor-pointer text-[20px]" style="border-radius: 50%" @click="closeTeacherCertDetail()">
+            <img class="w-[11px] h-[11px]" src="./img/clone_icon_img.png" />
+          </div>
+        </div>
+        <div class="h-[2px] bg-[#8742DB] w-full mt-[25px]"></div>
+        <div class="mt-[20px] flex gap-[16px]">
+          <div class="flex-1 h-[320px] bg-[#F0EBFB] rounded-[16px] flex items-center justify-center overflow-hidden">
+            <img src="./img/certificate_img.png" class="max-h-[300px] object-contain" onerror="this.style.display='none'" />
+          </div>
+          <div class="flex-1 h-[320px] bg-[#F0EBFB] rounded-[16px] flex items-center justify-center overflow-hidden">
+            <img src="./img/certificate_img.png" class="max-h-[300px] object-contain" onerror="this.style.display='none'" />
+          </div>
+        </div>
+        <div class="mt-[30px] flex justify-center gap-[16px]">
+          <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="teacherDownloadClick()">下载数字证书</div>
+          <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="teacherClaim()">申领纸质证书</div>
+          <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="teacherClaim()">申领铜板证书</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 指导老师下载数字证书确认对话框 ===== -->
+    <div x-show="showTeacherDownloadConfirmModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50" @click.self="closeTeacherDownloadConfirm()">
+      <div class="relative w-[520px] p-[32px] bg-white rounded-[24px]">
+        <div class="flex items-center justify-between">
+          <div class="text-[20px] font-medium text-[#8742DB]">下载数字证书</div>
+          <div class="w-[30px] h-[30px] flex border-[2px] border-[#8742DB] items-center justify-center cursor-pointer text-[20px]" style="border-radius: 50%" @click="closeTeacherDownloadConfirm()">
+            <img class="w-[11px] h-[11px]" src="./img/clone_icon_img.png" />
+          </div>
+        </div>
+        <div class="h-[2px] bg-[#8742DB] w-full mt-[20px]"></div>
+        <div class="mt-[24px] flex items-start gap-[10px]">
+          <input type="checkbox" x-model="teacherDownloadConfirmed" class="w-[16px] h-[16px] mt-[3px] flex-shrink-0" style="accent-color: #9162FF" />
+          <div>
+            <div class="text-[15px] font-medium text-black/80">确认无误</div>
+            <div class="mt-[2px] text-[13px] text-black/50">如有问题到个人中心-我的证书中进行修改</div>
+          </div>
+        </div>
+        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium rounded-full text-white"
+          :class="teacherDownloadConfirmed ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'"
+          style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)"
+          @click="teacherDownloadConfirmed ? teacherDownloadConfirm() : null">下载数字证书</div>
+      </div>
+    </div>
+
+    <!-- ===== 指导老师无查询结果对话框 ===== -->
+    <div x-show="showTeacherNoResultModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" @click.self="showTeacherNoResultModal = false">
+      <div class="relative w-[480px] p-[32px] bg-white rounded-[24px] text-center">
+        <img src="./img/error_icon_img.png" class="w-[90px] h-[90px] m-auto" />
+        <div class="mt-[16px] text-[20px] font-medium text-black/80">无查询结果</div>
+        <div class="mt-[12px] text-[15px] text-black/60 leading-[24px]">很抱歉，未查询到您的指导记录，请确认姓名和手机号填写是否正确后重试。</div>
+        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium cursor-pointer text-white rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="showTeacherNoResultModal = false">知道了</div>
+      </div>
+    </div>
   </main>
 
   <!-- 容器：用于插入底部 -->
@@ -1109,6 +1168,9 @@
         teacherReward: null,
         teacherLevel: 'excellent_teacher',
         teacherWorkList: [],
+        showTeacherNoResultModal: false,
+        teacherDownloadConfirmed: false,
+        showTeacherDownloadConfirmModal: false,
 
         // 已获奖项列表
         awardList: [
@@ -2358,6 +2420,46 @@
           // TODO: 调用后端发送验证码接口
         },
 
+        // 循环切换指导老师奖项（3种）
+        cycleTeacherLevel() {
+          const order = ['excellent_teacher', 'innovation_pacesetter', 'ai_pioneer'];
+          const idx = order.indexOf(this.teacherLevel);
+          this.teacherLevel = order[(idx + 1) % order.length];
+        },
+
+        // 指导老师证书详情
+        openTeacherCertDetail() {
+          this.teacherDownloadConfirmed = false;
+          this.showTeacherCertModal = true;
+        },
+        closeTeacherCertDetail() {
+          this.showTeacherCertModal = false;
+          this.teacherDownloadConfirmed = false;
+        },
+        // 申领纸质/铜板证书
+        teacherClaim() {
+          this.openComingSoon('即将开放，敬请期待');
+        },
+        // 下载数字证书 → 确认对话框
+        teacherDownloadClick() {
+          this.teacherDownloadConfirmed = false;
+          this.showTeacherDownloadConfirmModal = true;
+        },
+        closeTeacherDownloadConfirm() {
+          this.showTeacherDownloadConfirmModal = false;
+          this.teacherDownloadConfirmed = false;
+        },
+        teacherDownloadConfirm() {
+          if (!this.teacherDownloadConfirmed) return;
+          const link = document.createElement('a');
+          link.href = '#';
+          link.download = '指导老师数字证书.png';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          this.closeTeacherDownloadConfirm();
+        },
+
         // 手机号正则：支持大陆(11位)、香港(8位)、澳门(8位)、台湾(10位)
         isValidPhone(phone) {
           if (!phone || !phone.trim()) return false;
@@ -2463,56 +2565,34 @@
                   this.showContestantResultModal = true;
                 }
               } else if (this.activeQueryType === "teacher") {
-                // ===== 通用校验 =====
-                if (!this.validateCommon()) return;
-                // ===== 私有校验 =====
-                if (!this.teacherName.trim()) {
-                  alert("请输入指导老师姓名");
-                  return;
-                }
-                if (!this.teacherPhone.trim()) {
-                  alert("请输入指导老师手机号");
-                  return;
-                }
-                if (!this.isValidPhone(this.teacherPhone)) {
-                  alert("请输入正确的手机号码");
-                  return;
-                }
-                if (!this.teacherVerifyCode.trim()) {
-                  alert("请输入验证码");
+                // ===== 校验（任意输入即可查询） =====
+                if (!this.matchYear) { alert("请选择比赛年份"); return; }
+                if (!this.matchLevel) { alert("请选择阶段"); return; }
+                if (!this.teacherName.trim()) { alert("请输入指导老师姓名"); return; }
+                if (!this.teacherPhone.trim()) { alert("请输入指导老师手机号"); return; }
+                if (!this.teacherVerifyCode.trim()) { alert("请输入验证码"); return; }
+
+                // 全部输入 0 → 无查询结果
+                if (this.teacherName.trim() === '0' && this.teacherPhone.trim() === '0') {
+                  this.showTeacherNoResultModal = true;
                   return;
                 }
 
-                // 指导老师查询 - 收集参数
-                const params = {
-                  match_year: this.matchYear || undefined,
-                  match_level: this.matchLevel,
-                  phone: this.teacherPhone,
-                  verify: this.teacherVerifyCode,
-                };
-                // 请求 /teacher/award/check 接口
-                const { data } = await httpPost("/teacher/award/check", params);
-                console.log("指导老师查询返回数据：", data);
-                // 提取 teacher_reward 字段（YES=已获奖, NO=未获奖）
-                this.teacherReward = (data && data.teacher_reward) ? data.teacher_reward : null;
-                // 提取作品列表（data.regs 数组）
-                const regs = (data && Array.isArray(data.regs)) ? data.regs : null;
-                if (regs && regs.length > 0) {
-                  this.teacherWorkList = regs;
-                  // 计算指导老师等级
-                  const totalCount = regs.length;
-                  const awardWinners = regs.filter(r => r.pretty_reward_level && r.pretty_reward_level !== '未获奖').length;
-                  if (totalCount >= 30 && awardWinners >= 10) {
-                    this.teacherLevel = 'ai_pioneer';
-                  } else if (totalCount >= 10 && awardWinners >= 4) {
-                    this.teacherLevel = 'innovation_pacesetter';
-                  } else {
-                    this.teacherLevel = 'excellent_teacher';
-                  }
-                } else {
-                  this.teacherWorkList = [];
-                  this.teacherLevel = 'excellent_teacher';
-                }
+                // 任意输入 → 指导老师查询结果（演示数据）
+                this.teacherReward = 'YES';
+                this.teacherLevel = 'innovation_pacesetter';
+                this.teacherWorkList = [
+                  { reg_work_name: "会飞的枪", reg_name: "张子墨", reg_group: "小学组", pretty_reward_level: "一等奖" },
+                  { reg_work_name: "四里直宁", reg_name: "李然", reg_group: "小学组", pretty_reward_level: "二等奖" },
+                  { reg_work_name: "十二生肖", reg_name: "罗国生", reg_group: "小学组", pretty_reward_level: "二等奖" },
+                  { reg_work_name: "星际之旅", reg_name: "陈子涵", reg_group: "小学组", pretty_reward_level: "三等奖" },
+                  { reg_work_name: "梦想的世界", reg_name: "刘雨桐", reg_group: "小学组", pretty_reward_level: "三等奖" },
+                  { reg_work_name: "和麻太斌", reg_name: "林皓轩", reg_group: "小学组", pretty_reward_level: "一等奖" },
+                  { reg_work_name: "侧线", reg_name: "周芷若", reg_group: "小学组", pretty_reward_level: "二等奖" },
+                  { reg_work_name: "传统文化", reg_name: "谭诗宁", reg_group: "小学组", pretty_reward_level: "三等奖" },
+                  { reg_work_name: "国际都市", reg_name: "郑凯文", reg_group: "小学组", pretty_reward_level: "三等奖" },
+                  { reg_work_name: "半年", reg_name: "王立豪", reg_group: "小学组", pretty_reward_level: "一等奖" }
+                ];
                 this.teacherSubmitted = true;
                 this.showQueryTabs = false;
               } else if (this.activeQueryType === "school") {
