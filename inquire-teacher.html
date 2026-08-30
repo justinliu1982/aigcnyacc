@@ -221,7 +221,7 @@
                   <img
                     :src="'./img/winning_icon_' + (teacherLevel === 'ai_pioneer' ? '4' : teacherLevel === 'innovation_pacesetter' ? '2' : '1') + '.png'"
                     class="w-[422px] h-[365px]" alt="">
-                  <div class="text-[18px] text-[#fff] font-medium absolute top-[18px] right-[60px]">
+                  <div class="text-[18px] text-[#fff] font-medium absolute top-[18px] right-[60px] cursor-pointer select-none" @click="cycleTeacherLevel()">
                     <span x-show="teacherReward === 'YES'">已获奖</span>
                     <span x-show="teacherReward !== 'YES'">未获奖</span>
                   </div>
@@ -244,8 +244,8 @@
                     <span x-show="teacherLevel === 'innovation_pacesetter'">（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例1.6%）</span>
                     <span x-show="teacherLevel === 'ai_pioneer'">（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例0.8%）</span>
                   </div>
-                  <div class="absolute w-[98px] h-[36px] flex rounded-[100px] left-[40px] bottom-[55px] items-center justify-center bg-[#fff] cursor-pointer" @click="alert('该功能将于7月20日开放')">
-                    <span class="text-[16px] font-medium" :style="{ color: teacherLevel === 'ai_pioneer' ? '#10934F' : teacherLevel === 'innovation_pacesetter' ? '#E06B39' : '#3C8DFF' }">查看详情</span>
+                  <div class="absolute w-[160px] h-[48px] flex rounded-[100px] left-[40px] bottom-[55px] items-center justify-center bg-[#fff] cursor-pointer shadow-lg" @click="openTeacherCertDetail()">
+                    <span class="text-[18px] font-semibold" :style="{ color: teacherLevel === 'ai_pioneer' ? '#10934F' : teacherLevel === 'innovation_pacesetter' ? '#E06B39' : '#3C8DFF' }">查看详情</span>
                   </div>
                 </div>
               </div>
@@ -262,7 +262,7 @@
                 <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
               </div>
               <div class="flex-shrink-0 mx-[15px] w-[200px] h-[46px] relative" style="border-radius: 20px; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%); padding: 3px;">
-                <div class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]" style="border-radius: 17px;">指导作品列表</div>
+                <div class="w-full h-full flex justify-center items-center text-[20px] font-medium text-[#8742DB] bg-[#F0EBFB]" style="border-radius: 17px;">部分指导作品</div>
               </div>
                <div class="w-[10px] h-[10px] items-center justify-center flex" style="border-radius: 50%; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
                 <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
