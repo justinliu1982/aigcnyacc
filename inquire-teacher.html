@@ -193,7 +193,7 @@
           <!-- 标题区域 -->
           <div class="text-center">
             <div class="mt-[10px] text-[rgb(158,164,176)] text-[18px] font-medium">
-              指导老师：<span x-text="teacherName || '-'"></span> ｜ <span x-text="(matchYear || '') + '年' + (matchLevel === 'NATIONAL' ? '国赛' : matchLevel === 'PROVINCE' ? '省赛' : '')"></span>
+              指导老师：<span x-text="teacherName || '-'"></span> ｜ <span x-text="teacherPhone || '-'"></span> ｜ <span x-text="(matchYear || '') + '年' + (matchLevel === 'NATIONAL' ? '国赛' : matchLevel === 'PROVINCE' ? '省赛' : '')"></span>
             </div>
           </div>
 
@@ -221,9 +221,12 @@
                   <img
                     :src="'./img/winning_icon_' + (teacherLevel === 'ai_pioneer' ? '4' : teacherLevel === 'innovation_pacesetter' ? '2' : '1') + '.png'"
                     class="w-[422px] h-[365px]" alt="">
-                  <div class="text-[18px] text-[#fff] font-medium absolute top-[18px] right-[60px] cursor-pointer select-none" @click="cycleTeacherLevel()">
-                    <span x-show="teacherReward === 'YES'">已获奖</span>
-                    <span x-show="teacherReward !== 'YES'">未获奖</span>
+                  <div class="absolute top-[16px] right-[16px] flex items-center gap-[8px]">
+                    <div class="px-[12px] py-[4px] rounded-full bg-[#fff] text-[13px] font-medium cursor-pointer shadow" style="color: #8742DB" @click="cycleTeacherLevel()">点击切换奖项</div>
+                    <div class="text-[18px] text-[#fff] font-medium cursor-pointer select-none" @click="cycleTeacherLevel()">
+                      <span x-show="teacherReward === 'YES'">已获奖</span>
+                      <span x-show="teacherReward !== 'YES'">未获奖</span>
+                    </div>
                   </div>
                   <!-- 等级名称 -->
                   <div class="absolute text-[22px] top-[62px] font-medium absolute left-[40px]" :style="{ color: teacherLevel === 'ai_pioneer' ? '#10934F' : teacherLevel === 'innovation_pacesetter' ? '#E06B39' : '#3489FF' }">
@@ -244,8 +247,8 @@
                     <span x-show="teacherLevel === 'innovation_pacesetter'">（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例1.6%）</span>
                     <span x-show="teacherLevel === 'ai_pioneer'">（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例0.8%）</span>
                   </div>
-                  <div class="absolute w-[160px] h-[48px] flex rounded-[100px] left-[40px] bottom-[55px] items-center justify-center bg-[#fff] cursor-pointer shadow-lg" @click="openTeacherCertDetail()">
-                    <span class="text-[18px] font-semibold" :style="{ color: teacherLevel === 'ai_pioneer' ? '#10934F' : teacherLevel === 'innovation_pacesetter' ? '#E06B39' : '#3C8DFF' }">查看详情</span>
+                  <div class="absolute w-[200px] h-[56px] flex rounded-[100px] left-[40px] bottom-[50px] items-center justify-center cursor-pointer shadow-xl" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="openTeacherCertDetail()">
+                    <span class="text-[20px] font-bold text-white">查看详情</span>
                   </div>
                 </div>
               </div>
