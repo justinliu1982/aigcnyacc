@@ -222,7 +222,7 @@
                     :src="'./img/winning_icon_' + (teacherLevel === 'ai_pioneer' ? '4' : teacherLevel === 'innovation_pacesetter' ? '2' : '1') + '.png'"
                     class="w-[422px] h-[365px]" alt="">
                   <div class="absolute top-[16px] right-[16px] flex items-center gap-[8px]">
-                    <div class="px-[12px] py-[4px] rounded-full bg-[#fff] text-[13px] font-medium cursor-pointer shadow" style="color: #8742DB" @click="cycleTeacherLevel()">点击切换奖项</div>
+                    <div class="w-[48px] h-[24px] rounded-full cursor-pointer shadow" :style="{ background: teacherLevel === 'ai_pioneer' ? '#10934F' : teacherLevel === 'innovation_pacesetter' ? '#E06B39' : '#3489FF' }" @click="cycleTeacherLevel()"></div>
                     <div class="text-[18px] text-[#fff] font-medium cursor-pointer select-none" @click="cycleTeacherLevel()">
                       <span x-show="teacherReward === 'YES'">已获奖</span>
                       <span x-show="teacherReward !== 'YES'">未获奖</span>
