@@ -217,10 +217,10 @@
             <div class="mt-[20px] w-full flex justify-center">
               <!-- 已获奖项 - 根据 teacherReward 和 teacherLevel 动态显示 -->
               <div class="mt-[20px]">
-                <div class="w-[422px] h-[365px] relative">
+                <div class="w-[422px] relative">
                   <img
-                    :src="'./img/winning_icon_' + (teacherLevel === 'ai_pioneer' ? '4' : teacherLevel === 'innovation_pacesetter' ? '2' : '1') + '.png'"
-                    class="w-[422px] h-[365px]" alt="">
+                    :src="'./img/' + (teacherLevel === 'ai_pioneer' ? '114' : teacherLevel === 'innovation_pacesetter' ? '115' : '26') + '.png'"
+                    class="w-[422px] block" alt="指导老师奖项">
                   <div class="absolute top-[16px] right-[16px] flex items-center gap-[8px]">
                     <div class="w-[48px] h-[24px] rounded-full cursor-pointer shadow" :style="{ background: teacherLevel === 'ai_pioneer' ? '#10934F' : teacherLevel === 'innovation_pacesetter' ? '#E06B39' : '#3489FF' }" @click="cycleTeacherLevel()"></div>
                     <div class="text-[18px] text-[#fff] font-medium cursor-pointer select-none" @click="cycleTeacherLevel()">
@@ -228,26 +228,7 @@
                       <span x-show="teacherReward !== 'YES'">未获奖</span>
                     </div>
                   </div>
-                  <!-- 等级名称 -->
-                  <div class="absolute text-[22px] top-[62px] font-medium absolute left-[40px]" :style="{ color: teacherLevel === 'ai_pioneer' ? '#10934F' : teacherLevel === 'innovation_pacesetter' ? '#E06B39' : '#3489FF' }">
-                    <span x-show="teacherLevel === 'excellent_teacher'">优秀指导教师</span>
-                    <span x-show="teacherLevel === 'innovation_pacesetter'">教学创新标兵</span>
-                    <span x-show="teacherLevel === 'ai_pioneer'">人工智能教育先锋</span>
-                  </div>
-                  <div class="absolute text-[16px] top-[112px] left-[40px]">申领要求：</div>
-                  <!-- 申领要求 -->
-                  <div class="absolute text-[16px] w-[80%] top-[140px] left-[40px]">
-                    <span x-show="teacherLevel === 'excellent_teacher'">1、指导10名以上选手参赛</span>
-                    <span x-show="teacherLevel === 'innovation_pacesetter'">1、指导10名以上选手参赛且总获奖学生不低于4名</span>
-                    <span x-show="teacherLevel === 'ai_pioneer'">1、指导30名以上选手参赛且总获奖学生不低于10名</span>
-                  </div>
-                  <!-- 提示 -->
-                  <div class="absolute text-[16px] w-[80%] top-[190px] left-[40px]">
-                    <span x-show="teacherLevel === 'excellent_teacher'">（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例8%）</span>
-                    <span x-show="teacherLevel === 'innovation_pacesetter'">（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例1.6%）</span>
-                    <span x-show="teacherLevel === 'ai_pioneer'">（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例0.8%）</span>
-                  </div>
-                  <div class="absolute w-[200px] h-[56px] flex rounded-[100px] left-[40px] bottom-[50px] items-center justify-center cursor-pointer shadow-xl" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="openTeacherCertDetail()">
+                  <div class="absolute w-[200px] h-[56px] flex rounded-[100px] left-[40px] bottom-[24px] items-center justify-center cursor-pointer shadow-xl" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="openTeacherCertDetail()">
                     <span class="text-[20px] font-bold text-white">查看详情</span>
                   </div>
                 </div>
