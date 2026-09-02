@@ -56,6 +56,10 @@
 
     <!-- 白色卡片 -->
     <div class="bg-white p-[40px] rounded-[32px] mt-[29px] relative" style="border: 5px solid rgba(201, 179, 252, 1);">
+      <div class="absolute w-[380px] top-[-25px] left-1/2 -translate-x-1/2">
+        <img src="./img/award_icon.png" alt="award icon" class="w-[380px] h-[67px]" onerror="this.style.display='none'" />
+        <div class="absolute top-[60%] left-1/2 -translate-x-1/2 -translate-y-2/2 text-[rgba(135,66,219,1)] text-[22px] font-medium">组织学校奖项查询</div>
+      </div>
       <!-- 标题区域 -->
       <div class="text-center">
         <div class="mt-[10px] text-[rgb(158,164,176)] text-[18px] font-medium leading-[30px]">
@@ -81,13 +85,13 @@
         </div>
 
         <!-- 奖项卡片 -->
-        <div class="mt-[20px] flex justify-center gap-[20px] flex-nowrap">
+        <div class="mt-[20px] flex justify-center gap-[16px] flex-nowrap">
           <template x-for="(award, index) in schoolAwardLevels" :key="award.name">
-            <div class="w-[280px] p-[24px] rounded-[20px] bg-white relative text-center" style="border: 1px solid rgba(145, 98, 255, 0.3); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06)">
-              <div class="mt-[10px] text-[24px] font-bold leading-tight" :style="{ color: award.color }" x-text="award.name"></div>
-              <div class="mt-[18px]">
-                <div class="w-[160px] h-[48px] m-auto flex rounded-full items-center justify-center cursor-pointer shadow-lg" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="openSchoolCertDetail()">
-                  <span class="text-[17px] font-bold text-white">查看详情</span>
+            <div class="w-[200px] p-[16px] rounded-[20px] bg-white relative text-center" style="border: 1px solid rgba(145, 98, 255, 0.3); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06)">
+              <div class="mt-[8px] text-[15px] font-bold leading-tight" :style="{ color: award.color }" x-text="award.name"></div>
+              <div class="mt-[14px]">
+                <div class="w-[140px] h-[44px] m-auto flex rounded-full items-center justify-center cursor-pointer shadow-lg" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="openSchoolCertDetail()">
+                  <span class="text-[14px] font-bold text-white">查看详情</span>
                 </div>
               </div>
             </div>
