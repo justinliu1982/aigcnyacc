@@ -1174,6 +1174,15 @@
         showTeacherNoResultModal: false,
         teacherDownloadConfirmed: false,
         showTeacherDownloadConfirmModal: false,
+        teacherAwardSituation: 1,
+        teacherAwardLevelsData: [
+          { level: 'excellent_teacher', name: '优秀指导教师', color: '#3489FF', req: '1、指导10名以上选手参赛', note: '（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例8%）' },
+          { level: 'innovation_pacesetter', name: '教学创新标兵', color: '#E06B39', req: '1、指导10名以上选手参赛且总获奖学生不低于4名', note: '（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例1.6%）' },
+          { level: 'ai_pioneer', name: '人工智能教育先锋', color: '#10934F', req: '1、指导30名以上选手参赛且总获奖学生不低于10名', note: '（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例0.8%）' },
+        ],
+        get teacherAwardLevels() {
+          return this.teacherAwardLevelsData.slice(0, this.teacherAwardSituation);
+        },
 
         // 已获奖项列表
         awardList: [
@@ -2430,6 +2439,11 @@
           this.teacherLevel = order[(idx + 1) % order.length];
         },
 
+        // 循环切换奖项情况（1/2/3 种奖项）
+        cycleTeacherAwardSituation() {
+          this.teacherAwardSituation = this.teacherAwardSituation >= 3 ? 1 : this.teacherAwardSituation + 1;
+        },
+
         // 指导老师证书详情
         openTeacherCertDetail() {
           this.teacherDownloadConfirmed = false;
@@ -2596,6 +2610,7 @@
                   { reg_work_name: "国际都市", reg_name: "郑凯文", reg_group: "小学组", pretty_reward_level: "三等奖" },
                   { reg_work_name: "半年", reg_name: "王立豪", reg_group: "小学组", pretty_reward_level: "一等奖" }
                 ];
+                this.teacherAwardSituation = 1;
                 this.teacherSubmitted = true;
                 this.showQueryTabs = false;
               } else if (this.activeQueryType === "school") {
