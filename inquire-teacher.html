@@ -188,7 +188,7 @@
       >
           <div class="absolute w-[380px] top-[-25px] left-1/2 -translate-x-1/2">
               <img src="./img/award_icon.png" alt="award icon" class="w-[380px] h-[67px]" onerror="this.style.display='none'" />
-              <div class=" absolute  top-[60%]  left-1/2 -translate-x-1/2 -translate-y-2/2 text-[rgba(135,66,219,1)] text-[22px] font-medium">指导老师获奖查询</div>
+              <div class=" absolute  top-[60%]  left-1/2 -translate-x-1/2 -translate-y-2/2 text-[rgba(135,66,219,1)] text-[22px] font-medium cursor-pointer select-none" @click="showTeacherWorkList = !showTeacherWorkList">指导老师获奖查询</div>
           </div>
           <!-- 标题区域 -->
           <div class="text-center">
@@ -230,7 +230,7 @@
           </div>
 
           <!-- Module 2: 指导作品列表 -->
-          <div class="mt-[55px]">
+          <div class="mt-[55px]" x-show="showTeacherWorkList">
             <!-- 分隔线 + 标签 -->
             <div class="flex w-[896px] m-auto items-center">
               <div class="flex-1 h-[2px]" style="background: linear-gradient(270deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%)"></div>
