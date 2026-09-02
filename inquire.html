@@ -1011,6 +1011,96 @@
         <img :src="teacherPreviewImage" class="max-w-full max-h-full object-contain" />
       </div>
     </div>
+
+    <!-- ===== 学校证书详情对话框 ===== -->
+    <div x-show="showSchoolCertModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" @click.self="closeSchoolCertDetail()">
+      <div class="relative w-[680px] p-[40px] bg-white rounded-[24px]">
+        <div class="flex items-center justify-between">
+          <div class="text-[22px] font-medium text-[#8742DB]">证书详情</div>
+          <div class="w-[30px] h-[30px] flex border-[2px] border-[#8742DB] items-center justify-center cursor-pointer text-[20px]" style="border-radius: 50%" @click="closeSchoolCertDetail()">
+            <img class="w-[11px] h-[11px]" src="./img/clone_icon_img.png" />
+          </div>
+        </div>
+        <div class="h-[2px] bg-[#8742DB] w-full mt-[25px]"></div>
+        <div class="mt-[20px] flex gap-[16px]">
+          <div class="flex-1 h-[320px] bg-[#F0EBFB] rounded-[16px] flex items-center justify-center overflow-hidden cursor-pointer" @click="openSchoolCertPreview('./img/团队数字.png')">
+            <img src="./img/团队数字.png" class="max-h-[300px] object-contain" onerror="this.style.display='none'" />
+          </div>
+          <div class="flex-1 h-[320px] bg-[#F0EBFB] rounded-[16px] flex items-center justify-center overflow-hidden cursor-pointer" @click="openSchoolCertPreview('./img/团队通票.png')">
+            <img src="./img/团队通票.png" class="max-h-[300px] object-contain" onerror="this.style.display='none'" />
+          </div>
+        </div>
+        <div class="mt-[30px] flex justify-center gap-[16px]">
+          <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="schoolDownloadClick()">下载数字证书</div>
+          <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="schoolClaim()">申领纸质证书</div>
+          <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="schoolClaim()">申领铜板证书</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 学校证书申请对话框 ===== -->
+    <div x-show="showSchoolCertApplyModal" class="fixed inset-0 z-[60] flex items-center justify-center bg-black/50" @click.self="closeSchoolCertApply()">
+      <div class="relative w-[560px] p-[32px] bg-white rounded-[24px]">
+        <div class="flex items-center justify-between">
+          <div class="text-[20px] font-medium text-[#8742DB]">学校证书申请</div>
+          <div class="w-[30px] h-[30px] flex border-[2px] border-[#8742DB] items-center justify-center cursor-pointer text-[20px]" style="border-radius: 50%" @click="closeSchoolCertApply()">
+            <img class="w-[11px] h-[11px]" src="./img/clone_icon_img.png" />
+          </div>
+        </div>
+        <div class="h-[2px] bg-[#8742DB] w-full mt-[20px]"></div>
+        <div class="mt-[24px] flex flex-col gap-[16px]">
+          <div>
+            <div class="text-sm text-black/60 mb-[6px] text-left">授权人姓名</div>
+            <input class="w-full h-[48px] px-[16px] text-[15px] border outline-none" style="border-radius: 12px; border-color: rgba(145, 98, 255, 0.2)" type="text" placeholder="请输入授权人姓名" x-model="schoolAuthorizerName" />
+          </div>
+          <div>
+            <div class="text-sm text-black/60 mb-[6px] text-left">手机号</div>
+            <input class="w-full h-[48px] px-[16px] text-[15px] border outline-none" style="border-radius: 12px; border-color: rgba(145, 98, 255, 0.2)" type="text" placeholder="请输入手机号" x-model="schoolAuthorizerPhone" />
+          </div>
+          <div>
+            <div class="text-sm text-black/60 mb-[6px] text-left">验证码</div>
+            <div class="flex gap-[12px]">
+              <input class="flex-1 h-[48px] px-[16px] text-[15px] border outline-none" style="border-radius: 12px; border-color: rgba(145, 98, 255, 0.2)" type="text" placeholder="请输入验证码" x-model="schoolAuthorizerCode" />
+              <div class="w-[120px] h-[48px] flex items-center justify-center text-[14px] font-medium rounded-[12px]" :class="schoolAuthorizerCountdown > 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'" style="border: 1px solid #9162FF; color: #9162FF" @click="sendSchoolAuthorizerCode()">
+                <span x-text="schoolAuthorizerCountdown > 0 ? schoolAuthorizerCountdown + 's' : (schoolAuthorizerSent ? '重新获取' : '发送验证码')"></span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-[6px]">
+              <div class="text-sm text-black/60 text-left">授权书</div>
+              <span class="text-[13px] text-[#8742DB] cursor-pointer" @click="window.open('./template/authorization.docx', '_blank')">点击下载模板到本地</span>
+            </div>
+            <label class="w-full h-[90px] flex flex-col items-center justify-center cursor-pointer rounded-[12px]" style="border: 1px dashed #9162FF; background: rgba(145, 98, 255, 0.05)">
+              <input type="file" accept=".pdf,.png,.jpg,.jpeg" class="hidden" @change="onSchoolAuthFileChange($event)" />
+              <span x-show="!schoolAuthFileName" class="text-[14px] text-[#9162FF]">点击上传授权委托书</span>
+              <span x-show="schoolAuthFileName" class="text-[14px] text-[#2e7d32]" x-text="schoolAuthFileName"></span>
+            </label>
+            <div class="mt-[6px] text-[12px] text-black/50 text-left">上传授权委托书，限1份 10M以内 PDF\PNG\JPG格式</div>
+          </div>
+        </div>
+        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium rounded-full text-white"
+          :class="schoolCertApplyValid ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'"
+          style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)"
+          @click="schoolCertApplyValid ? submitSchoolCertApply() : null">提交</div>
+      </div>
+    </div>
+
+    <!-- ===== 学校申请审核提示对话框 ===== -->
+    <div x-show="showSchoolCertReviewModal" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/50" @click.self="showSchoolCertReviewModal = false">
+      <div class="relative w-[480px] p-[32px] bg-white rounded-[24px] text-center">
+        <div class="mt-[8px] text-[17px] text-black/80 leading-[28px]">申请正在审核，请耐心等待</div>
+        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium cursor-pointer text-white rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="showSchoolCertReviewModal = false">知道了</div>
+      </div>
+    </div>
+
+    <!-- ===== 学校证书全屏预览 ===== -->
+    <div x-show="showSchoolCertPreviewModal" class="fixed inset-0 z-[90] flex items-center justify-center bg-black/80" @click.self="showSchoolCertPreviewModal = false">
+      <div class="relative w-full h-full flex items-center justify-center p-[40px]">
+        <div class="absolute top-[24px] right-[24px] w-[44px] h-[44px] flex items-center justify-center cursor-pointer text-white text-[32px] rounded-full" style="background: rgba(0, 0, 0, 0.5)" @click="showSchoolCertPreviewModal = false">×</div>
+        <img :src="schoolPreviewImage" class="max-w-full max-h-full object-contain" />
+      </div>
+    </div>
   </main>
 
   <!-- 容器：用于插入底部 -->
@@ -1074,7 +1164,6 @@
         queryTabs: [
           { key: "contestant", label: "参赛者查询" },
           { key: "teacher", label: "指导老师查询" },
-          { key: "school", label: "组织学校奖项申请" },
           { key: "schoolQuery", label: "组织学校奖项查询" },
         ],
 
@@ -1507,6 +1596,35 @@
         schoolQueryVerifyCodeCountdown: 0,
         schoolQuerySubmitted: false,
         schoolQueryStudents: [{ name: "", id: "" }],
+        // 学校可申请奖项（4种情况）
+        schoolAwardSituation: 1,
+        schoolAwardLevelsData: [
+          { name: '人工智能教育示范团队', color: '#3489ff' },
+          { name: '创新实践教育基地', color: '#e06b39' },
+          { name: '优秀组织学校', color: '#a65cec' },
+          { name: '优秀社会实践活动组织', color: '#10934f' },
+        ],
+        get schoolAwardLevels() {
+          return this.schoolAwardLevelsData.slice(this.schoolAwardSituation - 1);
+        },
+        // 学校证书详情 / 申请 / 审核
+        showSchoolCertModal: false,
+        showSchoolCertApplyModal: false,
+        showSchoolCertReviewModal: false,
+        schoolCertSubmitted: false,
+        schoolCertReviewed: false,
+        schoolAuthorizerName: "",
+        schoolAuthorizerPhone: "",
+        schoolAuthorizerCode: "",
+        schoolAuthorizerSent: false,
+        schoolAuthorizerCountdown: 0,
+        schoolAuthorizerTimer: null,
+        schoolAuthFileName: "",
+        showSchoolCertPreviewModal: false,
+        schoolPreviewImage: "",
+        get schoolCertApplyValid() {
+          return this.schoolAuthorizerName.trim() !== '' && this.schoolAuthorizerPhone.trim() !== '' && this.schoolAuthorizerCode.trim() !== '' && this.schoolAuthFileName !== '';
+        },
 
         // 重置查询视图（切换查询类型时重置提交状态）
         resetQueryViews() {
@@ -2493,6 +2611,66 @@
           this.closeTeacherDownloadConfirm();
         },
 
+        // ===== 学校奖项查询 =====
+        cycleSchoolAwardSituation() {
+          this.schoolAwardSituation = this.schoolAwardSituation >= 4 ? 1 : this.schoolAwardSituation + 1;
+        },
+        openSchoolCertDetail() {
+          this.showSchoolCertModal = true;
+        },
+        closeSchoolCertDetail() {
+          this.showSchoolCertModal = false;
+        },
+        openSchoolCertPreview(src) {
+          this.schoolPreviewImage = src;
+          this.showSchoolCertPreviewModal = true;
+        },
+        schoolClaim() {
+          this.openComingSoon('即将开放，敬请期待');
+        },
+        schoolDownloadClick() {
+          if (!this.schoolCertSubmitted) {
+            this.showSchoolCertApplyModal = true;
+          } else if (!this.schoolCertReviewed) {
+            this.schoolCertReviewed = true;
+            this.showSchoolCertReviewModal = true;
+          } else {
+            this.teacherDownloadConfirmed = false;
+            this.showTeacherDownloadConfirmModal = true;
+          }
+        },
+        closeSchoolCertApply() {
+          this.showSchoolCertApplyModal = false;
+        },
+        sendSchoolAuthorizerCode() {
+          if (!this.schoolAuthorizerPhone.trim()) {
+            alert("请输入手机号");
+            return;
+          }
+          if (this.schoolAuthorizerCountdown > 0) return;
+          this.schoolAuthorizerSent = true;
+          this.schoolAuthorizerCountdown = 60;
+          this.schoolAuthorizerTimer = setInterval(() => {
+            this.schoolAuthorizerCountdown--;
+            if (this.schoolAuthorizerCountdown <= 0) {
+              clearInterval(this.schoolAuthorizerTimer);
+              this.schoolAuthorizerTimer = null;
+            }
+          }, 1000);
+        },
+        onSchoolAuthFileChange(evt) {
+          const f = evt.target.files && evt.target.files[0];
+          if (f) this.schoolAuthFileName = f.name;
+        },
+        submitSchoolCertApply() {
+          if (!this.schoolAuthorizerName.trim()) { alert("请输入授权人姓名"); return; }
+          if (!this.schoolAuthorizerPhone.trim()) { alert("请输入手机号"); return; }
+          if (!this.schoolAuthorizerCode.trim()) { alert("请输入验证码"); return; }
+          if (!this.schoolAuthFileName) { alert("请上传授权委托书"); return; }
+          this.schoolCertSubmitted = true;
+          this.showSchoolCertApplyModal = false;
+        },
+
         // 手机号正则：支持大陆(11位)、香港(8位)、澳门(8位)、台湾(10位)
         isValidPhone(phone) {
           if (!phone || !phone.trim()) return false;
@@ -2630,30 +2808,15 @@
                 this.showTeacherWorkList = false;
                 this.teacherSubmitted = true;
                 this.showQueryTabs = false;
-              } else if (this.activeQueryType === "school") {
-                // 组织学校奖项申请
-                const data = await httpPost("/api/query/school", {
-                  schoolName: this.schoolName,
-                  contact: this.schoolContact,
-                  phone: this.schoolPhone,
-                  email: this.schoolEmail,
-                  code: this.schoolCode,
-                  students: this.students,
-                  awardStates: this.awardStates,
-                });
-                this.schoolSubmitted = true;
-                this.showQueryTabs = false;
               } else if (this.activeQueryType === "schoolQuery") {
-                // 组织学校奖项查询
-                const data = await httpPost("/api/query/schoolQuery", {
-                  schoolName: this.schoolQueryName,
-                  contact: this.schoolQueryContact,
-                  phone: this.schoolQueryPhone,
-                  email: this.schoolQueryEmail,
-                  code: this.schoolQueryCode,
-                  verifyCode: this.schoolQueryVerifyCode,
-                  students: this.schoolQueryStudents,
-                });
+                // 组织学校奖项查询（任意输入 → 结果）
+                if (!this.matchYear) { alert("请选择比赛年份"); return; }
+                if (!this.matchLevel) { alert("请选择阶段"); return; }
+                if (!this.schoolQueryName.trim()) { alert("请输入学校名称"); return; }
+
+                this.schoolAwardSituation = 1;
+                this.schoolCertSubmitted = false;
+                this.schoolCertReviewed = false;
                 this.schoolQuerySubmitted = true;
                 this.showQueryTabs = false;
               }
