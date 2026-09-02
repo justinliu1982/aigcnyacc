@@ -1174,6 +1174,7 @@
         showTeacherNoResultModal: false,
         teacherDownloadConfirmed: false,
         showTeacherDownloadConfirmModal: false,
+        showTeacherWorkList: false,
         teacherAwardSituation: 1,
         teacherAwardLevelsData: [
           { level: 'ai_pioneer', name: '人工智能教育先锋', color: '#10934F', req: '1、指导30名以上选手参赛且总获奖学生不低于10名', note: '（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例0.8%）' },
@@ -2611,6 +2612,7 @@
                   { reg_work_name: "半年", reg_name: "王立豪", reg_group: "小学组", pretty_reward_level: "一等奖" }
                 ];
                 this.teacherAwardSituation = 1;
+                this.showTeacherWorkList = false;
                 this.teacherSubmitted = true;
                 this.showQueryTabs = false;
               } else if (this.activeQueryType === "school") {
