@@ -1101,6 +1101,15 @@
         <img :src="schoolPreviewImage" class="max-w-full max-h-full object-contain" />
       </div>
     </div>
+
+    <!-- ===== 通用提示对话框 ===== -->
+    <div x-show="showMessageModal" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/50" @click.self="showMessageModal = false">
+      <div class="relative w-[480px] p-[32px] bg-white rounded-[24px] text-center">
+        <img src="./img/error_icon_img.png" class="w-[90px] h-[90px] m-auto" />
+        <div class="mt-[16px] text-[17px] text-black/80 leading-[28px]" x-text="messageText"></div>
+        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium cursor-pointer text-white rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="showMessageModal = false">知道了</div>
+      </div>
+    </div>
   </main>
 
   <!-- 容器：用于插入底部 -->
@@ -1269,6 +1278,8 @@
         teacherLevel: 'excellent_teacher',
         teacherWorkList: [],
         showTeacherNoResultModal: false,
+        showMessageModal: false,
+        messageText: '',
         teacherDownloadConfirmed: false,
         showTeacherDownloadConfirmModal: false,
         showTeacherWorkList: false,
@@ -2673,6 +2684,11 @@
           this.schoolCertSubmitted = true;
           this.showSchoolCertApplyModal = false;
         },
+        // 通用提示对话框
+        showMessage(msg) {
+          this.messageText = msg;
+          this.showMessageModal = true;
+        },
 
         // 手机号正则：支持大陆(11位)、香港(8位)、澳门(8位)、台湾(10位)
         isValidPhone(phone) {
@@ -2791,6 +2807,11 @@
                   this.showTeacherNoResultModal = true;
                   return;
                 }
+                // 指导老师姓名输入 00 → 数据核实中
+                if (this.teacherName.trim() === '00') {
+                  this.showMessage('数据正在核实中，请稍后再试');
+                  return;
+                }
 
                 // 任意输入 → 指导老师查询结果（演示数据）
                 this.teacherReward = 'YES';
@@ -2816,6 +2837,17 @@
                 if (!this.matchYear) { alert("请选择比赛年份"); return; }
                 if (!this.matchLevel) { alert("请选择阶段"); return; }
                 if (!this.schoolQueryName.trim()) { alert("请输入学校名称"); return; }
+
+                // 学校名称输入 0 → 未查询到获奖记录
+                if (this.schoolQueryName.trim() === '0') {
+                  this.showMessage('未查询到获奖记录');
+                  return;
+                }
+                // 学校名称输入 00 → 数据核实中
+                if (this.schoolQueryName.trim() === '00') {
+                  this.showMessage('数据正在核实中，请稍后再试');
+                  return;
+                }
 
                 this.schoolAwardSituation = 1;
                 this.schoolCertSubmitted = false;
