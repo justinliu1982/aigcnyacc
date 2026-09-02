@@ -200,7 +200,7 @@
           <!-- Module 1: 已获奖项 -->
           <div class="mt-[32px]">
             <!-- 分隔线 + 标签 -->
-            <div class="flex w-[896px] m-auto items-center">
+            <div class="flex w-[896px] m-auto items-center cursor-pointer" @click="cycleTeacherAwardSituation()">
               <div class="flex-1 h-[2px]" style="background: linear-gradient(270deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%)"></div>
               <div class="w-[10px] h-[10px] items-center justify-center flex" style="border-radius: 50%; background: linear-gradient(180deg, rgba(192, 98, 255, 1) 0%, rgba(144, 114, 255, 1) 100%);">
                 <div class="w-[4px] h-[4px] bg-[#fff] flex rounded-full"></div>
@@ -214,25 +214,21 @@
               <div class="flex-1 h-[2px]" style="background: linear-gradient(90deg, #9162ff 0%, rgba(145, 98, 255, 0) 100%)"></div>
             </div>
 
-            <div class="mt-[20px] w-full flex justify-center">
-              <!-- 已获奖项 - 根据 teacherReward 和 teacherLevel 动态显示 -->
-              <div class="mt-[20px]">
-                <div class="w-[422px] relative">
-                  <img
-                    :src="'./img/' + (teacherLevel === 'ai_pioneer' ? '114' : teacherLevel === 'innovation_pacesetter' ? '115' : '26') + '.png'"
-                    class="w-[422px] block" alt="指导老师奖项">
-                  <div class="absolute top-[16px] right-[16px] flex items-center gap-[8px]">
-                    <div class="w-[48px] h-[24px] rounded-full cursor-pointer shadow" :style="{ background: teacherLevel === 'ai_pioneer' ? '#10934F' : teacherLevel === 'innovation_pacesetter' ? '#E06B39' : '#3489FF' }" @click="cycleTeacherLevel()"></div>
-                    <div class="text-[18px] text-[#fff] font-medium cursor-pointer select-none" @click="cycleTeacherLevel()">
-                      <span x-show="teacherReward === 'YES'">已获奖</span>
-                      <span x-show="teacherReward !== 'YES'">未获奖</span>
+            <div class="mt-[20px] flex flex-wrap justify-center gap-[24px]">
+              <template x-for="(award, index) in teacherAwardLevels" :key="award.level">
+                <div class="w-[400px] p-[28px] rounded-[20px] bg-white relative" style="border: 1px solid rgba(145, 98, 255, 0.3); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06)">
+                  <div class="text-[14px] font-medium px-[14px] py-[4px] rounded-full inline-block text-white" style="background: #9162FF">已获奖</div>
+                  <div class="mt-[14px] text-[32px] font-bold leading-tight" :style="{ color: award.color }" x-text="award.name"></div>
+                  <div class="mt-[14px] text-[16px] text-black/60">申领要求：</div>
+                  <div class="text-[16px] text-black/80 leading-[26px]" x-text="award.req"></div>
+                  <div class="mt-[8px] text-[15px] text-black/50 leading-[24px]" x-text="award.note"></div>
+                  <div class="mt-[22px]">
+                    <div class="w-[200px] h-[52px] flex rounded-full items-center justify-center cursor-pointer shadow-lg" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="openTeacherCertDetail()">
+                      <span class="text-[19px] font-bold text-white">查看详情</span>
                     </div>
                   </div>
-                  <div class="absolute w-[200px] h-[56px] flex rounded-[100px] left-[40px] bottom-[24px] items-center justify-center cursor-pointer shadow-xl" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="openTeacherCertDetail()">
-                    <span class="text-[20px] font-bold text-white">查看详情</span>
-                  </div>
                 </div>
-              </div>
+              </template>
             </div>
           </div>
 
