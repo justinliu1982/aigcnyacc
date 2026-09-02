@@ -1625,6 +1625,7 @@
         showSchoolCertReviewModal: false,
         schoolCertSubmitted: false,
         schoolCertReviewed: false,
+        schoolClaimActive: false,
         schoolAuthorizerName: "",
         schoolAuthorizerPhone: "",
         schoolAuthorizerCode: "",
@@ -2639,10 +2640,12 @@
           this.showSchoolCertPreviewModal = true;
         },
         schoolClaim() {
-          this.openComingSoon('即将开放，敬请期待');
+          this.schoolClaimActive = true;
+          this.showSchoolCertApplyModal = true;
         },
         schoolDownloadClick() {
           if (!this.schoolCertSubmitted) {
+            this.schoolClaimActive = false;
             this.showSchoolCertApplyModal = true;
           } else if (!this.schoolCertReviewed) {
             this.schoolCertReviewed = true;
@@ -2683,6 +2686,10 @@
           if (!this.schoolAuthFileName) { alert("请上传授权委托书"); return; }
           this.schoolCertSubmitted = true;
           this.showSchoolCertApplyModal = false;
+          if (this.schoolClaimActive) {
+            this.schoolClaimActive = false;
+            this.openComingSoon('即将开放，敬请期待');
+          }
         },
         // 通用提示对话框
         showMessage(msg) {
