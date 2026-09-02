@@ -1176,12 +1176,12 @@
         showTeacherDownloadConfirmModal: false,
         teacherAwardSituation: 1,
         teacherAwardLevelsData: [
-          { level: 'excellent_teacher', name: '优秀指导教师', color: '#3489FF', req: '1、指导10名以上选手参赛', note: '（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例8%）' },
-          { level: 'innovation_pacesetter', name: '教学创新标兵', color: '#E06B39', req: '1、指导10名以上选手参赛且总获奖学生不低于4名', note: '（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例1.6%）' },
           { level: 'ai_pioneer', name: '人工智能教育先锋', color: '#10934F', req: '1、指导30名以上选手参赛且总获奖学生不低于10名', note: '（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例0.8%）' },
+          { level: 'innovation_pacesetter', name: '教学创新标兵', color: '#E06B39', req: '1、指导10名以上选手参赛且总获奖学生不低于4名', note: '（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例1.6%）' },
+          { level: 'excellent_teacher', name: '优秀指导教师', color: '#3489FF', req: '1、指导10名以上选手参赛', note: '（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例8%）' },
         ],
         get teacherAwardLevels() {
-          return this.teacherAwardLevelsData.slice(0, this.teacherAwardSituation);
+          return this.teacherAwardLevelsData.slice(-this.teacherAwardSituation);
         },
 
         // 已获奖项列表
