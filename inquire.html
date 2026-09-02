@@ -952,11 +952,11 @@
         </div>
         <div class="h-[2px] bg-[#8742DB] w-full mt-[25px]"></div>
         <div class="mt-[20px] flex gap-[16px]">
-          <div class="flex-1 h-[320px] bg-[#F0EBFB] rounded-[16px] flex items-center justify-center overflow-hidden">
-            <img src="./img/certificate_img.png" class="max-h-[300px] object-contain" onerror="this.style.display='none'" />
+          <div class="flex-1 h-[320px] bg-[#F0EBFB] rounded-[16px] flex items-center justify-center overflow-hidden cursor-pointer" @click="openTeacherCertPreview('./img/老师数字.png')">
+            <img src="./img/老师数字.png" class="max-h-[300px] object-contain" onerror="this.style.display='none'" />
           </div>
-          <div class="flex-1 h-[320px] bg-[#F0EBFB] rounded-[16px] flex items-center justify-center overflow-hidden">
-            <img src="./img/certificate_img.png" class="max-h-[300px] object-contain" onerror="this.style.display='none'" />
+          <div class="flex-1 h-[320px] bg-[#F0EBFB] rounded-[16px] flex items-center justify-center overflow-hidden cursor-pointer" @click="openTeacherCertPreview('./img/老师铜板.png')">
+            <img src="./img/老师铜板.png" class="max-h-[300px] object-contain" onerror="this.style.display='none'" />
           </div>
         </div>
         <div class="mt-[30px] flex justify-center gap-[16px]">
@@ -1001,6 +1001,14 @@
         <div class="mt-[16px] text-[20px] font-medium text-black/80">无查询结果</div>
         <div class="mt-[12px] text-[15px] text-black/60 leading-[24px]">很抱歉，未查询到您的指导记录，请确认姓名和手机号填写是否正确后重试。</div>
         <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium cursor-pointer text-white rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="showTeacherNoResultModal = false">知道了</div>
+      </div>
+    </div>
+
+    <!-- ===== 指导老师证书全屏预览 ===== -->
+    <div x-show="showTeacherCertPreviewModal" class="fixed inset-0 z-[90] flex items-center justify-center bg-black/80" @click.self="showTeacherCertPreviewModal = false">
+      <div class="relative w-full h-full flex items-center justify-center p-[40px]">
+        <div class="absolute top-[24px] right-[24px] w-[44px] h-[44px] flex items-center justify-center cursor-pointer text-white text-[32px] rounded-full" style="background: rgba(0, 0, 0, 0.5)" @click="showTeacherCertPreviewModal = false">×</div>
+        <img :src="teacherPreviewImage" class="max-w-full max-h-full object-contain" />
       </div>
     </div>
   </main>
@@ -1175,6 +1183,8 @@
         teacherDownloadConfirmed: false,
         showTeacherDownloadConfirmModal: false,
         showTeacherWorkList: false,
+        showTeacherCertPreviewModal: false,
+        teacherPreviewImage: '',
         teacherAwardSituation: 1,
         teacherAwardLevelsData: [
           { level: 'ai_pioneer', name: '人工智能教育先锋', color: '#10934F', req: '1、指导30名以上选手参赛且总获奖学生不低于10名', note: '（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例0.8%）' },
@@ -2453,6 +2463,11 @@
         closeTeacherCertDetail() {
           this.showTeacherCertModal = false;
           this.teacherDownloadConfirmed = false;
+        },
+        // 证书图片全屏预览
+        openTeacherCertPreview(src) {
+          this.teacherPreviewImage = src;
+          this.showTeacherCertPreviewModal = true;
         },
         // 申领纸质/铜板证书
         teacherClaim() {
