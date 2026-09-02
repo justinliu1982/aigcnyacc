@@ -978,7 +978,7 @@
         </div>
         <div class="h-[2px] bg-[#8742DB] w-full mt-[20px]"></div>
         <div class="mt-[20px] w-full h-[240px] bg-[#F0EBFB] rounded-[16px] flex items-center justify-center overflow-hidden">
-          <img src="./img/certificate_img.png" class="max-h-[220px] object-contain" onerror="this.style.display='none'" />
+          <img :src="downloadPreviewImage" class="max-h-[220px] object-contain" onerror="this.style.display='none'" />
         </div>
         <div class="mt-[20px] flex items-start gap-[10px]">
           <input type="checkbox" x-model="teacherDownloadConfirmed" class="w-[16px] h-[16px] mt-[3px] flex-shrink-0" style="accent-color: #9162FF" />
@@ -1274,6 +1274,7 @@
         showTeacherWorkList: false,
         showTeacherCertPreviewModal: false,
         teacherPreviewImage: '',
+        downloadPreviewImage: '',
         teacherAwardSituation: 1,
         teacherAwardLevelsData: [
           { level: 'ai_pioneer', name: '人工智能教育先锋', color: '#10934F', req: '1、指导30名以上选手参赛且总获奖学生不低于10名', note: '（注：若满足本条件的人数超过总颁发比例，则按照指导人数从高到低颁发，获奖比例0.8%）' },
@@ -2594,6 +2595,7 @@
         // 下载数字证书 → 确认对话框
         teacherDownloadClick() {
           this.teacherDownloadConfirmed = false;
+          this.downloadPreviewImage = './img/certificate_img.png';
           this.showTeacherDownloadConfirmModal = true;
         },
         closeTeacherDownloadConfirm() {
@@ -2636,6 +2638,7 @@
             this.showSchoolCertReviewModal = true;
           } else {
             this.teacherDownloadConfirmed = false;
+            this.downloadPreviewImage = './img/团队数字.png';
             this.showTeacherDownloadConfirmModal = true;
           }
         },
