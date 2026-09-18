@@ -2137,7 +2137,8 @@
           }
           this.showLoginModal = false;
           this.loginError = "";
-          this.showLoginSuccessModal = true;
+          // 登录成功 → 进入个人中心页面
+          window.location.href = './个人中心.html';
         },
         closeLoginSuccess() {
           this.showLoginSuccessModal = false;
