@@ -240,15 +240,25 @@
           @click="showPrintTip = false">✕</div>
       </div>
 
-      <!-- 形式一：建议自行打印（对应官网报名） -->
+      <!-- 形式一：数字证书下载 / 代打印邮寄（对应官网报名） -->
       <div x-show="printTipMode === 'self'">
-        <div class="mt-[18px] text-[14px] leading-[26px] text-[#55556a]">
-          建议纸质证书通过下载数字证书后自行打印，如需辅助及指导可联系专项工作组，联系电话：XXXXXXX。
+        <div class="mt-[18px] text-[15px] font-semibold text-[#2b2b3a]">【大赛证书申领通知】</div>
+
+        <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
+          大赛数字证书已开放下载，请登录官网自行下载打印。
+        </div>
+
+        <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
+          如需纸质证书，不方便打印的选手可扫码进入工作组系统，填写信息申请代打印邮寄服务（邮费按实际快递费收取）。工作组将在【7】个工作日内处理。
+        </div>
+
+        <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
+          如有疑问请联系【XXXXXXX】，电话：【XXXXXXX】。
         </div>
 
         <div class="mt-[18px] flex flex-col items-center">
           <img src="./img/ewm.png" class="w-[150px] h-[150px]" alt="专项工作组二维码" />
-          <div class="mt-[8px] text-[13px] text-[#9a9aae]">扫码联系专项工作组</div>
+          <div class="mt-[8px] text-[13px] text-[#9a9aae]">扫码进入工作组系统</div>
         </div>
       </div>
 
