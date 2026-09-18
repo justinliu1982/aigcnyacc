@@ -149,7 +149,7 @@
                       <td class="u-td" style="color: #55556a;" x-text="c.source"></td>
                       <td class="u-td">
                         <div class="flex flex-wrap gap-[8px]">
-                          <span class="u-btn u-btn-outline">查看</span>
+                          <span class="u-btn u-btn-outline" @click="openCertDetail()">查看</span>
                           <span class="u-btn" :class="c.applied ? 'u-btn-outline' : 'u-btn-solid'" x-text="c.applied ? '已申领' : '申领纸质'"></span>
                           <span class="u-btn u-btn-solid">下载数字</span>
                           <span class="u-btn u-btn-outline" x-show="c.feedback">反馈</span>
@@ -172,6 +172,62 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- ===== 证书详情对话框 ===== -->
+  <div x-show="showCertDetail" x-cloak class="fixed inset-0 z-[80] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.45)" @click.self="closeCertDetail()">
+    <div class="bg-white rounded-[16px] w-[960px] max-w-[94vw] p-[26px]">
+      <!-- 标题 -->
+      <div class="flex items-center justify-between">
+        <div class="text-[20px] font-bold text-[#2b2b3a]">大赛获奖证书</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="closeCertDetail()">✕</div>
+      </div>
+
+      <div class="mt-[20px] flex gap-[24px]">
+        <!-- 左：证书预览区（证书图暂缺，先保留区域） -->
+        <div class="flex-1 min-w-0 rounded-[12px] flex items-center justify-center" style="background: #f7f7fa; min-height: 420px;">
+          <div class="flex items-center justify-center rounded-[8px] bg-white text-[14px] text-[#b8b8c8]"
+            style="width: 84%; aspect-ratio: 297 / 210; border: 1px dashed #dcdce8;">证书预览</div>
+        </div>
+
+        <!-- 右：信息与操作 -->
+        <div class="w-[236px] flex-shrink-0 flex flex-col">
+          <div class="text-[13px] text-[#9a9aae]">证书名称</div>
+          <div class="mt-[6px] text-[16px] font-bold text-[#2b2b3a]">大赛获奖证书</div>
+
+          <div class="mt-[16px] text-[13px] text-[#9a9aae]">对应作品</div>
+          <div class="mt-[6px] text-[16px] font-bold text-[#2b2b3a]">《数字苏园·光影戏梦》</div>
+
+          <div class="mt-[18px] h-[1px] bg-[#eeeef4]"></div>
+
+          <div class="mt-[18px] h-[36px] rounded-[8px] flex items-center justify-center text-[14px] font-medium"
+            style="background: #e9f9f0; color: #21a366;">✓ 证书信息已确认</div>
+
+          <div class="mt-[10px] h-[36px] rounded-[8px] border border-[#e4e4ee] bg-white flex items-center justify-center gap-[6px] text-[14px] text-[#2b2b3a] cursor-pointer"
+            @mouseenter="$el.style.borderColor = '#8742DB'; $el.style.color = '#8742DB'"
+            @mouseleave="$el.style.borderColor = '#e4e4ee'; $el.style.color = '#2b2b3a'">
+            <span>✏️</span><span>证书问题反馈</span>
+          </div>
+
+          <div class="mt-[10px] h-[36px] rounded-[8px] flex items-center justify-center gap-[6px] text-[14px] text-white cursor-pointer"
+            style="background: #8742DB;">
+            <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" class="flex-shrink-0">
+              <rect x="1" y="1" width="14" height="12.5" rx="3" fill="#F0466B" />
+              <rect x="3.8" y="3.6" width="8.4" height="6.4" rx="1.2" fill="#fff" />
+              <rect x="6.4" y="11" width="3.2" height="3.6" rx="1.1" fill="#fff" />
+            </svg>
+            <span>申领纸质证书</span>
+          </div>
+
+          <div class="mt-[10px] h-[36px] rounded-[8px] flex items-center justify-center gap-[6px] text-[14px] text-white cursor-pointer"
+            style="background: #8742DB;">
+            <span class="text-[17px] leading-none">↓</span><span>下载数字证书</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -202,6 +258,17 @@
           { name: '社会实践证书', award: '--', work: '参赛者：张明华', stage: '国赛', confirm: '未确认', status: '未申领', statusColor: 'color:#9a9aae;', source: '官网报名', applied: false, feedback: false },
           { name: '参赛证书', award: '--', work: '参赛者：张明华', stage: '国赛', confirm: '已确认', status: '未申领', statusColor: 'color:#9a9aae;', source: '官网报名', applied: false, feedback: false },
         ],
+
+        // ===== 证书详情对话框 =====
+        showCertDetail: false,
+
+        openCertDetail() {
+          this.showCertDetail = true;
+        },
+
+        closeCertDetail() {
+          this.showCertDetail = false;
+        },
       }));
     });
   </script>
