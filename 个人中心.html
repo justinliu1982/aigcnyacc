@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>个人中心</title>
+  <script src="./browser@4.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js" defer></script>
+  <style>
+    [x-cloak] { display: none !important; }
+    html { font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif; }
+    body { margin: 0; background: #f7f8fd; }
+    .u-menu-item { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; margin: 0 12px; border-radius: 10px; cursor: pointer; color: #55556a; font-size: 15px; }
+    .u-menu-item:hover { background: rgba(255, 255, 255, 0.65); }
+    .u-menu-item.active { background: #fff; color: #8742DB; font-weight: 600; }
+    .u-tab { position: relative; padding: 0 4px 14px 4px; cursor: pointer; font-size: 16px; color: #6b6b80; }
+    .u-tab.active { color: #8742DB; font-weight: 600; }
+    .u-tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 2px; background: #8742DB; }
+    .u-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: #8742DB; color: #fff; font-size: 12px; }
+    .u-btn { display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 0 12px; border-radius: 6px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+    .u-btn-outline { border: 1px solid #c9c9d6; color: #55556a; background: #fff; }
+    .u-btn-outline:hover { border-color: #8742DB; color: #8742DB; }
+    .u-btn-solid { background: #8742DB; color: #fff; }
+    .u-btn-solid:hover { background: #7534c4; }
+    .u-btn-gray { background: #f0f0f5; color: #8888a0; }
+    .u-th, .u-td { padding: 18px 12px; font-size: 14px; vertical-align: middle; }
+    .u-th { color: #55556a; font-weight: 600; background: #fafafd; }
+    .u-tr { border-top: 1px solid #f0f0f5; }
+  </style>
+</head>
+
+<body x-data="userCenter()" x-cloak>
+  <div class="flex min-h-screen">
+
+    <!-- ===== 左侧边栏 ===== -->
+    <aside class="w-[240px] flex-shrink-0" style="background: #ebe7fb;">
+      <!-- Logo -->
+      <div class="flex items-center gap-[10px] px-[20px] h-[62px]">
+        <div class="w-[30px] h-[30px] rounded-[8px] flex items-center justify-center text-white font-bold text-[17px]" style="background: #874ee9;">A</div>
+        <div class="text-[16px] font-bold text-[#2b2b3a]">AIGCNYACC大赛</div>
+      </div>
+
+      <!-- 用户卡片 -->
+      <div class="mx-[12px] mt-[8px] bg-white rounded-[16px] px-[16px] py-[20px] text-center">
+        <div class="w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center text-white text-[26px] font-medium" style="background: #8742DB;">张</div>
+        <div class="mt-[10px] text-[16px] font-semibold text-[#2b2b3a]">张明华</div>
+        <div class="mt-[4px] text-[12px] text-[#9a9aae]">账号ID：AIGC2026-0388</div>
+        <div class="mt-[10px] inline-flex items-center gap-[4px] px-[10px] h-[24px] rounded-full text-[12px]" style="background: #e7f7ee; color: #21a366;">
+          <span>📱</span><span>手机已绑定</span>
+        </div>
+      </div>
+
+      <!-- 菜单 -->
+      <nav class="mt-[18px] pb-[24px]">
+        <div class="px-[24px] mb-[8px] text-[13px] text-[#8f8fa8]">个人中心</div>
+        <template x-for="item in menu" :key="item.key">
+          <div class="u-menu-item" :class="activeMenu === item.key ? 'active' : ''" @click="activeMenu = item.key">
+            <span class="text-[16px]" x-text="item.icon"></span>
+            <span class="flex-1" x-text="item.label"></span>
+            <span class="u-badge" x-show="item.badge" x-text="item.badge"></span>
+          </div>
+        </template>
+      </nav>
+    </aside>
+
+    <!-- ===== 主内容区 ===== -->
+    <main class="flex-1 min-w-0 flex flex-col">
+      <!-- 顶部栏 -->
+      <header class="h-[62px] flex-shrink-0 flex items-center justify-end gap-[18px] px-[32px]">
+        <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center cursor-pointer bg-white text-[16px]">🔍</div>
+        <div class="relative w-[34px] h-[34px] rounded-[10px] flex items-center justify-center cursor-pointer bg-white text-[16px]">
+          🔔
+          <span class="absolute top-[5px] right-[6px] w-[7px] h-[7px] rounded-full" style="background: #ff4d4f;"></span>
+        </div>
+        <div class="flex items-center gap-[8px] cursor-pointer">
+          <div class="w-[34px] h-[34px] rounded-full flex items-center justify-center text-white text-[15px]" style="background: #8742DB;">张</div>
+          <span class="text-[14px] text-[#2b2b3a]">张明华</span>
+        </div>
+      </header>
+
+      <!-- 内容 -->
+      <div class="flex-1 px-[32px] pb-[40px]">
+        <!-- Tabs -->
+        <div class="flex items-center gap-[36px] border-b border-[#ebeaf2]">
+          <div class="u-tab" :class="activeTab === 'cert' ? 'active' : ''" @click="activeTab = 'cert'">
+            我的证书 <span class="u-badge ml-[4px]">11</span>
+          </div>
+          <div class="u-tab" :class="activeTab === 'claim' ? 'active' : ''" @click="activeTab = 'claim'">
+            我的申领 <span class="u-badge ml-[4px]" style="background: #b9a7ea;">4</span>
+          </div>
+        </div>
+
+        <!-- 我的证书 -->
+        <div x-show="activeTab === 'cert'" class="mt-[20px]">
+          <div class="bg-white rounded-[16px] p-[24px]">
+            <!-- 筛选 + 批量下载 -->
+            <div class="flex items-center justify-between">
+              <div class="relative">
+                <select class="appearance-none bg-white border border-[#dddcE8] rounded-[10px] h-[40px] pl-[16px] pr-[36px] text-[15px] text-[#2b2b3a] outline-none cursor-pointer" x-model="matchName">
+                  <option value="2025-2026">第一届大赛(2025-2026)</option>
+                </select>
+                <span class="absolute right-[14px] top-1/2 -translate-y-1/2 pointer-events-none text-[#8f8fa8]">▾</span>
+              </div>
+              <div class="flex items-center gap-[12px]">
+                <span class="text-[13px] text-[#8f8fa8]">一次勾选多张证书，批量下载</span>
+                <div class="u-btn" style="border: 1px solid #8742DB; color: #8742DB; background: #fff; height: 36px; padding: 0 16px;">
+                  <span class="mr-[6px]">⬇</span>批量下载数字证书
+                </div>
+              </div>
+            </div>
+
+            <!-- 备注说明 -->
+            <div class="mt-[20px] rounded-[12px] px-[20px] py-[16px] text-[13px] leading-[26px]" style="background: #f7f5fe; color: #55556a;">
+              <div>省赛：证书上传时间：2026/08/01　纸质证书申领：2026/08/15 — 2026/09/25　问题反馈：2026/08/15 — 2026/09/05</div>
+              <div>国赛：证书上传时间：2026/08/25　纸质证书申领：2026/08/28 — 2026/09/25　问题反馈：2026/08/25 — 2026/09/05</div>
+              <div class="mt-[6px]">💳 <span class="font-medium">在线支付说明：</span>仅收取【快递服务费】（邮寄运费）；每张证书一个独立订单，仅支持在线支付（支付宝／微信），不支持对公打款与合并支付。</div>
+              <div>✏️ <span class="font-medium">问题反馈说明：</span>证书信息有误请进入证书详情页，点击「证书问题反馈／修改证书信息」提交更正；可更正字段为姓名／指导老师／就读学校（赛区以报名数据为准，本期不予更正）。</div>
+              <div>📦 <span class="font-medium">收件地址说明：</span>支付成功后至印刷厂导出前可修改收件地址（每单限 1 次）；进入印刷／已寄出后不可修改。</div>
+            </div>
+
+            <!-- 证书表格 -->
+            <div class="mt-[20px]">
+              <table class="w-full border-collapse">
+                <thead>
+                  <tr>
+                    <th class="u-th text-left" style="width: 210px;">证书名称</th>
+                    <th class="u-th text-left" style="width: 90px;">奖项</th>
+                    <th class="u-th text-left" style="width: 170px;">参赛作品</th>
+                    <th class="u-th text-left" style="width: 90px;">比赛阶段</th>
+                    <th class="u-th text-left" style="width: 100px;">证书确认</th>
+                    <th class="u-th text-left" style="width: 280px;">申领状态</th>
+                    <th class="u-th text-left" style="width: 110px;">报名来源</th>
+                    <th class="u-th text-left">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="(c, i) in certs" :key="i">
+                    <tr class="u-tr">
+                      <td class="u-td" style="color: #8742DB;" x-text="c.name"></td>
+                      <td class="u-td" style="color: #55556a;" x-text="c.award"></td>
+                      <td class="u-td" style="color: #55556a;" x-text="c.work"></td>
+                      <td class="u-td" style="color: #55556a;" x-text="c.stage"></td>
+                      <td class="u-td">
+                        <span :style="c.confirm === '已确认' ? 'color:#21a366;' : 'color:#9a9aae;'" x-text="c.confirm"></span>
+                      </td>
+                      <td class="u-td">
+                        <span :style="c.statusColor" x-text="c.status"></span>
+                      </td>
+                      <td class="u-td" style="color: #55556a;" x-text="c.source"></td>
+                      <td class="u-td">
+                        <div class="flex flex-wrap gap-[8px]">
+                          <span class="u-btn u-btn-outline">查看</span>
+                          <span class="u-btn" :class="c.applied ? 'u-btn-outline' : 'u-btn-solid'" x-text="c.applied ? '已申领' : '申领纸质'"></span>
+                          <span class="u-btn u-btn-solid">下载数字</span>
+                          <span class="u-btn u-btn-outline" x-show="c.feedback">反馈</span>
+                          <span class="u-btn u-btn-gray">···</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 我的申领 -->
+        <div x-show="activeTab === 'claim'" class="mt-[20px]">
+          <div class="bg-white rounded-[16px] p-[40px] text-center text-[15px] text-[#8f8fa8]">
+            暂无申领记录
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('userCenter', () => ({
+        activeMenu: 'cert',
+        activeTab: 'cert',
+        matchName: '2025-2026',
+        menu: [
+          { key: 'account', icon: '⚙️', label: '账号设置' },
+          { key: 'signup', icon: '📋', label: '参赛报名' },
+          { key: 'status', icon: '📊', label: '报名状态' },
+          { key: 'score', icon: '🏆', label: '我的成绩' },
+          { key: 'cert', icon: '🎓', label: '我的证书' },
+          { key: 'notice', icon: '🔔', label: '大赛通知', badge: 3 },
+          { key: 'feedback', icon: '💬', label: '问题反馈' },
+        ],
+        certs: [
+          { name: '大赛获奖证书', award: '一等奖', work: '《数字苏园·光影戏梦》', stage: '省赛', confirm: '已确认', status: '已寄出', statusColor: 'color:#21a366;', source: '官网报名', applied: true, feedback: true },
+          { name: '大赛获奖证书', award: '二等奖', work: '《城市之光》', stage: '省赛', confirm: '未确认', status: '已由北京新艺教育科技有限公司统一下单', statusColor: 'color:#e08a2b;', source: '组织单位报名', applied: false, feedback: false },
+          { name: '艺术品一物一码溯源注册登记证书', award: '--', work: '《数字苏园·光影戏梦》', stage: '省赛', confirm: '已确认', status: '已寄出', statusColor: 'color:#21a366;', source: '官网报名', applied: true, feedback: false },
+          { name: '艺术品一物一码溯源注册登记证书', award: '--', work: '《城市之光》', stage: '省赛', confirm: '已确认', status: '未申领', statusColor: 'color:#9a9aae;', source: '官网报名', applied: false, feedback: false },
+          { name: '社会实践证书', award: '--', work: '参赛者：张明华', stage: '省赛', confirm: '已确认', status: '未申领', statusColor: 'color:#9a9aae;', source: '官网报名', applied: false, feedback: false },
+          { name: '创作者注册登记证书', award: '--', work: '参赛者：张明华', stage: '省赛', confirm: '已确认', status: '支付失败', statusColor: 'color:#ff4d4f;', source: '官网报名', applied: true, feedback: false },
+          { name: '参赛证书', award: '--', work: '参赛者：张明华', stage: '省赛', confirm: '已确认', status: '未申领', statusColor: 'color:#9a9aae;', source: '官网报名', applied: false, feedback: false },
+          { name: '大赛获奖证书', award: '三等奖', work: '《山海湖源》', stage: '国赛', confirm: '未确认', status: '已由北京新艺教育科技有限公司统一下单', statusColor: 'color:#e08a2b;', source: '组织单位报名', applied: false, feedback: false },
+          { name: '国家入编证书', award: '--', work: '《数字苏园·光影戏梦》', stage: '国赛', confirm: '已确认', status: '未申领', statusColor: 'color:#9a9aae;', source: '官网报名', applied: false, feedback: false },
+          { name: '社会实践证书', award: '--', work: '参赛者：张明华', stage: '国赛', confirm: '未确认', status: '未申领', statusColor: 'color:#9a9aae;', source: '官网报名', applied: false, feedback: false },
+          { name: '参赛证书', award: '--', work: '参赛者：张明华', stage: '国赛', confirm: '已确认', status: '未申领', statusColor: 'color:#9a9aae;', source: '官网报名', applied: false, feedback: false },
+        ],
+      }));
+    });
+  </script>
+</body>
+</html>
