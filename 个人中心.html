@@ -212,7 +212,7 @@
           </div>
 
           <div class="mt-[10px] h-[36px] rounded-[8px] flex items-center justify-center gap-[6px] text-[14px] text-white cursor-pointer"
-            style="background: #8742DB;" @click="showPrintTip = true">
+            style="background: #8742DB;" @click="openPrintTip()">
             <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" class="flex-shrink-0">
               <rect x="1" y="1" width="14" height="12.5" rx="3" fill="#F0466B" />
               <rect x="3.8" y="3.6" width="8.4" height="6.4" rx="1.2" fill="#fff" />
@@ -240,18 +240,38 @@
           @click="showPrintTip = false">✕</div>
       </div>
 
-      <div class="mt-[18px] text-[14px] leading-[26px] text-[#55556a]">
-        建议纸质证书通过下载数字证书后自行打印，如需辅助及指导可联系专项工作组，联系电话：XXXXXXX。
+      <!-- 形式一：建议自行打印（对应官网报名） -->
+      <div x-show="printTipMode === 'self'">
+        <div class="mt-[18px] text-[14px] leading-[26px] text-[#55556a]">
+          建议纸质证书通过下载数字证书后自行打印，如需辅助及指导可联系专项工作组，联系电话：XXXXXXX。
+        </div>
+
+        <div class="mt-[18px] flex flex-col items-center">
+          <img src="./img/ewm.png" class="w-[150px] h-[150px]" alt="专项工作组二维码" />
+          <div class="mt-[8px] text-[13px] text-[#9a9aae]">扫码联系专项工作组</div>
+        </div>
       </div>
 
-      <div class="mt-[18px] flex flex-col items-center">
-        <img src="./img/ewm.png" class="w-[150px] h-[150px]" alt="专项工作组二维码" />
-        <div class="mt-[8px] text-[13px] text-[#9a9aae]">扫码联系专项工作组</div>
+      <!-- 形式二：联系组织单位（对应组织单位报名） -->
+      <div x-show="printTipMode === 'org'">
+        <div class="mt-[18px] text-[14px] leading-[26px] text-[#55556a]">
+          您的参赛报名方式为组织单位报名，请与您参赛报名的组织单位联系获取相关证书，联系人：XXXX，联系电话：XXXXXXXX。
+        </div>
       </div>
 
-      <div class="mt-[22px] flex justify-center">
+      <!-- 操作区：知道了 + 右下角形式切换 -->
+      <div class="mt-[22px] relative flex justify-center">
         <div class="w-[160px] h-[42px] flex items-center justify-center rounded-full text-[15px] font-medium text-white cursor-pointer"
           style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%);" @click="showPrintTip = false">知道了</div>
+
+        <div class="absolute right-0 top-0 h-[42px] flex items-center gap-[2px] text-[13px] cursor-pointer"
+          style="color: #8742DB;" x-show="printTipMode === 'self'" @click="printTipMode = 'org'">
+          <span>组织单位报名</span><span class="text-[15px] leading-none">›</span>
+        </div>
+        <div class="absolute right-0 top-0 h-[42px] flex items-center gap-[2px] text-[13px] cursor-pointer"
+          style="color: #8742DB;" x-show="printTipMode === 'org'" @click="printTipMode = 'self'">
+          <span class="text-[15px] leading-none">‹</span><span>官网报名</span>
+        </div>
       </div>
     </div>
   </div>
@@ -288,6 +308,12 @@
         // ===== 证书详情对话框 =====
         showCertDetail: false,
         showPrintTip: false,
+        printTipMode: 'self',
+
+        openPrintTip() {
+          this.printTipMode = 'self';
+          this.showPrintTip = true;
+        },
 
         openCertDetail() {
           this.showCertDetail = true;
