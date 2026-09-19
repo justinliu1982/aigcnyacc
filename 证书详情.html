@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>证书详情</title>
+  <script src="./browser@4.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js" defer></script>
+  <style>
+    [x-cloak] { display: none !important; }
+    html { font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif; }
+    body { margin: 0; background: #f7f8fd; }
+
+    .u-menu-item { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; margin: 0 12px; border-radius: 10px; cursor: pointer; color: #55556a; font-size: 15px; }
+    .u-menu-item:hover { background: rgba(255, 255, 255, 0.65); }
+    .u-menu-item.active { background: #fff; color: #8742DB; font-weight: 600; }
+    .u-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: #8742DB; color: #fff; font-size: 12px; }
+    .u-btn { display: inline-flex; align-items: center; justify-content: center; height: 30px; padding: 0 12px; border-radius: 6px; font-size: 13px; cursor: pointer; white-space: nowrap; }
+    .u-btn-outline { border: 1px solid #c9c9d6; color: #55556a; background: #fff; }
+    .u-btn-outline:hover { border-color: #8742DB; color: #8742DB; }
+    .u-btn-solid { background: #8742DB; color: #fff; }
+    .u-btn-solid:hover { background: #7534c4; }
+
+    /* 详情操作按钮 */
+    .d-btn { display: flex; align-items: center; justify-content: center; gap: 6px; height: 40px; border-radius: 8px; font-size: 14px; cursor: pointer; }
+    .d-btn-outline { border: 1px solid #e4e4ee; background: #fff; color: #2b2b3a; }
+    .d-btn-outline:hover { border-color: #8742DB; color: #8742DB; }
+    .d-btn-primary { background: #8742DB; color: #fff; }
+    .d-btn-primary:hover { background: #7534c4; }
+
+    /* 信息块 */
+    .info-label { font-size: 13px; color: #9a9aae; }
+    .info-value { font-size: 16px; font-weight: 700; color: #2b2b3a; margin-top: 6px; }
+
+    /* 问题反馈字段 */
+    .fb-field { border: 1px solid #e8e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+    .fb-field.expanded { border-color: #8742DB; background: #faf8ff; }
+    .fb-field .fb-correction { display: none; }
+    .fb-field.expanded .fb-correction { display: block; }
+    .fb-input { width: 100%; height: 38px; border: 1px solid #e0e0ea; border-radius: 8px; padding: 0 12px; font-size: 13px; outline: none; box-sizing: border-box; background: #fff; }
+    .fb-input:focus { border-color: #8742DB; }
+    .fb-correct { font-size: 12px; color: #8742DB; padding: 4px 10px; border-radius: 6px; cursor: pointer; flex-shrink: 0; }
+    .fb-correct:hover { background: #8742DB; color: #fff; }
+    .upload-area { flex: 1; border: 1px dashed #d8d8e4; border-radius: 10px; padding: 14px 10px; text-align: center; cursor: pointer; background: #fff; }
+    .upload-area:hover { border-color: #8742DB; }
+    .upload-area.done { border-color: #21a366; background: #ecfdf5; }
+
+    @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+
+<body x-data="certDetailPage()" x-cloak>
+  <div class="flex min-h-screen">
+
+    <!-- ===== 左侧边栏 ===== -->
+    <aside class="w-[240px] flex-shrink-0" style="background: #ebe7fb;">
+      <div class="flex items-center gap-[10px] px-[20px] h-[62px]">
+        <div class="w-[30px] h-[30px] rounded-[8px] flex items-center justify-center text-white font-bold text-[17px]" style="background: #874ee9;">A</div>
+        <div class="text-[16px] font-bold text-[#2b2b3a]">AIGCNYACC大赛</div>
+      </div>
+
+      <div class="mx-[12px] mt-[8px] bg-white rounded-[16px] px-[16px] py-[20px] text-center">
+        <div class="w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center text-white text-[26px] font-medium" style="background: #8742DB;">张</div>
+        <div class="mt-[10px] text-[16px] font-semibold text-[#2b2b3a]">张明华</div>
+        <div class="mt-[4px] text-[12px] text-[#9a9aae]">账号ID：AIGC2026-0388</div>
+        <div class="mt-[10px] inline-flex items-center gap-[4px] px-[10px] h-[24px] rounded-full text-[12px]" style="background: #e7f7ee; color: #21a366;">
+          <span>📱</span><span>手机已绑定</span>
+        </div>
+      </div>
+
+      <nav class="mt-[18px] pb-[24px]">
+        <div class="px-[24px] mb-[8px] text-[13px] text-[#8f8fa8]">个人中心</div>
+        <template x-for="item in menu" :key="item.key">
+          <div class="u-menu-item" :class="activeMenu === item.key ? 'active' : ''" @click="selectMenu(item.key)">
+            <span class="text-[16px]" x-text="item.icon"></span>
+            <span class="flex-1" x-text="item.label"></span>
+            <span class="u-badge" x-show="item.badge" x-text="item.badge"></span>
+          </div>
+        </template>
+      </nav>
+    </aside>
+
+    <!-- ===== 主内容区 ===== -->
+    <main class="flex-1 min-w-0 flex flex-col">
+      <header class="h-[62px] flex-shrink-0 flex items-center justify-end gap-[18px] px-[32px]">
+        <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center cursor-pointer bg-white text-[16px]">🔍</div>
+        <div class="relative w-[34px] h-[34px] rounded-[10px] flex items-center justify-center cursor-pointer bg-white text-[16px]">
+          🔔
+          <span class="absolute top-[5px] right-[6px] w-[7px] h-[7px] rounded-full" style="background: #ff4d4f;"></span>
+        </div>
+        <div class="flex items-center gap-[8px] cursor-pointer">
+          <div class="w-[34px] h-[34px] rounded-full flex items-center justify-center text-white text-[15px]" style="background: #8742DB;">张</div>
+          <span class="text-[14px] text-[#2b2b3a]">张明华</span>
+        </div>
+      </header>
+
+      <div class="flex-1 px-[32px] pb-[40px]">
+        <!-- 面包屑 -->
+        <div class="flex items-center gap-[8px] text-[14px]">
+          <a href="./个人中心.html" class="cursor-pointer" style="color: #8742DB;">我的证书</a>
+          <span class="text-[#c0c0cc]">/</span>
+          <span class="text-[#8f8fa8]">证书详情</span>
+        </div>
+
+        <div class="mt-[16px] text-[20px] font-bold text-[#2b2b3a]" x-text="certName"></div>
+
+        <!-- 详情主体 -->
+        <div class="mt-[18px] bg-white rounded-[16px] p-[26px] flex flex-col lg:flex-row gap-[24px]">
+          <!-- 左：证书预览 -->
+          <div class="flex-1 min-w-0 rounded-[12px] flex items-center justify-center" style="background: #f7f7fa; min-height: 520px;">
+            <div class="flex items-center justify-center rounded-[8px] bg-white text-[14px] text-[#b8b8c8]"
+              style="width: 86%; aspect-ratio: 297 / 210; border: 1px dashed #dcdce8;">证书预览</div>
+          </div>
+
+          <!-- 右：信息与操作 -->
+          <div class="w-full lg:w-[320px] flex-shrink-0 flex flex-col">
+            <div class="info-label">证书名称</div>
+            <div class="info-value" x-text="certName"></div>
+
+            <div class="mt-[18px] info-label">对应作品</div>
+            <div class="info-value" x-text="certWork"></div>
+
+            <div class="mt-[20px] h-[1px] bg-[#eeeef4]"></div>
+
+            <div class="mt-[20px] flex flex-col gap-[10px]">
+              <!-- 证书信息确认状态 -->
+              <div x-show="confirmed" class="h-[40px] rounded-[8px] flex items-center justify-center text-[14px] font-medium"
+                style="background: #e9f9f0; color: #21a366;">✓ 证书信息已确认</div>
+              <div x-show="!confirmed">
+                <div class="d-btn d-btn-primary" @click="confirmCertInfo()">✓ 确认证书信息</div>
+                <p class="mt-[6px] text-[12px] text-[#9a9aae] text-center leading-[1.5]">请先确认证书信息无误后再下载</p>
+              </div>
+
+              <div class="d-btn d-btn-outline" @click="openFeedback()"><span>✏️</span><span>证书问题反馈</span></div>
+              <div class="d-btn d-btn-primary" @click="openPrintTip()">
+                <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" class="flex-shrink-0">
+                  <rect x="1" y="1" width="14" height="12.5" rx="3" fill="#F0466B" />
+                  <rect x="3.8" y="3.6" width="8.4" height="6.4" rx="1.2" fill="#fff" />
+                  <rect x="6.4" y="11" width="3.2" height="3.6" rx="1.1" fill="#fff" />
+                </svg>
+                <span>申领纸质证书</span>
+              </div>
+              <div class="d-btn d-btn-primary" :style="confirmed ? '' : 'opacity:.5;cursor:not-allowed;'"
+                @click="confirmed ? openDownload() : null">
+                <span class="text-[17px] leading-none">↓</span><span>下载数字证书</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ===== 证书问题反馈 ===== -->
+  <div x-show="showFeedback" x-cloak class="fixed inset-0 z-[80] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.45)" @click.self="showFeedback = false">
+    <div class="bg-white rounded-[16px] w-[720px] max-w-[94vw] max-h-[90vh] overflow-y-auto p-[26px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[19px] font-bold text-[#2b2b3a]">证书问题反馈</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showFeedback = false">✕</div>
+      </div>
+
+      <div class="mt-[18px] rounded-[10px] px-[16px] py-[14px]" style="background: #fbfbfd;">
+        <div class="text-[13px] text-[#9a9aae]">问题证书</div>
+        <div class="mt-[4px] text-[15px] font-semibold text-[#2b2b3a]" x-text="certName + ' · ' + certWork"></div>
+      </div>
+
+      <p class="mt-[14px] text-[13px] leading-[1.7] text-[#6c7293]">
+        请核对以下证书信息，如有错误请点击对应字段的「更正」按钮填写正确信息。可一次提交多条更正，提交后统一转总后台人工审核。
+      </p>
+
+      <div class="mt-[12px] rounded-[6px] px-[12px] py-[10px] text-[12px] leading-[1.7] text-[#6c7293]"
+        style="background: #fbfbfd; border: 1px dashed #e8e8f0;">
+        ℹ️ 可更正字段：<b>姓名 / 指导老师姓名 / 就读学校</b>；<b>赛区信息更正本期已关闭</b>——赛区以报名数据为准，证书阶段不可变更。
+      </div>
+
+      <div class="mt-[14px]">
+        <!-- 姓名 -->
+        <div class="fb-field" :class="fb.name.open ? 'expanded' : ''">
+          <div class="flex items-center gap-[12px]">
+            <span class="text-[13px] text-[#6c7293]" style="min-width: 100px;">姓名</span>
+            <span class="flex-1 text-[14px] font-medium text-[#1a1a2e]">张明华</span>
+            <div class="fb-correct" @click="fb.name.open = !fb.name.open">更正</div>
+          </div>
+          <div class="fb-correction mt-[12px]">
+            <div class="text-[13px] text-[#6c7293]">正确信息：</div>
+            <div class="mt-[6px] text-[12px] leading-[1.6]" style="color: #9a9aae;" x-text="fb.name.hint"></div>
+
+            <div class="mt-[10px] rounded-[6px] px-[12px] py-[10px]" style="background: #fffbeb; border: 1px solid #fde68a;">
+              <div class="text-[12px] font-bold" style="color: #d97706;">⚠️ 姓名更正重要提示</div>
+              <div class="mt-[4px] text-[11px] leading-[1.7] text-[#6c7293]">
+                提交姓名更正并审核通过后，系统将同步更新：您名下全部证书姓名、大赛系统内全部实名信息，以及大赛授权绑定的创作者注册登记小程序、艺术品一物一码溯源注册登记小程序对应的实名认证信息。<br>
+                您上传的身份证件、本人手持身份证照片，仅用于本次姓名更正与身份真实性核验，核验完成后平台不会留存您的身份证资料，不用于其他任何业务场景。<br>
+                请按下方要求上传身份证件及本人手持身份证照片。<br>
+                提交本次更正反馈，即代表您知悉并同意授权大赛系统及创作者注册登记系统，按更正后的信息修改您的实名认证信息。
+              </div>
+            </div>
+
+            <div class="mt-[10px]">
+              <input type="text" class="fb-input" x-model="fb.name.correction" placeholder="请输入正确的姓名（需与身份证姓名一致）" />
+            </div>
+
+            <div class="mt-[10px] flex gap-[8px]">
+              <div class="upload-area" :class="idUpload.front ? 'done' : ''" @click="idUpload.front = true">
+                <template x-if="!idUpload.front">
+                  <div><div class="text-[22px]">🪪</div><div class="mt-[2px] text-[12px] text-[#6c7293]">上传身份证人像面</div><div class="mt-[2px] text-[11px] text-[#9a9aae]">JPG/PNG · 清晰完整</div></div>
+                </template>
+                <template x-if="idUpload.front">
+                  <div><div class="text-[22px]">✅</div><div class="mt-[2px] text-[12px] font-semibold" style="color: #10b981;">身份证人像面已上传</div><div class="u-btn u-btn-outline mt-[6px]" @click.stop="idUpload.front = false">删除</div></div>
+                </template>
+              </div>
+              <div class="upload-area" :class="idUpload.back ? 'done' : ''" @click="idUpload.back = true">
+                <template x-if="!idUpload.back">
+                  <div><div class="text-[22px]">🏛️</div><div class="mt-[2px] text-[12px] text-[#6c7293]">上传身份证国徽面</div><div class="mt-[2px] text-[11px] text-[#9a9aae]">JPG/PNG · 清晰完整</div></div>
+                </template>
+                <template x-if="idUpload.back">
+                  <div><div class="text-[22px]">✅</div><div class="mt-[2px] text-[12px] font-semibold" style="color: #10b981;">身份证国徽面已上传</div><div class="u-btn u-btn-outline mt-[6px]" @click.stop="idUpload.back = false">删除</div></div>
+                </template>
+              </div>
+            </div>
+
+            <div class="mt-[8px] upload-area" :class="idUpload.handheld ? 'done' : ''" @click="idUpload.handheld = true">
+              <template x-if="!idUpload.handheld">
+                <div class="flex items-center gap-[14px] text-left">
+                  <svg width="78" height="64" viewBox="0 0 96 78" class="flex-shrink-0" aria-label="手持身份证示意图">
+                    <circle cx="48" cy="13" r="9" fill="#9AA7B8" />
+                    <path d="M31 70 Q31 33 48 31 Q65 33 65 70 Z" fill="#9AA7B8" opacity="0.5" />
+                    <path d="M33 41 Q21 54 35 58" stroke="#9AA7B8" stroke-width="6" fill="none" stroke-linecap="round" />
+                    <path d="M63 41 Q75 54 61 58" stroke="#9AA7B8" stroke-width="6" fill="none" stroke-linecap="round" />
+                    <rect x="28" y="48" width="40" height="25" rx="3" fill="#fff" stroke="#5B6B7F" stroke-width="2" />
+                    <rect x="32" y="52" width="9" height="11" rx="1" fill="#C3CDD9" />
+                    <line x1="45" y1="54" x2="64" y2="54" stroke="#C3CDD9" stroke-width="2.5" />
+                    <line x1="45" y1="59" x2="64" y2="59" stroke="#C3CDD9" stroke-width="2.5" />
+                    <line x1="45" y1="64" x2="58" y2="64" stroke="#C3CDD9" stroke-width="2.5" />
+                    <circle cx="33" cy="50" r="3.5" fill="#5B6B7F" />
+                    <circle cx="63" cy="50" r="3.5" fill="#5B6B7F" />
+                  </svg>
+                  <div class="flex-1">
+                    <div class="text-[12px] font-semibold text-[#6c7293]">上传本人手持身份证照片</div>
+                    <div class="mt-[4px] text-[11px] leading-[1.7] text-[#9a9aae]">参照左侧示意图：本人手持身份证（人像面朝外）置于胸前，面部与证件信息清晰可辨、无遮挡，证件文字完整可读</div>
+                  </div>
+                </div>
+              </template>
+              <template x-if="idUpload.handheld">
+                <div><div class="text-[22px]">✅</div><div class="mt-[2px] text-[12px] font-semibold" style="color: #10b981;">本人手持身份证照片已上传</div><div class="u-btn u-btn-outline mt-[6px]" @click.stop="idUpload.handheld = false">删除</div></div>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- 指导老师姓名 -->
+        <div class="fb-field" :class="fb.teacher.open ? 'expanded' : ''">
+          <div class="flex items-center gap-[12px]">
+            <span class="text-[13px] text-[#6c7293]" style="min-width: 100px;">指导老师姓名</span>
+            <span class="flex-1 text-[14px] font-medium text-[#1a1a2e]">李老师</span>
+            <div class="fb-correct" @click="fb.teacher.open = !fb.teacher.open">更正</div>
+          </div>
+          <div class="fb-correction mt-[12px]">
+            <div class="text-[13px] text-[#6c7293]">正确信息：</div>
+            <div class="mt-[6px] text-[12px] leading-[1.6]" style="color: #9a9aae;" x-text="fb.teacher.hint"></div>
+            <div class="mt-[10px] flex flex-col gap-[8px]">
+              <template x-for="(t, i) in teacherInputs" :key="i">
+                <div class="flex gap-[6px]">
+                  <input type="text" class="fb-input" :placeholder="'指导老师' + (i + 1)" x-model="t.name" />
+                  <input type="text" class="fb-input" inputmode="numeric" maxlength="11" placeholder="手机号"
+                    x-model="t.phone" @input="t.phone = t.phone.replace(/[^0-9]/g, '')" />
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- 就读学校 -->
+        <div class="fb-field" :class="fb.school.open ? 'expanded' : ''">
+          <div class="flex items-center gap-[12px]">
+            <span class="text-[13px] text-[#6c7293]" style="min-width: 100px;">就读学校</span>
+            <span class="flex-1 text-[14px] font-medium text-[#1a1a2e]">南京市金陵小学</span>
+            <div class="fb-correct" @click="fb.school.open = !fb.school.open">更正</div>
+          </div>
+          <div class="fb-correction mt-[12px]">
+            <div class="text-[13px] text-[#6c7293]">正确信息：</div>
+            <div class="mt-[6px] text-[12px] leading-[1.6]" style="color: #9a9aae;" x-text="fb.school.hint"></div>
+            <div class="mt-[10px]">
+              <input type="text" class="fb-input" x-model="fb.school.correction" placeholder="请输入正确的就读学校" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-[16px] rounded-[10px] px-[14px] py-[12px]" style="background: #fffbeb; border: 1px solid #fde68a;">
+        <label class="flex items-start gap-[8px] cursor-pointer text-[13px] leading-[1.6] text-[#6c7293]">
+          <input type="checkbox" class="mt-[3px] flex-shrink-0" style="width: 16px; height: 16px; accent-color: #8742DB;" x-model="feedbackAgreed" />
+          <span>本人承诺所提交的证书更正信息与事实一致，因虚假信息导致的证书失效、成绩取消等后果由本人承担。</span>
+        </label>
+      </div>
+
+      <div class="mt-[20px] flex justify-end gap-[12px]">
+        <div class="u-btn u-btn-outline" style="height: 38px; padding: 0 20px; font-size: 14px;" @click="showFeedback = false">取消</div>
+        <div class="u-btn u-btn-solid" style="height: 38px; padding: 0 20px; font-size: 14px;" @click="submitFeedback()">提交问题反馈</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 二次确认 ===== -->
+  <div x-show="showFeedbackConfirm" x-cloak class="fixed inset-0 z-[85] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showFeedbackConfirm = false">
+    <div class="bg-white rounded-[16px] w-[440px] max-w-[92vw] p-[26px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">二次确认</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showFeedbackConfirm = false">✕</div>
+      </div>
+      <div class="mt-[16px] text-center py-[12px]">
+        <div class="text-[40px]">⚠️</div>
+        <p class="mt-[12px] text-[14px] leading-[1.8] text-[#1a1a2e]">每个证书只有一次修改权限，请确认信息准确无误。</p>
+      </div>
+      <div class="mt-[18px] flex justify-end gap-[12px]">
+        <div class="u-btn u-btn-outline" style="height: 38px; padding: 0 20px; font-size: 14px;" @click="showFeedbackConfirm = false">返回修改</div>
+        <div class="u-btn u-btn-solid" style="height: 38px; padding: 0 20px; font-size: 14px;" @click="doSubmitFeedback()">确认无误</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 申领纸质证书提示 ===== -->
+  <div x-show="showPrintTip" x-cloak class="fixed inset-0 z-[90] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showPrintTip = false">
+    <div class="bg-white rounded-[16px] w-[540px] max-w-[92vw] p-[28px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">申领纸质证书</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showPrintTip = false">✕</div>
+      </div>
+
+      <div x-show="printTipMode === 'self'">
+        <div class="mt-[18px] text-[15px] font-semibold text-[#2b2b3a]">【大赛证书申领通知】</div>
+
+        <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
+          大赛数字证书已开放下载，请登录官网自行下载打印。
+        </div>
+
+        <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
+          如需纸质证书，不方便打印的选手可扫码进入工作组系统，填写信息申请代打印邮寄服务（邮费按实际快递费收取）。工作组将在【7】个工作日内处理。
+        </div>
+
+        <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
+          如有疑问请联系【XXXXXXX】，电话：【XXXXXXX】。
+        </div>
+
+        <div class="mt-[18px] flex flex-col items-center">
+          <img src="./img/ewm.png" class="w-[150px] h-[150px]" alt="专项工作组二维码" />
+          <div class="mt-[8px] text-[13px] text-[#9a9aae]">扫码进入工作组系统</div>
+        </div>
+      </div>
+
+      <div x-show="printTipMode === 'org'">
+        <div class="mt-[18px] text-[14px] leading-[26px] text-[#55556a]">
+          您的参赛报名方式为组织单位报名，请与您参赛报名的组织单位联系获取相关证书，联系人：XXXX，联系电话：XXXXXXXX。
+        </div>
+      </div>
+
+      <div class="mt-[22px] relative flex justify-center">
+        <div class="w-[160px] h-[42px] flex items-center justify-center rounded-full text-[15px] font-medium text-white cursor-pointer"
+          style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%);" @click="showPrintTip = false">知道了</div>
+
+        <div class="absolute right-0 top-0 h-[42px] flex items-center gap-[2px] text-[13px] cursor-pointer"
+          style="color: #8742DB;" x-show="printTipMode === 'self'" @click="printTipMode = 'org'">
+          <span>组织单位报名</span><span class="text-[15px] leading-none">›</span>
+        </div>
+        <div class="absolute right-0 top-0 h-[42px] flex items-center gap-[2px] text-[13px] cursor-pointer"
+          style="color: #8742DB;" x-show="printTipMode === 'org'" @click="printTipMode = 'self'">
+          <span class="text-[15px] leading-none">‹</span><span>官网报名</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 下载数字证书确认 ===== -->
+  <div x-show="showDownload" x-cloak class="fixed inset-0 z-[90] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showDownload = false">
+    <div class="bg-white rounded-[16px] w-[480px] max-w-[92vw] p-[28px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">下载数字证书</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showDownload = false">✕</div>
+      </div>
+
+      <div class="mt-[18px] rounded-[10px] px-[16px] py-[14px]" style="background: #fbfbfd;">
+        <div class="text-[13px] text-[#9a9aae]">证书名称</div>
+        <div class="mt-[4px] text-[15px] font-semibold text-[#2b2b3a]" x-text="certName"></div>
+        <div class="mt-[10px] text-[13px] text-[#9a9aae]">对应作品</div>
+        <div class="mt-[4px] text-[15px] font-semibold text-[#2b2b3a]" x-text="certWork"></div>
+      </div>
+
+      <label class="mt-[14px] flex items-start gap-[8px] cursor-pointer text-[13px] leading-[1.6] text-[#55556a]">
+        <input type="checkbox" class="mt-[3px] flex-shrink-0" style="width: 16px; height: 16px; accent-color: #8742DB;" x-model="downloadConfirmed" />
+        <span>确认无误</span>
+      </label>
+
+      <div class="mt-[20px] flex justify-end gap-[12px]">
+        <div class="u-btn u-btn-outline" style="height: 38px; padding: 0 20px; font-size: 14px;" @click="showDownload = false">取消</div>
+        <div class="u-btn u-btn-solid" style="height: 38px; padding: 0 20px; font-size: 14px;"
+          :style="downloadConfirmed ? '' : 'opacity:.5;cursor:not-allowed;'"
+          @click="downloadConfirmed ? doDownload() : null">确认下载</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 轻提示 ===== -->
+  <div x-show="showToast" x-cloak class="fixed left-1/2 -translate-x-1/2 z-[120] px-[22px] h-[44px] flex items-center rounded-full text-[14px] text-white"
+    :style="'bottom: 48px; background: ' + (toastType === 'success' ? '#21a366' : toastType === 'error' ? '#ff4d4f' : '#e08a2b') + '; animation: toastIn .2s ease;'"
+    x-text="toastMsg"></div>
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('certDetailPage', () => ({
+        activeMenu: 'cert',
+        menu: [
+          { key: 'account', icon: '⚙️', label: '账号设置' },
+          { key: 'signup', icon: '📋', label: '参赛报名' },
+          { key: 'status', icon: '📊', label: '报名状态' },
+          { key: 'score', icon: '🏆', label: '我的成绩' },
+          { key: 'cert', icon: '🎓', label: '我的证书' },
+          { key: 'notice', icon: '🔔', label: '大赛通知', badge: 3 },
+          { key: 'feedback', icon: '💬', label: '问题反馈' },
+        ],
+
+        // ===== 证书信息（可由列表页通过地址栏参数带入） =====
+        certName: '大赛获奖证书',
+        certWork: '《数字苏园·光影戏梦》',
+        confirmed: true,
+
+        init() {
+          const q = new URLSearchParams(location.search);
+          if (q.get('name')) this.certName = q.get('name');
+          if (q.get('work')) this.certWork = q.get('work');
+        },
+
+        selectMenu(key) {
+          this.activeMenu = key;
+          if (key === 'cert') location.href = './个人中心.html';
+        },
+
+        confirmCertInfo() {
+          this.confirmed = true;
+          this.showToastMsg('证书信息已确认，可下载数字证书', 'success');
+        },
+
+        // ===== 证书问题反馈 =====
+        showFeedback: false,
+        showFeedbackConfirm: false,
+        feedbackAgreed: false,
+        fb: {
+          name: { open: false, correction: '', hint: '仅可更改姓名错字，须与身份证姓名一致；提交后转总后台人工审核' },
+          teacher: { open: false, hint: '请输入正确的指导老师姓名，不可输入简称某老师，每个输入框只能输入一个老师，且至少输入一个老师' },
+          school: { open: false, correction: '', hint: '仅可补全当前就读学校名称，不可更改为其他学校（改其他学校审核不通过）' },
+        },
+        teacherInputs: [
+          { name: '李老师', phone: '' },
+          { name: '', phone: '' },
+          { name: '', phone: '' },
+          { name: '', phone: '' },
+        ],
+        idUpload: { front: false, back: false, handheld: false },
+
+        openFeedback() {
+          this.feedbackAgreed = false;
+          this.fb.name.open = false; this.fb.teacher.open = false; this.fb.school.open = false;
+          this.fb.name.correction = ''; this.fb.school.correction = '';
+          this.teacherInputs = [{ name: '李老师', phone: '' }, { name: '', phone: '' }, { name: '', phone: '' }, { name: '', phone: '' }];
+          this.idUpload = { front: false, back: false, handheld: false };
+          this.showFeedback = true;
+        },
+
+        submitFeedback() {
+          // 姓名更正：需填写正确姓名并上传身份证人像面、国徽面、本人手持身份证照片
+          if (this.fb.name.open) {
+            if (!this.fb.name.correction.trim()) { this.showToastMsg('请输入正确的姓名', 'warning'); return; }
+            if (!this.idUpload.front || !this.idUpload.back || !this.idUpload.handheld) {
+              this.showToastMsg('请上传身份证人像面、国徽面及本人手持身份证照片', 'warning'); return;
+            }
+          }
+          // 指导老师更正：至少一位，不可用简称，手机号须为 11 位
+          if (this.fb.teacher.open) {
+            const names = this.teacherInputs.map((t) => t.name.trim()).filter(Boolean);
+            if (!names.length) { this.showToastMsg('请至少输入一位指导老师姓名', 'warning'); return; }
+            if (names.some((n) => /老师$/.test(n))) { this.showToastMsg('指导老师姓名不可输入简称（如"王老师"），请输入完整姓名', 'error'); return; }
+            const phones = this.teacherInputs.map((t) => t.phone.trim()).filter(Boolean);
+            if (phones.some((p) => p.length !== 11)) { this.showToastMsg('指导老师手机号须为11位数字', 'warning'); return; }
+          }
+          const corrected = (this.fb.name.open && this.fb.name.correction.trim())
+            || (this.fb.teacher.open && this.teacherInputs.some((t) => t.name.trim()))
+            || (this.fb.school.open && this.fb.school.correction.trim());
+          if (!corrected) { this.showToastMsg('请至少更正一个字段后再提交', 'warning'); return; }
+          if (!this.feedbackAgreed) { this.showToastMsg('请勾选承诺声明后再提交', 'warning'); return; }
+          this.showFeedbackConfirm = true;
+        },
+
+        doSubmitFeedback() {
+          this.showFeedbackConfirm = false;
+          this.showFeedback = false;
+          this.showToastMsg('您的证书问题反馈已提交，请耐心等待反馈处理结果', 'success');
+        },
+
+        // ===== 申领纸质证书提示 =====
+        showPrintTip: false,
+        printTipMode: 'self',
+        openPrintTip() {
+          this.printTipMode = 'self';
+          this.showPrintTip = true;
+        },
+
+        // ===== 下载数字证书 =====
+        showDownload: false,
+        downloadConfirmed: false,
+        openDownload() {
+          this.downloadConfirmed = false;
+          this.showDownload = true;
+        },
+        doDownload() {
+          this.showDownload = false;
+          this.showToastMsg('数字证书下载中…', 'success');
+        },
+
+        // ===== 轻提示 =====
+        showToast: false,
+        toastMsg: '',
+        toastType: 'success',
+        toastTimer: null,
+        showToastMsg(msg, type) {
+          this.toastMsg = msg;
+          this.toastType = type || 'success';
+          this.showToast = true;
+          clearTimeout(this.toastTimer);
+          this.toastTimer = setTimeout(() => { this.showToast = false; }, 2400);
+        },
+      }));
+    });
+  </script>
+</body>
+</html>
