@@ -27,6 +27,7 @@
     .d-btn-outline:hover { border-color: #8742DB; color: #8742DB; }
     .d-btn-primary { background: #8742DB; color: #fff; }
     .d-btn-primary:hover { background: #7534c4; }
+    .d-btn-gray { background: #f0f0f5; color: #a8a8bc; cursor: not-allowed; }
 
     /* 信息块 */
     .info-label { font-size: 13px; color: #9a9aae; }
@@ -95,11 +96,16 @@
       </header>
 
       <div class="flex-1 px-[32px] pb-[40px]">
-        <!-- 面包屑 -->
-        <div class="flex items-center gap-[8px] text-[14px]">
-          <a href="./个人中心.html" class="cursor-pointer" style="color: #8742DB;">我的证书</a>
-          <span class="text-[#c0c0cc]">/</span>
-          <span class="text-[#8f8fa8]">证书详情</span>
+        <!-- 返回 + 面包屑 -->
+        <div class="flex items-center gap-[16px]">
+          <a href="./个人中心.html" class="d-btn d-btn-outline flex-shrink-0" style="height: 34px; padding: 0 14px; font-size: 13px;">
+            <span class="text-[15px] leading-none">←</span><span>返回</span>
+          </a>
+          <div class="flex items-center gap-[8px] text-[14px]">
+            <a href="./个人中心.html" class="cursor-pointer" style="color: #8742DB;">我的证书</a>
+            <span class="text-[#c0c0cc]">/</span>
+            <span class="text-[#8f8fa8]">证书详情</span>
+          </div>
         </div>
 
         <div class="mt-[16px] text-[20px] font-bold text-[#2b2b3a]" x-text="certName"></div>
@@ -123,16 +129,20 @@
             <div class="mt-[20px] h-[1px] bg-[#eeeef4]"></div>
 
             <div class="mt-[20px] flex flex-col gap-[10px]">
-              <!-- 证书信息确认状态 -->
-              <div x-show="confirmed" class="h-[40px] rounded-[8px] flex items-center justify-center text-[14px] font-medium"
-                style="background: #e9f9f0; color: #21a366;">✓ 证书信息已确认</div>
-              <div x-show="!confirmed">
-                <div class="d-btn d-btn-primary" @click="confirmCertInfo()">✓ 确认证书信息</div>
-                <p class="mt-[6px] text-[12px] text-[#9a9aae] text-center leading-[1.5]">请先确认证书信息无误后再下载</p>
+              <!-- ① 证书问题反馈：确认信息后置灰不可点击 -->
+              <div class="d-btn" :class="confirmed ? 'd-btn-gray' : 'd-btn-outline'"
+                @click="confirmed ? null : openFeedback()">
+                <span>✏️</span><span>证书问题反馈</span>
               </div>
 
-              <div class="d-btn d-btn-outline" @click="openFeedback()"><span>✏️</span><span>证书问题反馈</span></div>
-              <div class="d-btn d-btn-primary" @click="openPrintTip()">
+              <!-- ② 确认证书信息：确认后转为已确认状态 -->
+              <div x-show="!confirmed" class="d-btn d-btn-primary" @click="openConfirmInfo()">✓ 确认证书信息</div>
+              <div x-show="confirmed" class="h-[40px] rounded-[8px] flex items-center justify-center text-[14px] font-medium"
+                style="background: #e9f9f0; color: #21a366;">✓ 证书信息已确认</div>
+
+              <!-- ③ 申领纸质证书：未确认信息前置灰 -->
+              <div class="d-btn" :class="confirmed ? 'd-btn-primary' : 'd-btn-gray'"
+                @click="requireConfirmed() && openPrintTip()">
                 <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" class="flex-shrink-0">
                   <rect x="1" y="1" width="14" height="12.5" rx="3" fill="#F0466B" />
                   <rect x="3.8" y="3.6" width="8.4" height="6.4" rx="1.2" fill="#fff" />
@@ -140,8 +150,10 @@
                 </svg>
                 <span>申领纸质证书</span>
               </div>
-              <div class="d-btn d-btn-primary" :style="confirmed ? '' : 'opacity:.5;cursor:not-allowed;'"
-                @click="confirmed ? openDownload() : null">
+
+              <!-- ④ 下载数字证书：未确认信息前置灰 -->
+              <div class="d-btn" :class="confirmed ? 'd-btn-primary' : 'd-btn-gray'"
+                @click="requireConfirmed() && openDownload()">
                 <span class="text-[17px] leading-none">↓</span><span>下载数字证书</span>
               </div>
             </div>
@@ -149,6 +161,28 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- ===== 确认证书信息 ===== -->
+  <div x-show="showConfirmInfo" x-cloak class="fixed inset-0 z-[85] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showConfirmInfo = false">
+    <div class="bg-white rounded-[16px] w-[440px] max-w-[92vw] p-[26px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">确认证书信息</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showConfirmInfo = false">✕</div>
+      </div>
+
+      <div class="mt-[16px] text-center py-[8px]">
+        <div class="text-[36px]">⚠️</div>
+        <p class="mt-[12px] text-[14px] leading-[1.8] text-[#1a1a2e]">确认后信息将无法修改，是否确认信息无误？</p>
+      </div>
+
+      <div class="mt-[18px] flex justify-end gap-[12px]">
+        <div class="u-btn u-btn-outline" style="height: 38px; padding: 0 20px; font-size: 14px;" @click="showConfirmInfo = false">取消</div>
+        <div class="u-btn u-btn-solid" style="height: 38px; padding: 0 20px; font-size: 14px;" @click="confirmCertInfo()">确认</div>
+      </div>
+    </div>
   </div>
 
   <!-- ===== 证书问题反馈 ===== -->
@@ -428,7 +462,8 @@
         // ===== 证书信息（可由列表页通过地址栏参数带入） =====
         certName: '大赛获奖证书',
         certWork: '《数字苏园·光影戏梦》',
-        confirmed: true,
+        // 默认未确认：确认后问题反馈置灰，申领纸质 / 下载数字提亮
+        confirmed: false,
 
         init() {
           const q = new URLSearchParams(location.search);
@@ -441,9 +476,21 @@
           if (key === 'cert') location.href = './个人中心.html';
         },
 
+        // ===== 确认证书信息 =====
+        showConfirmInfo: false,
+        openConfirmInfo() {
+          this.showConfirmInfo = true;
+        },
         confirmCertInfo() {
           this.confirmed = true;
-          this.showToastMsg('证书信息已确认，可下载数字证书', 'success');
+          this.showConfirmInfo = false;
+          this.showToastMsg('证书信息已确认', 'success');
+        },
+        // 未确认信息时拦截申领 / 下载
+        requireConfirmed() {
+          if (this.confirmed) return true;
+          this.showToastMsg('请先确认证书信息', 'warning');
+          return false;
         },
 
         // ===== 证书问题反馈 =====
