@@ -85,37 +85,17 @@
           <div class="u-tab" :class="activeTab === 'cert' ? 'active' : ''" @click="activeTab = 'cert'">
             我的证书 <span class="u-badge ml-[4px]">11</span>
           </div>
-          <div class="u-tab" :class="activeTab === 'claim' ? 'active' : ''" @click="activeTab = 'claim'">
-            我的申领 <span class="u-badge ml-[4px]" style="background: #b9a7ea;">4</span>
-          </div>
         </div>
 
         <!-- 我的证书 -->
         <div x-show="activeTab === 'cert'" class="mt-[20px]">
           <div class="bg-white rounded-[16px] p-[24px]">
-            <!-- 筛选 + 批量下载 -->
-            <div class="flex items-center justify-between">
-              <div class="relative">
-                <select class="appearance-none bg-white border border-[#dddcE8] rounded-[10px] h-[40px] pl-[16px] pr-[36px] text-[15px] text-[#2b2b3a] outline-none cursor-pointer" x-model="matchName">
-                  <option value="2025-2026">第一届大赛(2025-2026)</option>
-                </select>
-                <span class="absolute right-[14px] top-1/2 -translate-y-1/2 pointer-events-none text-[#8f8fa8]">▾</span>
-              </div>
-              <div class="flex items-center gap-[12px]">
-                <span class="text-[13px] text-[#8f8fa8]">一次勾选多张证书，批量下载</span>
-                <div class="u-btn" style="border: 1px solid #8742DB; color: #8742DB; background: #fff; height: 36px; padding: 0 16px;">
-                  <span class="mr-[6px]">⬇</span>批量下载数字证书
-                </div>
-              </div>
-            </div>
-
-            <!-- 备注说明 -->
-            <div class="mt-[20px] rounded-[12px] px-[20px] py-[16px] text-[13px] leading-[26px]" style="background: #f7f5fe; color: #55556a;">
-              <div>省赛：证书上传时间：2026/08/01　纸质证书申领：2026/08/15 — 2026/09/25　问题反馈：2026/08/15 — 2026/09/05</div>
-              <div>国赛：证书上传时间：2026/08/25　纸质证书申领：2026/08/28 — 2026/09/25　问题反馈：2026/08/25 — 2026/09/05</div>
-              <div class="mt-[6px]">💳 <span class="font-medium">在线支付说明：</span>仅收取【快递服务费】（邮寄运费）；每张证书一个独立订单，仅支持在线支付（支付宝／微信），不支持对公打款与合并支付。</div>
-              <div>✏️ <span class="font-medium">问题反馈说明：</span>证书信息有误请进入证书详情页，点击「证书问题反馈／修改证书信息」提交更正；可更正字段为姓名／指导老师／就读学校（赛区以报名数据为准，本期不予更正）。</div>
-              <div>📦 <span class="font-medium">收件地址说明：</span>支付成功后至印刷厂导出前可修改收件地址（每单限 1 次）；进入印刷／已寄出后不可修改。</div>
+            <!-- 赛事筛选 -->
+            <div class="relative inline-block">
+              <select class="appearance-none bg-white border border-[#dddcE8] rounded-[10px] h-[40px] pl-[16px] pr-[36px] text-[15px] text-[#2b2b3a] outline-none cursor-pointer" x-model="matchName">
+                <option value="2025-2026">第一届大赛(2025-2026)</option>
+              </select>
+              <span class="absolute right-[14px] top-1/2 -translate-y-1/2 pointer-events-none text-[#8f8fa8]">▾</span>
             </div>
 
             <!-- 证书表格 -->
@@ -128,7 +108,6 @@
                     <th class="u-th text-left" style="width: 170px;">参赛作品</th>
                     <th class="u-th text-left" style="width: 90px;">比赛阶段</th>
                     <th class="u-th text-left" style="width: 100px;">证书确认</th>
-                    <th class="u-th text-left" style="width: 280px;">申领状态</th>
                     <th class="u-th text-left" style="width: 110px;">报名来源</th>
                     <th class="u-th text-left">操作</th>
                   </tr>
@@ -143,31 +122,15 @@
                       <td class="u-td">
                         <span :style="c.confirm === '已确认' ? 'color:#21a366;' : 'color:#9a9aae;'" x-text="c.confirm"></span>
                       </td>
-                      <td class="u-td">
-                        <span :style="c.statusColor" x-text="c.status"></span>
-                      </td>
                       <td class="u-td" style="color: #55556a;" x-text="c.source"></td>
                       <td class="u-td">
-                        <div class="flex flex-wrap gap-[8px]">
-                          <span class="u-btn u-btn-outline" @click="openCertDetail()">查看</span>
-                          <span class="u-btn" :class="c.applied ? 'u-btn-outline' : 'u-btn-solid'" x-text="c.applied ? '已申领' : '申领纸质'"></span>
-                          <span class="u-btn u-btn-solid">下载数字</span>
-                          <span class="u-btn u-btn-outline" x-show="c.feedback">反馈</span>
-                          <span class="u-btn u-btn-gray">···</span>
-                        </div>
+                        <span class="u-btn u-btn-outline" @click="openCertDetail()">查看详情</span>
                       </td>
                     </tr>
                   </template>
                 </tbody>
               </table>
             </div>
-          </div>
-        </div>
-
-        <!-- 我的申领 -->
-        <div x-show="activeTab === 'claim'" class="mt-[20px]">
-          <div class="bg-white rounded-[16px] p-[40px] text-center text-[15px] text-[#8f8fa8]">
-            暂无申领记录
           </div>
         </div>
       </div>
