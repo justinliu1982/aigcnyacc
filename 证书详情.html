@@ -204,12 +204,6 @@
         说明：只允许修改相关信息内的错别字及完善全名信息
       </p>
 
-      <div class="mt-[12px] rounded-[6px] px-[12px] py-[10px] text-[12px] leading-[1.7] text-[#6c7293]"
-        style="background: #fbfbfd; border: 1px dashed #e8e8f0;">
-        <span x-show="isAwardCert">ℹ️ 可更正字段：<b>姓名 / 指导老师姓名 / 就读学校</b>；<b>赛区信息更正本期已关闭</b>——赛区以报名数据为准，证书阶段不可变更。</span>
-        <span x-show="!isAwardCert">ℹ️ 可更正字段：<b>姓名</b>；指导老师姓名、就读学校及赛区信息本期不予更正。</span>
-      </div>
-
       <div class="mt-[14px]">
         <!-- 姓名 -->
         <div class="fb-field" :class="fb.name.open ? 'expanded' : ''">
@@ -332,7 +326,10 @@
 
       <div class="mt-[20px] flex justify-end gap-[12px]">
         <div class="u-btn u-btn-outline" style="height: 38px; padding: 0 20px; font-size: 14px;" @click="showFeedback = false">取消</div>
-        <div class="u-btn u-btn-solid" style="height: 38px; padding: 0 20px; font-size: 14px;" @click="submitFeedback()">提交问题反馈</div>
+        <!-- 提交需先勾选承诺声明 -->
+        <div class="u-btn u-btn-solid" style="height: 38px; padding: 0 20px; font-size: 14px;"
+          :style="feedbackAgreed ? '' : 'opacity:.5;cursor:not-allowed;'"
+          @click="feedbackAgreed ? submitFeedback() : null">提交问题反馈</div>
       </div>
     </div>
   </div>
