@@ -206,7 +206,8 @@
 
       <div class="mt-[12px] rounded-[6px] px-[12px] py-[10px] text-[12px] leading-[1.7] text-[#6c7293]"
         style="background: #fbfbfd; border: 1px dashed #e8e8f0;">
-        ℹ️ 可更正字段：<b>姓名 / 指导老师姓名 / 就读学校</b>；<b>赛区信息更正本期已关闭</b>——赛区以报名数据为准，证书阶段不可变更。
+        <span x-show="isAwardCert">ℹ️ 可更正字段：<b>姓名 / 指导老师姓名 / 就读学校</b>；<b>赛区信息更正本期已关闭</b>——赛区以报名数据为准，证书阶段不可变更。</span>
+        <span x-show="!isAwardCert">ℹ️ 可更正字段：<b>姓名</b>；指导老师姓名、就读学校及赛区信息本期不予更正。</span>
       </div>
 
       <div class="mt-[14px]">
@@ -283,8 +284,8 @@
           </div>
         </div>
 
-        <!-- 指导老师姓名 -->
-        <div class="fb-field" :class="fb.teacher.open ? 'expanded' : ''">
+        <!-- 指导老师姓名（仅大赛获奖证书可更正） -->
+        <div class="fb-field" x-show="isAwardCert" :class="fb.teacher.open ? 'expanded' : ''">
           <div class="flex items-center gap-[12px]">
             <span class="text-[13px] text-[#6c7293]" style="min-width: 100px;">指导老师姓名</span>
             <span class="flex-1 text-[14px] font-medium text-[#1a1a2e]">李老师</span>
@@ -305,8 +306,8 @@
           </div>
         </div>
 
-        <!-- 就读学校 -->
-        <div class="fb-field" :class="fb.school.open ? 'expanded' : ''">
+        <!-- 就读学校（仅大赛获奖证书可更正） -->
+        <div class="fb-field" x-show="isAwardCert" :class="fb.school.open ? 'expanded' : ''">
           <div class="flex items-center gap-[12px]">
             <span class="text-[13px] text-[#6c7293]" style="min-width: 100px;">就读学校</span>
             <span class="flex-1 text-[14px] font-medium text-[#1a1a2e]">南京市金陵小学</span>
@@ -465,6 +466,11 @@
         // 默认未确认：确认后问题反馈置灰，申领纸质 / 下载数字提亮
         confirmed: false,
 
+        // 仅「大赛获奖证书」可更正指导老师 / 就读学校，其余证书只允许更正姓名
+        get isAwardCert() {
+          return String(this.certName || '').indexOf('大赛获奖证书') !== -1;
+        },
+
         init() {
           const q = new URLSearchParams(location.search);
           if (q.get('name')) this.certName = q.get('name');
@@ -527,8 +533,8 @@
               this.showToastMsg('请上传身份证人像面、国徽面及本人手持身份证照片', 'warning'); return;
             }
           }
-          // 指导老师更正：至少一位，不可用简称，手机号须为 11 位
-          if (this.fb.teacher.open) {
+          // 指导老师更正：至少一位，不可用简称，手机号须为 11 位（仅大赛获奖证书可更正）
+          if (this.isAwardCert && this.fb.teacher.open) {
             const names = this.teacherInputs.map((t) => t.name.trim()).filter(Boolean);
             if (!names.length) { this.showToastMsg('请至少输入一位指导老师姓名', 'warning'); return; }
             if (names.some((n) => /老师$/.test(n))) { this.showToastMsg('指导老师姓名不可输入简称（如"王老师"），请输入完整姓名', 'error'); return; }
@@ -536,8 +542,8 @@
             if (phones.some((p) => p.length !== 11)) { this.showToastMsg('指导老师手机号须为11位数字', 'warning'); return; }
           }
           const corrected = (this.fb.name.open && this.fb.name.correction.trim())
-            || (this.fb.teacher.open && this.teacherInputs.some((t) => t.name.trim()))
-            || (this.fb.school.open && this.fb.school.correction.trim());
+            || (this.isAwardCert && this.fb.teacher.open && this.teacherInputs.some((t) => t.name.trim()))
+            || (this.isAwardCert && this.fb.school.open && this.fb.school.correction.trim());
           if (!corrected) { this.showToastMsg('请至少更正一个字段后再提交', 'warning'); return; }
           if (!this.feedbackAgreed) { this.showToastMsg('请勾选承诺声明后再提交', 'warning'); return; }
           this.showFeedbackConfirm = true;
