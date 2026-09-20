@@ -364,8 +364,9 @@
           @click="showPrintTip = false">✕</div>
       </div>
 
-      <!-- 步骤指示 -->
-      <div class="mt-[14px] flex items-center gap-[8px] text-[12px]">
+      <!-- 步骤指示（组织单位报名不走分步，隐藏） -->
+      <div class="mt-[14px] flex items-center gap-[8px] text-[12px]"
+        x-show="printTipMode === 'self' && !orgEntry">
         <span class="px-[10px] h-[24px] inline-flex items-center rounded-full"
           :style="printTipStep === 1 ? 'background:#f3edff;color:#8742DB;font-weight:600;' : 'color:#b0b0c0;'">1 收件信息</span>
         <span class="text-[#dcdce8]">———</span>
@@ -429,7 +430,7 @@
 
         <div class="mt-[22px] relative flex justify-center">
           <div class="absolute left-0 top-0 h-[42px] flex items-center gap-[2px] text-[13px] cursor-pointer"
-            style="color: #8742DB;" @click="printTipStep = 1">
+            style="color: #8742DB;" x-show="printTipStep === 2 && !orgEntry" @click="printTipStep = 1">
             <span class="text-[15px] leading-none">‹</span><span>上一步</span>
           </div>
 
@@ -441,7 +442,7 @@
             <span>组织单位报名</span><span class="text-[15px] leading-none">›</span>
           </div>
           <div class="absolute right-0 top-0 h-[42px] flex items-center gap-[2px] text-[13px] cursor-pointer"
-            style="color: #8742DB;" x-show="printTipMode === 'org'" @click="printTipMode = 'self'">
+            style="color: #8742DB;" x-show="printTipMode === 'org'" @click="switchToSelf()">
             <span class="text-[15px] leading-none">‹</span><span>官网报名</span>
           </div>
         </div>
@@ -502,6 +503,7 @@
         // ===== 证书信息（可由列表页通过地址栏参数带入） =====
         certName: '大赛获奖证书',
         certWork: '《数字苏园·光影戏梦》',
+        certSource: '官网报名',
         // 默认未确认：确认后问题反馈置灰，申领纸质 / 下载数字提亮
         confirmed: false,
 
@@ -510,10 +512,16 @@
           return String(this.certName || '').indexOf('大赛获奖证书') !== -1;
         },
 
+        // 组织单位报名：申领纸质证书维持单步（直接展示通知，不走收件信息步骤）
+        get orgEntry() {
+          return String(this.certSource || '').indexOf('组织单位') !== -1;
+        },
+
         init() {
           const q = new URLSearchParams(location.search);
           if (q.get('name')) this.certName = q.get('name');
           if (q.get('work')) this.certWork = q.get('work');
+          if (q.get('source')) this.certSource = q.get('source');
         },
 
         selectMenu(key) {
@@ -594,7 +602,8 @@
           this.showToastMsg('您的证书问题反馈已提交，请耐心等待反馈处理结果', 'success');
         },
 
-        // ===== 申领纸质证书（两步：收件信息 → 申领通知） =====
+        // ===== 申领纸质证书 =====
+        // 官网报名：两步（收件信息 → 申领通知）；组织单位报名：单步，直接展示通知
         showPrintTip: false,
         printTipStep: 1,
         printTipMode: 'self',
@@ -609,8 +618,8 @@
             && this.shipAddress.trim());
         },
         openPrintTip() {
-          this.printTipStep = 1;
-          this.printTipMode = 'self';
+          this.printTipMode = this.orgEntry ? 'org' : 'self';
+          this.printTipStep = this.orgEntry ? 2 : 1;
           this.showPrintTip = true;
         },
         printTipNext() {
@@ -618,6 +627,11 @@
           if (!this.shipName.trim()) { this.showToastMsg('请填写收件人姓名', 'warning'); return; }
           if (!/^\d{11}$/.test(this.shipPhone.trim())) { this.showToastMsg('请填写 11 位联系电话', 'warning'); return; }
           this.showToastMsg('请填写收件地址', 'warning');
+        },
+        // 从组织单位通知切回官网报名：组织单位入口的用户需重新走收件信息步骤
+        switchToSelf() {
+          this.printTipMode = 'self';
+          if (this.orgEntry) this.printTipStep = 1;
         },
 
         // ===== 下载数字证书 =====
