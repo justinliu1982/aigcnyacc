@@ -1111,6 +1111,40 @@
         <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium cursor-pointer text-white rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="showMessageModal = false">知道了</div>
       </div>
     </div>
+
+    <!-- ===== 申领纸质证书提示（指导老师查询 / 组织学校奖项查询通用） ===== -->
+    <div x-show="showPaperNotice" x-cloak class="fixed inset-0 z-[70] flex items-center justify-center bg-black/50" @click.self="showPaperNotice = false">
+      <div class="relative w-[560px] max-w-[92vw] p-[32px] bg-white rounded-[24px]">
+        <div class="flex items-center justify-between">
+          <div class="text-[22px] font-medium text-[#8742DB]">申领纸质证书</div>
+          <div class="w-[30px] h-[30px] flex border-[2px] border-[#8742DB] items-center justify-center cursor-pointer" style="border-radius: 50%" @click="showPaperNotice = false">
+            <img class="w-[11px] h-[11px]" src="./img/clone_icon_img.png" />
+          </div>
+        </div>
+        <div class="h-[2px] bg-[#8742DB] w-full mt-[25px]"></div>
+
+        <div class="mt-[20px] text-left text-[16px] font-medium text-black/80">【大赛证书申领通知】</div>
+
+        <div class="mt-[10px] text-left text-[14px] leading-[26px] text-black/60">
+          大赛数字证书已开放下载，请登录官网自行下载打印。
+        </div>
+
+        <div class="mt-[10px] text-left text-[14px] leading-[26px] text-black/60">
+          如需防伪特种纸质证书服务的选手，可扫码进入大赛“工作组”服务系统，填写信息申请纸质证书打印及快递等相关事务性服务（邮费按实际快递费收取）。工作组将在【7】个工作日内处理。
+        </div>
+
+        <div class="mt-[10px] text-left text-[14px] leading-[26px] text-black/60">
+          如有疑问请联系【XXXX】，电话：【XXXXXXX】。
+        </div>
+
+        <div class="mt-[18px] flex flex-col items-center">
+          <img src="./img/ewm.png" class="w-[150px] h-[150px]" alt="专项工作组二维码" />
+          <div class="mt-[8px] text-[13px] text-black/40">扫码进入工作组系统</div>
+        </div>
+
+        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium cursor-pointer text-white rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="showPaperNotice = false">知道了</div>
+      </div>
+    </div>
   </main>
 
   <!-- 容器：用于插入底部 -->
@@ -1281,6 +1315,8 @@
         showTeacherNoResultModal: false,
         showMessageModal: false,
         messageText: '',
+        // 申领纸质证书提示（指导老师查询 / 组织学校奖项查询通用，单步纯提示）
+        showPaperNotice: false,
         teacherDownloadConfirmed: false,
         showTeacherDownloadConfirmModal: false,
         showTeacherWorkList: false,
@@ -2601,9 +2637,9 @@
           this.teacherPreviewImage = src;
           this.showTeacherCertPreviewModal = true;
         },
-        // 申领纸质/铜板证书
+        // 申领纸质证书：统一弹出提示框（不分步）
         teacherClaim() {
-          this.openComingSoon('即将开放，敬请期待');
+          this.showPaperNotice = true;
         },
         // 下载数字证书 → 确认对话框
         teacherDownloadClick() {
@@ -2640,9 +2676,9 @@
           this.schoolPreviewImage = src;
           this.showSchoolCertPreviewModal = true;
         },
+        // 申领纸质证书：统一弹出提示框（不分步）
         schoolClaim() {
-          this.schoolClaimActive = true;
-          this.showSchoolCertApplyModal = true;
+          this.showPaperNotice = true;
         },
         schoolDownloadClick() {
           if (!this.schoolCertSubmitted) {
