@@ -29,6 +29,17 @@
     .d-btn-primary:hover { background: #7534c4; }
     .d-btn-gray { background: #f0f0f5; color: #a8a8bc; cursor: not-allowed; }
 
+    /* 申领纸质证书流程按钮 / 支付方式 */
+    .p-btn { display: flex; align-items: center; justify-content: center; height: 42px; padding: 0 18px; border-radius: 999px; font-size: 14px; font-weight: 500; white-space: nowrap; }
+    .p-btn-primary { color: #fff; background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%); cursor: pointer; }
+    .p-btn-primary:hover { opacity: .92; }
+    .p-btn-ghost { background: #fff; border: 1px solid #d9d9e6; color: #55556a; cursor: pointer; }
+    .p-btn-ghost:hover { border-color: #8742DB; color: #8742DB; }
+    .p-btn-disabled { background: #d9d9e3; color: #fff; cursor: not-allowed; }
+    .pay-opt { display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 18px; border-radius: 8px; border: 1px solid #e4e4ee; font-size: 14px; color: #55556a; cursor: pointer; }
+    .pay-opt:hover { border-color: #c9b6f0; }
+    .pay-opt.active { border-color: #8742DB; color: #8742DB; background: #faf8ff; font-weight: 600; }
+
     /* 信息块 */
     .info-label { font-size: 13px; color: #9a9aae; }
     .info-value { font-size: 16px; font-weight: 700; color: #2b2b3a; margin-top: 6px; }
@@ -354,29 +365,66 @@
     </div>
   </div>
 
-  <!-- ===== 申领纸质证书（两步：收件信息 → 申领通知） ===== -->
+  <!-- ===== 申领纸质证书（官网报名：四步流程 / 组织单位报名：单步通知） ===== -->
   <div x-show="showPrintTip" x-cloak class="fixed inset-0 z-[90] flex items-center justify-center"
     style="background: rgba(0, 0, 0, 0.35)" @click.self="showPrintTip = false">
-    <div class="bg-white rounded-[16px] w-[540px] max-w-[92vw] p-[28px]">
+    <div class="bg-white rounded-[16px] w-[560px] max-w-[92vw] p-[28px]">
       <div class="flex items-center justify-between">
         <div class="text-[18px] font-bold text-[#2b2b3a]">申领纸质证书</div>
         <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
           @click="showPrintTip = false">✕</div>
       </div>
 
-      <!-- 步骤指示（组织单位报名不走分步，隐藏） -->
-      <div class="mt-[14px] flex items-center gap-[8px] text-[12px]"
-        x-show="printTipMode === 'self' && !orgEntry">
-        <span class="px-[10px] h-[24px] inline-flex items-center rounded-full"
-          :style="printTipStep === 1 ? 'background:#f3edff;color:#8742DB;font-weight:600;' : 'color:#b0b0c0;'">1 收件信息</span>
-        <span class="text-[#dcdce8]">———</span>
-        <span class="px-[10px] h-[24px] inline-flex items-center rounded-full"
-          :style="printTipStep === 2 ? 'background:#f3edff;color:#8742DB;font-weight:600;' : 'color:#b0b0c0;'">2 申领通知</span>
+      <!-- 步骤指示（仅官网报名四步流程） -->
+      <div class="mt-[14px] flex items-center gap-[6px] text-[12px]" x-show="printTipMode === 'self'">
+        <span class="px-[8px] h-[24px] inline-flex items-center rounded-full" :style="stepStyle(1)">1 通知</span>
+        <span class="px-[8px] h-[24px] inline-flex items-center rounded-full" :style="stepStyle(2)">2 订单</span>
+        <span class="px-[8px] h-[24px] inline-flex items-center rounded-full" :style="stepStyle(3)">3 支付</span>
+        <span class="px-[8px] h-[24px] inline-flex items-center rounded-full" :style="stepStyle(4)">4 完成</span>
       </div>
 
-      <!-- 第 1 步：确认物流收件信息 -->
-      <div x-show="printTipStep === 1" class="mt-[16px]">
-        <div class="flex flex-col gap-[12px]">
+      <!-- 组织单位报名：单步通知（不参与分步） -->
+      <div x-show="printTipMode === 'org'" class="mt-[16px]">
+        <div class="text-[14px] leading-[26px] text-[#55556a]">
+          您的参赛报名方式为组织单位报名，请与您参赛报名的组织单位联系获取相关证书，联系人：XXXX，联系电话：XXXXXXXX。
+        </div>
+        <div class="mt-[22px] flex justify-center">
+          <div class="p-btn p-btn-primary" style="width: 160px;" @click="showPrintTip = false">知道了</div>
+        </div>
+
+        <div class="mt-[14px] flex justify-end">
+          <div class="flex items-center gap-[2px] text-[13px] cursor-pointer" style="color: #8742DB;"
+            @click="switchToSelf()">
+            <span class="text-[15px] leading-none">‹</span><span>官网报名</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第 1 步：申领通知 -->
+      <div x-show="printTipMode === 'self' && printTipStep === 1" class="mt-[16px]">
+        <div class="text-[15px] font-semibold text-[#2b2b3a]">【大赛证书申领通知】</div>
+
+        <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
+          大赛数字证书已开放下载，请登录官网自行下载打印。如需防伪特种纸质证书服务，将产生证书打印及快递等相关事务性服务费用，是否同意。
+        </div>
+
+        <div class="mt-[22px] flex justify-center gap-[12px]">
+          <div class="p-btn p-btn-primary" style="width: 158px;" @click="printTipStep = 2">同意，下一步</div>
+          <div class="p-btn p-btn-ghost" style="width: 158px;" @click="showPrintTip = false">不同意，放弃申领</div>
+        </div>
+
+        <div class="mt-[14px] flex justify-end">
+          <div class="flex items-center gap-[2px] text-[13px] cursor-pointer" style="color: #8742DB;"
+            @click="printTipMode = 'org'">
+            <span>组织单位报名</span><span class="text-[15px] leading-none">›</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第 2 步：确认物流地址及订单金额 -->
+      <div x-show="printTipMode === 'self' && printTipStep === 2" class="mt-[16px]">
+        <div class="text-[14px] font-semibold text-[#2b2b3a]">物流信息</div>
+        <div class="mt-[10px] flex flex-col gap-[12px]">
           <div>
             <div class="text-[13px] text-[#6c7293]">收件人姓名</div>
             <input type="text" class="fb-input mt-[6px]" x-model="shipName" placeholder="请输入收件人姓名" />
@@ -392,59 +440,77 @@
           </div>
         </div>
 
-        <div class="mt-[22px] flex justify-center">
-          <div class="w-[160px] h-[42px] flex items-center justify-center rounded-full text-[15px] font-medium text-white"
-            :style="shipReady ? 'background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%); cursor:pointer;' : 'background:#d9d9e3; cursor:not-allowed;'"
-            @click="printTipNext()">确认</div>
+        <div class="mt-[18px] pt-[16px] flex items-center justify-between" style="border-top: 1px solid #f0f0f5;">
+          <div class="text-[14px] font-semibold text-[#2b2b3a]">服务费用</div>
+          <div class="text-[20px] font-bold" style="color: #8742DB;">￥19.00</div>
+        </div>
+
+        <div class="mt-[18px] pt-[16px]" style="border-top: 1px solid #f0f0f5;">
+          <div class="text-[14px] font-semibold text-[#2b2b3a]">支付方式选择</div>
+          <div class="mt-[10px] flex gap-[12px]">
+            <div class="pay-opt" :class="payMethod === 'wechat' ? 'active' : ''" @click="payMethod = 'wechat'">
+              <span class="w-[8px] h-[8px] rounded-full flex-shrink-0" style="background: #21a366;"></span><span>微信</span>
+            </div>
+            <div class="pay-opt" :class="payMethod === 'alipay' ? 'active' : ''" @click="payMethod = 'alipay'">
+              <span class="w-[8px] h-[8px] rounded-full flex-shrink-0" style="background: #1677ff;"></span><span>支付宝</span>
+            </div>
+          </div>
+        </div>
+
+        <label class="mt-[18px] flex items-start gap-[8px] cursor-pointer text-[13px] leading-[1.6] text-[#55556a]">
+          <input type="checkbox" class="mt-[3px] flex-shrink-0" style="width: 16px; height: 16px; accent-color: #8742DB;" x-model="payAgreed" />
+          <span>地址确认无误，同意支付此费用，支付完成后无法退款</span>
+        </label>
+
+        <div class="mt-[22px] flex justify-center gap-[12px]">
+          <div class="p-btn" :class="orderReady ? 'p-btn-primary' : 'p-btn-disabled'" style="width: 158px;"
+            @click="printTipSubmitOrder()">信息无误，确认提交</div>
+          <div class="p-btn p-btn-ghost" style="width: 128px;" @click="showPrintTip = false">放弃申领</div>
         </div>
       </div>
 
-      <!-- 第 2 步：申领通知 -->
-      <div x-show="printTipStep === 2" class="mt-[16px]">
-        <div x-show="printTipMode === 'self'">
-          <div class="text-[15px] font-semibold text-[#2b2b3a]">【大赛证书申领通知】</div>
+      <!-- 第 3 步：二维码扫码支付 -->
+      <div x-show="printTipMode === 'self' && printTipStep === 3" class="mt-[16px]">
+        <div class="flex flex-col items-center">
+          <div class="text-[14px] font-semibold text-[#2b2b3a]"
+            x-text="payMethod === 'wechat' ? '微信扫码支付' : '支付宝扫码支付'"></div>
 
-          <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
-            大赛数字证书已开放下载，请登录官网自行下载打印。
-          </div>
+          <img src="./img/ewm.png" class="mt-[12px] w-[170px] h-[170px]" alt="支付二维码" />
 
-          <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
-            如需防伪特种纸质证书服务的选手，可扫码进入大赛“工作组”服务系统，填写信息申请纸质证书打印及快递等相关事务性服务由“工作组”负责。（邮费按实际快递费收取）。工作组将在【7】个工作日内处理。
-          </div>
+          <div class="mt-[12px] text-[22px] font-bold" style="color: #8742DB;">￥19.00</div>
 
-          <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
-            如有疑问请联系4009398003。
-          </div>
+          <div class="mt-[8px] text-[13px]" style="color: #e08a2b;">二维码有效期 15 分钟，请尽快完成支付</div>
+        </div>
 
-          <div class="mt-[18px] flex flex-col items-center">
-            <img src="./img/ewm.png" class="w-[150px] h-[150px]" alt="专项工作组二维码" />
-            <div class="mt-[8px] text-[13px] text-[#9a9aae]">扫码进入工作组系统</div>
+        <div class="mt-[22px] flex justify-center">
+          <div class="p-btn p-btn-primary" style="width: 200px;" @click="printTipStep = 4">我已完成支付</div>
+        </div>
+      </div>
+
+      <!-- 第 4 步：支付成功 -->
+      <div x-show="printTipMode === 'self' && printTipStep === 4" class="mt-[16px]">
+        <div class="flex flex-col items-center py-[6px]">
+          <div class="w-[56px] h-[56px] rounded-full flex items-center justify-center text-[28px]"
+            style="background: #e9f9f0; color: #21a366;">✓</div>
+          <div class="mt-[14px] text-[17px] font-bold text-[#2b2b3a]">支付成功</div>
+          <div class="mt-[8px] text-[13px] leading-[22px] text-[#6c7293] text-center">
+            您的纸质证书申领订单已提交，我们将尽快安排打印与寄送。
           </div>
         </div>
 
-        <div x-show="printTipMode === 'org'">
-          <div class="text-[14px] leading-[26px] text-[#55556a]">
-            您的参赛报名方式为组织单位报名，请与您参赛报名的组织单位联系获取相关证书，联系人：XXXX，联系电话：XXXXXXXX。
-          </div>
+        <div class="mt-[22px] flex justify-center">
+          <div class="p-btn p-btn-primary" style="width: 180px;" @click="showOrderDetail = !showOrderDetail"
+            x-text="showOrderDetail ? '收起订单详情' : '查看订单详情'"></div>
         </div>
 
-        <div class="mt-[22px] relative flex justify-center">
-          <div class="absolute left-0 top-0 h-[42px] flex items-center gap-[2px] text-[13px] cursor-pointer"
-            style="color: #8742DB;" x-show="printTipStep === 2 && !orgEntry" @click="printTipStep = 1">
-            <span class="text-[15px] leading-none">‹</span><span>上一步</span>
-          </div>
-
-          <div class="w-[160px] h-[42px] flex items-center justify-center rounded-full text-[15px] font-medium text-white cursor-pointer"
-            style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%);" @click="showPrintTip = false">知道了</div>
-
-          <div class="absolute right-0 top-0 h-[42px] flex items-center gap-[2px] text-[13px] cursor-pointer"
-            style="color: #8742DB;" x-show="printTipMode === 'self'" @click="printTipMode = 'org'">
-            <span>组织单位报名</span><span class="text-[15px] leading-none">›</span>
-          </div>
-          <div class="absolute right-0 top-0 h-[42px] flex items-center gap-[2px] text-[13px] cursor-pointer"
-            style="color: #8742DB;" x-show="printTipMode === 'org'" @click="switchToSelf()">
-            <span class="text-[15px] leading-none">‹</span><span>官网报名</span>
-          </div>
+        <div x-show="showOrderDetail" class="mt-[16px] rounded-[10px] p-[16px] text-[13px] leading-[26px] text-[#55556a]"
+          style="background: #fbfbfd;">
+          <div class="flex justify-between gap-[16px]"><span>订单编号</span><span x-text="orderNo"></span></div>
+          <div class="flex justify-between gap-[16px]"><span>证书名称</span><span x-text="certName"></span></div>
+          <div class="flex justify-between gap-[16px]"><span>服务费用</span><span>￥19.00</span></div>
+          <div class="flex justify-between gap-[16px]"><span>支付方式</span><span x-text="payMethod === 'wechat' ? '微信' : '支付宝'"></span></div>
+          <div class="flex justify-between gap-[16px]"><span>支付状态</span><span style="color: #21a366;">已支付</span></div>
+          <div class="flex justify-between gap-[16px]"><span class="flex-shrink-0">收件信息</span><span class="text-right" x-text="shipName + ' ' + shipPhone + ' ' + shipAddress"></span></div>
         </div>
       </div>
     </div>
@@ -611,27 +677,54 @@
         shipName: '张明华',
         shipPhone: '13812341234',
         shipAddress: '',
-        // 三项信息完整（姓名 + 11 位电话 + 地址）才可进入下一步
+        // 支付方式 / 订单
+        payMethod: 'alipay',
+        payAgreed: false,
+        showOrderDetail: false,
+        orderNo: '',
+        // 三项信息完整（姓名 + 11 位电话 + 地址）
         get shipReady() {
           return !!(this.shipName.trim()
             && /^\d{11}$/.test(this.shipPhone.trim())
             && this.shipAddress.trim());
         },
+        // 信息完整且已勾选费用确认，才可提交订单
+        get orderReady() {
+          return this.shipReady && this.payAgreed;
+        },
+        // 步骤指示样式
+        stepStyle(n) {
+          return this.printTipStep === n
+            ? 'background:#f3edff;color:#8742DB;font-weight:600;'
+            : 'color:#b0b0c0;';
+        },
         openPrintTip() {
           this.printTipMode = this.orgEntry ? 'org' : 'self';
-          this.printTipStep = this.orgEntry ? 2 : 1;
+          this.printTipStep = 1;
+          this.payAgreed = false;
+          this.payMethod = 'alipay';
+          this.showOrderDetail = false;
           this.showPrintTip = true;
         },
-        printTipNext() {
-          if (this.shipReady) { this.printTipStep = 2; return; }
-          if (!this.shipName.trim()) { this.showToastMsg('请填写收件人姓名', 'warning'); return; }
-          if (!/^\d{11}$/.test(this.shipPhone.trim())) { this.showToastMsg('请填写 11 位联系电话', 'warning'); return; }
-          this.showToastMsg('请填写收件地址', 'warning');
+        // 第 2 步提交：校验物流信息与费用确认后进入扫码支付
+        printTipSubmitOrder() {
+          if (!this.shipReady) {
+            if (!this.shipName.trim()) { this.showToastMsg('请填写收件人姓名', 'warning'); return; }
+            if (!/^\d{11}$/.test(this.shipPhone.trim())) { this.showToastMsg('请填写 11 位联系电话', 'warning'); return; }
+            this.showToastMsg('请填写收件地址', 'warning');
+            return;
+          }
+          if (!this.payAgreed) { this.showToastMsg('请先确认地址与费用声明', 'warning'); return; }
+          const d = new Date();
+          const pad = (v) => String(v).padStart(2, '0');
+          this.orderNo = 'PS' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate())
+            + String(Math.floor(Math.random() * 900000) + 100000);
+          this.printTipStep = 3;
         },
-        // 从组织单位通知切回官网报名：组织单位入口的用户需重新走收件信息步骤
+        // 从组织单位通知切回官网报名：回到第 1 步重新走流程
         switchToSelf() {
           this.printTipMode = 'self';
-          if (this.orgEntry) this.printTipStep = 1;
+          this.printTipStep = 1;
         },
 
         // ===== 下载数字证书 =====
