@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>证书详情</title>
   <script src="./browser@4.js"></script>
+  <script src="./order-store.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js" defer></script>
   <style>
     [x-cloak] { display: none !important; }
@@ -370,17 +371,13 @@
     style="background: rgba(0, 0, 0, 0.35)" @click.self="showPrintTip = false">
     <div class="bg-white rounded-[16px] w-[560px] max-w-[92vw] p-[28px]">
       <div class="flex items-center justify-between">
-        <div class="text-[18px] font-bold text-[#2b2b3a]">申领纸质证书</div>
+        <div class="text-[18px] font-bold text-[#2b2b3a]">
+          申领纸质证书
+          <span x-show="printTipMode === 'self' && printTipStep <= 2" class="text-[13px] font-normal"
+            style="color: #9a9aae;" x-text="'（' + printTipStep + '/2）'"></span>
+        </div>
         <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
           @click="showPrintTip = false">✕</div>
-      </div>
-
-      <!-- 步骤指示（仅官网报名四步流程） -->
-      <div class="mt-[14px] flex items-center gap-[6px] text-[12px]" x-show="printTipMode === 'self'">
-        <span class="px-[8px] h-[24px] inline-flex items-center rounded-full" :style="stepStyle(1)">1 通知</span>
-        <span class="px-[8px] h-[24px] inline-flex items-center rounded-full" :style="stepStyle(2)">2 订单</span>
-        <span class="px-[8px] h-[24px] inline-flex items-center rounded-full" :style="stepStyle(3)">3 支付</span>
-        <span class="px-[8px] h-[24px] inline-flex items-center rounded-full" :style="stepStyle(4)">4 完成</span>
       </div>
 
       <!-- 组织单位报名：单步通知（不参与分步） -->
@@ -449,10 +446,24 @@
           <div class="text-[14px] font-semibold text-[#2b2b3a]">支付方式选择</div>
           <div class="mt-[10px] flex gap-[12px]">
             <div class="pay-opt" :class="payMethod === 'wechat' ? 'active' : ''" @click="payMethod = 'wechat'">
-              <span class="w-[8px] h-[8px] rounded-full flex-shrink-0" style="background: #21a366;"></span><span>微信</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" class="flex-shrink-0" aria-label="微信">
+                <circle cx="9" cy="8.6" r="6.4" fill="#07C160" />
+                <circle cx="6.7" cy="8" r="0.95" fill="#fff" />
+                <circle cx="11.3" cy="8" r="0.95" fill="#fff" />
+                <path d="M6.3 11.4 Q9 13.5 11.7 11.4" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" />
+                <circle cx="15.7" cy="15.2" r="4.6" fill="#07C160" stroke="#fff" stroke-width="1.6" />
+                <circle cx="14.3" cy="14.6" r="0.8" fill="#fff" />
+                <circle cx="17.1" cy="14.6" r="0.8" fill="#fff" />
+              </svg>
+              <span>微信</span>
             </div>
             <div class="pay-opt" :class="payMethod === 'alipay' ? 'active' : ''" @click="payMethod = 'alipay'">
-              <span class="w-[8px] h-[8px] rounded-full flex-shrink-0" style="background: #1677ff;"></span><span>支付宝</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" class="flex-shrink-0" aria-label="支付宝">
+                <rect x="1.5" y="1.5" width="21" height="21" rx="5.5" fill="#1677FF" />
+                <text x="12" y="16.8" font-size="13" text-anchor="middle" fill="#fff"
+                  font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-weight="700">支</text>
+              </svg>
+              <span>支付宝</span>
             </div>
           </div>
         </div>
@@ -482,8 +493,9 @@
           <div class="mt-[8px] text-[13px]" style="color: #e08a2b;">二维码有效期 15 分钟，请尽快完成支付</div>
         </div>
 
-        <div class="mt-[22px] flex justify-center">
-          <div class="p-btn p-btn-primary" style="width: 200px;" @click="printTipStep = 4">我已完成支付</div>
+        <div class="mt-[22px] flex justify-end">
+          <span class="text-[12px] cursor-pointer hover:underline" style="color: #b0b0c0;"
+            @click="completePay()">我已完成支付</span>
         </div>
       </div>
 
@@ -499,18 +511,8 @@
         </div>
 
         <div class="mt-[22px] flex justify-center">
-          <div class="p-btn p-btn-primary" style="width: 180px;" @click="showOrderDetail = !showOrderDetail"
-            x-text="showOrderDetail ? '收起订单详情' : '查看订单详情'"></div>
-        </div>
-
-        <div x-show="showOrderDetail" class="mt-[16px] rounded-[10px] p-[16px] text-[13px] leading-[26px] text-[#55556a]"
-          style="background: #fbfbfd;">
-          <div class="flex justify-between gap-[16px]"><span>订单编号</span><span x-text="orderNo"></span></div>
-          <div class="flex justify-between gap-[16px]"><span>证书名称</span><span x-text="certName"></span></div>
-          <div class="flex justify-between gap-[16px]"><span>服务费用</span><span>￥19.00</span></div>
-          <div class="flex justify-between gap-[16px]"><span>支付方式</span><span x-text="payMethod === 'wechat' ? '微信' : '支付宝'"></span></div>
-          <div class="flex justify-between gap-[16px]"><span>支付状态</span><span style="color: #21a366;">已支付</span></div>
-          <div class="flex justify-between gap-[16px]"><span class="flex-shrink-0">收件信息</span><span class="text-right" x-text="shipName + ' ' + shipPhone + ' ' + shipAddress"></span></div>
+          <div class="p-btn p-btn-primary" style="width: 180px;"
+            @click="location.href = './订单详情.html?orderNo=' + encodeURIComponent(orderNo)">查看订单详情</div>
         </div>
       </div>
     </div>
@@ -669,7 +671,7 @@
         },
 
         // ===== 申领纸质证书 =====
-        // 官网报名：两步（收件信息 → 申领通知）；组织单位报名：单步，直接展示通知
+        // 官网报名：四步（通知→订单→支付→成功）；组织单位报名：单步，直接展示通知
         showPrintTip: false,
         printTipStep: 1,
         printTipMode: 'self',
@@ -680,7 +682,6 @@
         // 支付方式 / 订单
         payMethod: 'alipay',
         payAgreed: false,
-        showOrderDetail: false,
         orderNo: '',
         // 三项信息完整（姓名 + 11 位电话 + 地址）
         get shipReady() {
@@ -692,21 +693,21 @@
         get orderReady() {
           return this.shipReady && this.payAgreed;
         },
-        // 步骤指示样式
-        stepStyle(n) {
-          return this.printTipStep === n
-            ? 'background:#f3edff;color:#8742DB;font-weight:600;'
-            : 'color:#b0b0c0;';
-        },
         openPrintTip() {
           this.printTipMode = this.orgEntry ? 'org' : 'self';
           this.printTipStep = 1;
           this.payAgreed = false;
           this.payMethod = 'alipay';
-          this.showOrderDetail = false;
+          // 自动带出最近一次填写的物流信息
+          const info = window.OrderStore.getShipInfo();
+          if (info) {
+            this.shipName = info.shipName || '张明华';
+            this.shipPhone = info.shipPhone || '13812341234';
+            this.shipAddress = info.shipAddress || '';
+          }
           this.showPrintTip = true;
         },
-        // 第 2 步提交：校验物流信息与费用确认后进入扫码支付
+        // 第 2 步提交：校验后生成待支付订单并进入扫码支付
         printTipSubmitOrder() {
           if (!this.shipReady) {
             if (!this.shipName.trim()) { this.showToastMsg('请填写收件人姓名', 'warning'); return; }
@@ -715,11 +716,34 @@
             return;
           }
           if (!this.payAgreed) { this.showToastMsg('请先确认地址与费用声明', 'warning'); return; }
-          const d = new Date();
-          const pad = (v) => String(v).padStart(2, '0');
-          this.orderNo = 'PS' + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate())
-            + String(Math.floor(Math.random() * 900000) + 100000);
+          // 记忆物流信息，供其他证书申领时复用
+          window.OrderStore.saveShipInfo({
+            shipName: this.shipName.trim(),
+            shipPhone: this.shipPhone.trim(),
+            shipAddress: this.shipAddress.trim(),
+          });
+          // 生成待支付订单
+          this.orderNo = window.OrderStore.genOrderNo();
+          window.OrderStore.addOrder({
+            orderNo: this.orderNo,
+            certName: this.certName,
+            certWork: this.certWork,
+            shipName: this.shipName.trim(),
+            shipPhone: this.shipPhone.trim(),
+            shipAddress: this.shipAddress.trim(),
+            amount: 19.00,
+            payMethod: this.payMethod,
+            status: 'pending',
+            createTime: Date.now(),
+            payTime: null,
+            invoiceEmail: '',
+          });
           this.printTipStep = 3;
+        },
+        // 第 3 步：标记支付完成，进入成功页
+        completePay() {
+          window.OrderStore.updateOrder(this.orderNo, { status: 'paid', payTime: Date.now() });
+          this.printTipStep = 4;
         },
         // 从组织单位通知切回官网报名：回到第 1 步重新走流程
         switchToSelf() {
