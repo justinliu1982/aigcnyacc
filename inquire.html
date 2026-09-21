@@ -10,6 +10,7 @@
   <script src="./certificate-renderer.js"></script>
   <link rel="stylesheet" href="./creator-certificate-template.css" />
   <script src="./creator-certificate-renderer.js"></script>
+  <script src="./order-store.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js" defer></script>
   <script src="./browser@4.js"></script>
 </head>
@@ -111,6 +112,22 @@
     /* 箭头层级低于select，避免遮挡 */
     z-index: 0;
   }
+
+  /* 申领纸质证书流程（与个人中心一致） */
+  .p-btn { display: flex; align-items: center; justify-content: center; height: 42px; padding: 0 18px; border-radius: 999px; font-size: 14px; font-weight: 500; white-space: nowrap; }
+  .p-btn-primary { color: #fff; background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%); cursor: pointer; }
+  .p-btn-primary:hover { opacity: .92; }
+  .p-btn-ghost { background: #fff; border: 1px solid #d9d9e6; color: #55556a; cursor: pointer; }
+  .p-btn-ghost:hover { border-color: #8742DB; color: #8742DB; }
+  .p-btn-disabled { background: #d9d9e3; color: #fff; cursor: not-allowed; }
+  .pay-opt { display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 18px; border-radius: 8px; border: 1px solid #e4e4ee; font-size: 14px; color: #55556a; cursor: pointer; }
+  .pay-opt:hover { border-color: #c9b6f0; }
+  .pay-opt.active { border-color: #8742DB; color: #8742DB; background: #faf8ff; font-weight: 600; }
+  .fb-input { width: 100%; height: 38px; border: 1px solid #e0e0ea; border-radius: 8px; padding: 0 12px; font-size: 13px; outline: none; box-sizing: border-box; background: #fff; }
+  .fb-input:focus { border-color: #8742DB; }
+  .tinfo-row { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; font-size: 14px; }
+  .tinfo-row .k { color: #9a9aae; flex-shrink: 0; }
+  .tinfo-row .v { color: #2b2b3a; font-weight: 500; text-align: right; word-break: break-all; }
 </style>
 
 <body>
@@ -1112,39 +1129,144 @@
       </div>
     </div>
 
-    <!-- ===== 申领纸质证书提示（指导老师查询 / 组织学校奖项查询通用） ===== -->
-    <div x-show="showPaperNotice" x-cloak class="fixed inset-0 z-[70] flex items-center justify-center bg-black/50" @click.self="showPaperNotice = false">
-      <div class="relative w-[560px] max-w-[92vw] p-[32px] bg-white rounded-[24px]">
+    <!-- ===== 指导老师申领纸质证书（四步，与个人中心一致） ===== -->
+    <div x-show="showTClaim" x-cloak class="fixed inset-0 z-[70] flex items-center justify-center bg-black/50" @click.self="showTClaim = false">
+      <div class="relative w-[560px] max-w-[92vw] p-[28px] bg-white rounded-[16px]">
         <div class="flex items-center justify-between">
-          <div class="text-[22px] font-medium text-[#8742DB]">申领纸质证书</div>
-          <div class="w-[30px] h-[30px] flex border-[2px] border-[#8742DB] items-center justify-center cursor-pointer" style="border-radius: 50%" @click="showPaperNotice = false">
-            <img class="w-[11px] h-[11px]" src="./img/clone_icon_img.png" />
+          <div class="text-[18px] font-bold text-[#2b2b3a]">
+            申领纸质证书
+            <span x-show="tStep <= 2" class="text-[13px] font-normal" style="color: #9a9aae;"
+              x-text="'（' + tStep + '/2）'"></span>
+          </div>
+          <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]" @click="showTClaim = false">✕</div>
+        </div>
+
+        <!-- 第 1 步：申领通知 -->
+        <div x-show="tStep === 1" class="mt-[16px] text-left">
+          <div class="text-[15px] font-semibold text-[#2b2b3a]">【大赛证书申领通知】</div>
+          <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
+            大赛数字证书已开放下载，请登录官网自行下载打印。如需防伪特种纸质证书服务，将产生证书打印及快递等相关事务性服务费用，是否同意。
+          </div>
+          <div class="mt-[22px] flex justify-center gap-[12px]">
+            <div class="p-btn p-btn-primary" style="width: 158px;" @click="tStep = 2">同意，下一步</div>
+            <div class="p-btn p-btn-ghost" style="width: 158px;" @click="showTClaim = false">不同意，放弃申领</div>
           </div>
         </div>
-        <div class="h-[2px] bg-[#8742DB] w-full mt-[25px]"></div>
 
-        <div class="mt-[20px] text-left text-[16px] font-medium text-black/80">【大赛证书申领通知】</div>
+        <!-- 第 2 步：确认物流地址及订单金额 -->
+        <div x-show="tStep === 2" class="mt-[16px] text-left">
+          <div class="text-[14px] font-semibold text-[#2b2b3a]">物流信息</div>
+          <div class="mt-[10px] flex flex-col gap-[12px]">
+            <div>
+              <div class="text-[13px] text-[#6c7293]">收件人姓名</div>
+              <input type="text" class="fb-input mt-[6px]" x-model="tShipName" placeholder="请输入收件人姓名" />
+            </div>
+            <div>
+              <div class="text-[13px] text-[#6c7293]">联系电话</div>
+              <input type="text" class="fb-input mt-[6px]" inputmode="numeric" maxlength="11" placeholder="请输入 11 位手机号"
+                x-model="tShipPhone" @input="tShipPhone = tShipPhone.replace(/[^0-9]/g, '')" />
+            </div>
+            <div>
+              <div class="text-[13px] text-[#6c7293]">收件地址</div>
+              <input type="text" class="fb-input mt-[6px]" x-model="tShipAddress" placeholder="请输入详细收件地址" />
+            </div>
+          </div>
 
-        <div class="mt-[10px] text-left text-[14px] leading-[26px] text-black/60">
-          大赛数字证书已开放下载，请登录官网自行下载打印。
+          <div class="mt-[18px] pt-[16px] flex items-center justify-between" style="border-top: 1px solid #f0f0f5;">
+            <div class="text-[14px] font-semibold text-[#2b2b3a]">服务费用</div>
+            <div class="text-[20px] font-bold" style="color: #8742DB;">￥19.00</div>
+          </div>
+
+          <div class="mt-[18px] pt-[16px]" style="border-top: 1px solid #f0f0f5;">
+            <div class="text-[14px] font-semibold text-[#2b2b3a]">支付方式选择</div>
+            <div class="mt-[10px] flex gap-[12px]">
+              <div class="pay-opt" :class="tPayMethod === 'wechat' ? 'active' : ''" @click="tPayMethod = 'wechat'">
+                <svg width="16" height="16" viewBox="0 0 24 24" class="flex-shrink-0" aria-label="微信">
+                  <circle cx="9" cy="8.6" r="6.4" fill="#07C160" />
+                  <circle cx="6.7" cy="8" r="0.95" fill="#fff" />
+                  <circle cx="11.3" cy="8" r="0.95" fill="#fff" />
+                  <path d="M6.3 11.4 Q9 13.5 11.7 11.4" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round" />
+                  <circle cx="15.7" cy="15.2" r="4.6" fill="#07C160" stroke="#fff" stroke-width="1.6" />
+                  <circle cx="14.3" cy="14.6" r="0.8" fill="#fff" />
+                  <circle cx="17.1" cy="14.6" r="0.8" fill="#fff" />
+                </svg>
+                <span>微信</span>
+              </div>
+              <div class="pay-opt" :class="tPayMethod === 'alipay' ? 'active' : ''" @click="tPayMethod = 'alipay'">
+                <svg width="16" height="16" viewBox="0 0 24 24" class="flex-shrink-0" aria-label="支付宝">
+                  <rect x="1.5" y="1.5" width="21" height="21" rx="5.5" fill="#1677FF" />
+                  <text x="12" y="16.8" font-size="13" text-anchor="middle" fill="#fff"
+                    font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-weight="700">支</text>
+                </svg>
+                <span>支付宝</span>
+              </div>
+            </div>
+          </div>
+
+          <label class="mt-[18px] flex items-start gap-[8px] cursor-pointer text-[13px] leading-[1.6] text-[#55556a]">
+            <input type="checkbox" class="mt-[3px] flex-shrink-0" style="width: 16px; height: 16px; accent-color: #8742DB;" x-model="tPayAgreed" />
+            <span>地址确认无误，同意支付此费用，支付完成后无法退款</span>
+          </label>
+
+          <div class="mt-[22px] flex justify-center gap-[12px]">
+            <div class="p-btn" :class="tOrderReady ? 'p-btn-primary' : 'p-btn-disabled'" style="width: 158px;"
+              @click="tSubmitOrder()">信息无误，确认提交</div>
+            <div class="p-btn p-btn-ghost" style="width: 128px;" @click="showTClaim = false">放弃申领</div>
+          </div>
         </div>
 
-        <div class="mt-[10px] text-left text-[14px] leading-[26px] text-black/60">
-          如需防伪特种纸质证书服务的选手，可扫码进入大赛“工作组”服务系统，填写信息申请纸质证书打印及快递等相关事务性服务由“工作组”负责。（邮费按实际快递费收取）。工作组将在【7】个工作日内处理。
+        <!-- 第 3 步：二维码扫码支付 -->
+        <div x-show="tStep === 3" class="mt-[16px]">
+          <div class="flex flex-col items-center">
+            <div class="text-[14px] font-semibold text-[#2b2b3a]" x-text="tPayMethod === 'wechat' ? '微信扫码支付' : '支付宝扫码支付'"></div>
+            <img src="./img/ewm.png" class="mt-[12px] w-[170px] h-[170px]" alt="支付二维码" />
+            <div class="mt-[12px] text-[22px] font-bold" style="color: #8742DB;">￥19.00</div>
+            <div class="mt-[8px] text-[13px]" style="color: #e08a2b;">二维码有效期 15 分钟，请尽快完成支付</div>
+          </div>
+          <div class="mt-[22px] flex justify-end">
+            <span class="text-[12px] cursor-pointer hover:underline" style="color: #b0b0c0;" @click="tCompletePay()">我已完成支付</span>
+          </div>
         </div>
 
-        <div class="mt-[10px] text-left text-[14px] leading-[26px] text-black/60">
-          如有疑问请联系4009398003。
+        <!-- 第 4 步：支付成功 -->
+        <div x-show="tStep === 4" class="mt-[16px]">
+          <div class="flex flex-col items-center py-[6px]">
+            <div class="w-[56px] h-[56px] rounded-full flex items-center justify-center text-[28px]" style="background: #e9f9f0; color: #21a366;">✓</div>
+            <div class="mt-[14px] text-[17px] font-bold text-[#2b2b3a]">支付成功</div>
+            <div class="mt-[8px] text-[13px] leading-[22px] text-[#6c7293] text-center">您的纸质证书申领订单已提交，我们将尽快安排打印与寄送。</div>
+          </div>
+          <div class="mt-[22px] flex justify-center">
+            <div class="p-btn p-btn-primary" style="width: 180px;" @click="tGoOrder()">查看订单详情</div>
+          </div>
         </div>
-
-        <div class="mt-[18px] flex flex-col items-center">
-          <img src="./img/ewm.png" class="w-[150px] h-[150px]" alt="专项工作组二维码" />
-          <div class="mt-[8px] text-[13px] text-black/40">扫码进入工作组系统</div>
-        </div>
-
-        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium cursor-pointer text-white rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="showPaperNotice = false">知道了</div>
       </div>
     </div>
+
+    <!-- ===== 已有未完成申领订单：代出订单信息 ===== -->
+    <div x-show="showTOrderInfo" x-cloak class="fixed inset-0 z-[75] flex items-center justify-center bg-black/50" @click.self="showTOrderInfo = false">
+      <div class="relative w-[520px] max-w-[92vw] p-[28px] bg-white rounded-[16px]">
+        <div class="flex items-center justify-between">
+          <div class="text-[18px] font-bold text-[#2b2b3a]">申领订单信息</div>
+          <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]" @click="showTOrderInfo = false">✕</div>
+        </div>
+        <div class="mt-[16px] text-left rounded-[10px] px-[16px] py-[12px]" style="background: #fbfbfd;">
+          <div class="tinfo-row"><span class="k">订单编号</span><span class="v" x-text="tOrder ? tOrder.orderNo : ''"></span></div>
+          <div class="tinfo-row"><span class="k">证书名称</span><span class="v" x-text="tOrder ? tOrder.certName : ''"></span></div>
+          <div class="tinfo-row"><span class="k">申领状态</span><span class="v" x-text="tOrder ? tStatusText(tOrder.status) : ''"></span></div>
+          <div class="tinfo-row"><span class="k">服务费用</span><span class="v" x-text="tOrder ? '￥' + tOrder.amount.toFixed(2) : ''"></span></div>
+          <div class="tinfo-row"><span class="k">收件信息</span><span class="v" x-text="tOrder ? (tOrder.shipName + ' ' + tOrder.shipPhone + ' ' + tOrder.shipAddress) : ''"></span></div>
+        </div>
+        <div class="mt-[18px] flex justify-end gap-[12px]">
+          <div class="p-btn p-btn-ghost" style="height: 38px; font-size: 14px;" @click="showTOrderInfo = false">知道了</div>
+          <div class="p-btn p-btn-primary" style="height: 38px; font-size: 14px;" @click="tGoOrder()">查看订单详情</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 申领流程轻提示 -->
+    <div x-show="showTToast" x-cloak class="fixed left-1/2 -translate-x-1/2 z-[120] px-[22px] h-[44px] flex items-center rounded-full text-[14px] text-white"
+      :style="'bottom: 48px; background: ' + (tToastType === 'success' ? '#21a366' : tToastType === 'error' ? '#ff4d4f' : '#e08a2b') + ';'"
+      x-text="tToastMsg"></div>
   </main>
 
   <!-- 容器：用于插入底部 -->
@@ -1315,8 +1437,6 @@
         showTeacherNoResultModal: false,
         showMessageModal: false,
         messageText: '',
-        // 申领纸质证书提示（指导老师查询 / 组织学校奖项查询通用，单步纯提示）
-        showPaperNotice: false,
         teacherDownloadConfirmed: false,
         showTeacherDownloadConfirmModal: false,
         showTeacherWorkList: false,
@@ -2637,9 +2757,93 @@
           this.teacherPreviewImage = src;
           this.showTeacherCertPreviewModal = true;
         },
-        // 申领纸质证书：统一弹出提示框（不分步）
+        // ===== 指导老师申领纸质证书（四步流程，与个人中心一致） =====
+        showTClaim: false,
+        tStep: 1,
+        tShipName: '张明华',
+        tShipPhone: '13812341234',
+        tShipAddress: '',
+        tPayMethod: 'alipay',
+        tPayAgreed: false,
+        tOrderNo: '',
+        showTOrderInfo: false,
+        get tCertName() { return '指导老师证书'; },
+        get tCertWork() { return '指导老师：' + (this.teacherName || '—'); },
+        get tShipReady() {
+          return !!(this.tShipName.trim()
+            && /^\d{11}$/.test(this.tShipPhone.trim())
+            && this.tShipAddress.trim());
+        },
+        get tOrderReady() { return this.tShipReady && this.tPayAgreed; },
+        get tOrder() { return window.OrderStore.getOrder(this.tOrderNo); },
+        tStatusText(s) { return window.OrderStore.STATUS_TEXT[s] || s; },
         teacherClaim() {
-          this.showPaperNotice = true;
+          // 已有未完成收货的订单：直接代出订单信息，不再进入申领流程
+          const existing = window.OrderStore.orderOfCert(this.tCertName, this.tCertWork);
+          if (existing && (existing.status === 'pending' || existing.status === 'paid')) {
+            this.tOrderNo = existing.orderNo;
+            this.showTOrderInfo = true;
+            return;
+          }
+          this.tStep = 1;
+          this.tPayAgreed = false;
+          this.tPayMethod = 'alipay';
+          // 自动带出最近一次填写的物流信息
+          const info = window.OrderStore.getShipInfo();
+          if (info) {
+            this.tShipName = info.shipName || '张明华';
+            this.tShipPhone = info.shipPhone || '13812341234';
+            this.tShipAddress = info.shipAddress || '';
+          }
+          this.showTClaim = true;
+        },
+        tSubmitOrder() {
+          if (!this.tShipReady) {
+            if (!this.tShipName.trim()) { this.tToast('请填写收件人姓名', 'warning'); return; }
+            if (!/^\d{11}$/.test(this.tShipPhone.trim())) { this.tToast('请填写 11 位联系电话', 'warning'); return; }
+            this.tToast('请填写收件地址', 'warning');
+            return;
+          }
+          if (!this.tPayAgreed) { this.tToast('请先确认地址与费用声明', 'warning'); return; }
+          window.OrderStore.saveShipInfo({
+            shipName: this.tShipName.trim(),
+            shipPhone: this.tShipPhone.trim(),
+            shipAddress: this.tShipAddress.trim(),
+          });
+          this.tOrderNo = window.OrderStore.genOrderNo();
+          window.OrderStore.addOrder({
+            orderNo: this.tOrderNo,
+            certName: this.tCertName,
+            certWork: this.tCertWork,
+            shipName: this.tShipName.trim(),
+            shipPhone: this.tShipPhone.trim(),
+            shipAddress: this.tShipAddress.trim(),
+            amount: 19.00,
+            payMethod: this.tPayMethod,
+            status: 'pending',
+            createTime: Date.now(),
+            payTime: null,
+            invoiceEmail: '',
+          });
+          this.tStep = 3;
+        },
+        tCompletePay() {
+          window.OrderStore.markPaid(this.tOrderNo);
+          this.tStep = 4;
+        },
+        tGoOrder() {
+          location.href = './订单详情.html?orderNo=' + encodeURIComponent(this.tOrderNo);
+        },
+        showTToast: false,
+        tToastMsg: '',
+        tToastType: 'success',
+        tToastTimer: null,
+        tToast(msg, type) {
+          this.tToastMsg = msg;
+          this.tToastType = type || 'success';
+          this.showTToast = true;
+          clearTimeout(this.tToastTimer);
+          this.tToastTimer = setTimeout(() => { this.showTToast = false; }, 2400);
         },
         // 下载数字证书 → 确认对话框
         teacherDownloadClick() {
@@ -2676,9 +2880,10 @@
           this.schoolPreviewImage = src;
           this.showSchoolCertPreviewModal = true;
         },
-        // 申领纸质证书：统一弹出提示框（不分步）
+        // 申领纸质证书：组织学校走页面内申请表单（填授权人信息 + 授权委托书）
         schoolClaim() {
-          this.showPaperNotice = true;
+          this.schoolClaimActive = true;
+          this.showSchoolCertApplyModal = true;
         },
         schoolDownloadClick() {
           if (!this.schoolCertSubmitted) {
