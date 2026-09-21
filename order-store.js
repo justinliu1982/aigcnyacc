@@ -72,12 +72,37 @@
       + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
   }
 
+  // 物流商与快递单号（支付完成后视为已寄出，生成物流信息）
+  var CARRIERS = [
+    { name: '顺丰速运', prefix: 'SF' },
+    { name: '中国邮政EMS', prefix: 'EMS' },
+    { name: '京东物流', prefix: 'JD' },
+  ];
+  function genLogistics() {
+    var c = CARRIERS[Math.floor(Math.random() * CARRIERS.length)];
+    var digits = String(Math.floor(Math.random() * 9000000000000) + 1000000000000);
+    return { carrier: c.name, trackingNo: c.prefix + digits };
+  }
+  // 标记支付完成：写入支付时间，并在尚无物流信息时生成物流商与快递单号
+  function markPaid(orderNo) {
+    var o = getOrder(orderNo);
+    if (!o) return null;
+    var patch = { status: 'paid', payTime: Date.now() };
+    if (!o.trackingNo) {
+      var lg = genLogistics();
+      patch.carrier = lg.carrier;
+      patch.trackingNo = lg.trackingNo;
+    }
+    return updateOrder(orderNo, patch);
+  }
+
   window.OrderStore = {
     getOrders: getOrders,
     saveOrders: saveOrders,
     getOrder: getOrder,
     addOrder: addOrder,
     updateOrder: updateOrder,
+    markPaid: markPaid,
     orderOfCert: orderOfCert,
     getShipInfo: getShipInfo,
     saveShipInfo: saveShipInfo,
