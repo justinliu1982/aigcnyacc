@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>订单详情</title>
+  <script src="./browser@4.js"></script>
+  <script src="./order-store.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js" defer></script>
+  <style>
+    [x-cloak] { display: none !important; }
+    html { font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif; }
+    body { margin: 0; background: #f7f8fd; }
+
+    .u-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 16px; border-radius: 8px; font-size: 14px; cursor: pointer; white-space: nowrap; }
+    .u-btn-outline { border: 1px solid #c9c9d6; color: #55556a; background: #fff; }
+    .u-btn-outline:hover { border-color: #8742DB; color: #8742DB; }
+    .u-btn-solid { background: #8742DB; color: #fff; }
+    .u-btn-solid:hover { background: #7534c4; }
+    .u-btn-gray { background: #f0f0f5; color: #a8a8bc; cursor: not-allowed; }
+
+    .info-row { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; font-size: 14px; }
+    .info-row .k { color: #9a9aae; flex-shrink: 0; }
+    .info-row .v { color: #2b2b3a; font-weight: 500; text-align: right; word-break: break-all; }
+    .section-title { font-size: 15px; font-weight: 700; color: #2b2b3a; }
+    .card { background: #fff; border-radius: 16px; padding: 24px; }
+    .fb-input { width: 100%; height: 40px; border: 1px solid #e0e0ea; border-radius: 8px; padding: 0 12px; font-size: 14px; outline: none; box-sizing: border-box; }
+    .fb-input:focus { border-color: #8742DB; }
+
+    .status-pill { display: inline-flex; align-items: center; height: 26px; padding: 0 12px; border-radius: 13px; font-size: 13px; font-weight: 600; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+
+<body x-data="orderDetail()" x-cloak>
+  <div class="max-w-[720px] mx-auto px-[24px] py-[32px]">
+
+    <!-- 顶部 -->
+    <div class="flex items-center gap-[16px]">
+      <a href="./个人中心.html" class="u-btn u-btn-outline flex-shrink-0" style="height: 34px; font-size: 13px;">
+        <span class="mr-[4px]">←</span><span>返回</span>
+      </a>
+      <div class="text-[20px] font-bold text-[#2b2b3a]">订单详情</div>
+    </div>
+
+    <!-- 未找到订单 -->
+    <div x-show="!order" class="card mt-[24px] text-center py-[60px]">
+      <div class="text-[40px]">🧾</div>
+      <div class="mt-[12px] text-[15px] text-[#6c7293]">未找到该订单</div>
+      <a href="./个人中心.html" class="u-btn u-btn-solid mt-[20px]">返回个人中心</a>
+    </div>
+
+    <template x-if="order">
+      <div>
+        <!-- 状态 + 证书信息 -->
+        <div class="card mt-[24px]">
+          <div class="flex items-center justify-between">
+            <div class="section-title">证书信息</div>
+            <span class="status-pill"
+              :style="statusStyle()"
+              x-text="statusText"></span>
+          </div>
+          <div class="mt-[10px] border-t border-[#f0f0f5]">
+            <div class="info-row"><span class="k">证书名称</span><span class="v" x-text="order.certName"></span></div>
+            <div class="info-row"><span class="k">对应作品</span><span class="v" x-text="order.certWork"></span></div>
+          </div>
+        </div>
+
+        <!-- 物流信息 -->
+        <div class="card mt-[16px]">
+          <div class="section-title">物流信息</div>
+          <div class="mt-[10px] border-t border-[#f0f0f5]">
+            <div class="info-row"><span class="k">收件人姓名</span><span class="v" x-text="order.shipName"></span></div>
+            <div class="info-row"><span class="k">联系电话</span><span class="v" x-text="order.shipPhone"></span></div>
+            <div class="info-row"><span class="k">收件地址</span><span class="v" x-text="order.shipAddress"></span></div>
+          </div>
+        </div>
+
+        <!-- 支付单信息 -->
+        <div class="card mt-[16px]">
+          <div class="section-title">支付单信息</div>
+          <div class="mt-[10px] border-t border-[#f0f0f5]">
+            <div class="info-row"><span class="k">订单编号</span><span class="v" x-text="order.orderNo"></span></div>
+            <div class="info-row"><span class="k">服务费用</span><span class="v" x-text="'￥' + order.amount.toFixed(2)"></span></div>
+            <div class="info-row"><span class="k">支付方式</span><span class="v" x-text="order.payMethod === 'wechat' ? '微信' : '支付宝'"></span></div>
+            <div class="info-row"><span class="k">下单时间</span><span class="v" x-text="fmtTime(order.createTime)"></span></div>
+            <div class="info-row" x-show="order.payTime"><span class="k">支付时间</span><span class="v" x-text="fmtTime(order.payTime)"></span></div>
+            <div class="info-row" x-show="order.invoiceEmail"><span class="k">发票邮箱</span><span class="v" x-text="order.invoiceEmail"></span></div>
+          </div>
+        </div>
+
+        <!-- 状态操作 -->
+        <div class="mt-[24px] flex justify-center gap-[12px]">
+          <div x-show="canPay" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
+            @click="openPay()">去支付</div>
+          <div x-show="canConfirm" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
+            @click="showConfirm = true">确认收货</div>
+          <div x-show="canInvoice" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
+            @click="openInvoice()">申请开票</div>
+          <div x-show="invoiced" class="u-btn u-btn-gray" style="height: 44px; padding: 0 40px; font-size: 15px;">已申请开票</div>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <!-- ===== 二维码支付 ===== -->
+  <div x-show="showPay" x-cloak class="fixed inset-0 z-[90] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showPay = false">
+    <div class="bg-white rounded-[16px] w-[440px] max-w-[92vw] p-[28px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">扫码支付</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showPay = false">✕</div>
+      </div>
+
+      <div class="mt-[16px] flex flex-col items-center">
+        <img src="./img/ewm.png" class="w-[170px] h-[170px]" alt="支付二维码" />
+        <div class="mt-[12px] text-[22px] font-bold" style="color: #8742DB;" x-text="'￥' + (order ? order.amount.toFixed(2) : '0.00')"></div>
+        <div class="mt-[8px] text-[13px]" style="color: #e08a2b;">二维码有效期 15 分钟，请尽快完成支付</div>
+      </div>
+
+      <div class="mt-[20px] flex justify-end">
+        <span class="text-[12px] cursor-pointer hover:underline" style="color: #b0b0c0;" @click="completePay()">我已完成支付</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 确认收货 ===== -->
+  <div x-show="showConfirm" x-cloak class="fixed inset-0 z-[90] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showConfirm = false">
+    <div class="bg-white rounded-[16px] w-[400px] max-w-[92vw] p-[26px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">确认收货</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showConfirm = false">✕</div>
+      </div>
+      <div class="mt-[16px] text-center py-[8px]">
+        <div class="text-[36px]">📦</div>
+        <p class="mt-[12px] text-[14px] leading-[1.8] text-[#1a1a2e]">确认已收到纸质证书？</p>
+      </div>
+      <div class="mt-[18px] flex justify-end gap-[12px]">
+        <div class="u-btn u-btn-outline" @click="showConfirm = false">取消</div>
+        <div class="u-btn u-btn-solid" @click="doConfirm()">确认收货</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 申请开票 ===== -->
+  <div x-show="showInvoice" x-cloak class="fixed inset-0 z-[90] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showInvoice = false">
+    <div class="bg-white rounded-[16px] w-[440px] max-w-[92vw] p-[28px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">申请开票</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showInvoice = false">✕</div>
+      </div>
+
+      <div class="mt-[18px]">
+        <div class="text-[13px] text-[#6c7293]">收取发票邮箱地址</div>
+        <input type="text" class="fb-input mt-[6px]" x-model="invoiceEmail" placeholder="请输入收取电子发票的邮箱" />
+        <div class="mt-[8px] text-[12px] leading-[1.7]" style="color: #9a9aae;">
+          电子发票将以 PDF 形式发送至上述邮箱，请确认填写正确。
+        </div>
+      </div>
+
+      <div class="mt-[20px] flex justify-end gap-[12px]">
+        <div class="u-btn u-btn-outline" @click="showInvoice = false">取消</div>
+        <div class="u-btn u-btn-solid" @click="submitInvoice()">提交</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 轻提示 ===== -->
+  <div x-show="showToast" x-cloak class="fixed left-1/2 -translate-x-1/2 z-[120] px-[22px] h-[44px] flex items-center rounded-full text-[14px] text-white"
+    :style="'bottom: 48px; background: ' + (toastType === 'success' ? '#21a366' : toastType === 'error' ? '#ff4d4f' : '#e08a2b') + '; animation: toastIn .2s ease;'"
+    x-text="toastMsg"></div>
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('orderDetail', () => ({
+        orderNo: '',
+        order: null,
+        showPay: false,
+        showConfirm: false,
+        showInvoice: false,
+        invoiceEmail: '',
+
+        init() {
+          const q = new URLSearchParams(location.search);
+          this.orderNo = q.get('orderNo') || '';
+          this.order = window.OrderStore.getOrder(this.orderNo);
+        },
+
+        get statusText() {
+          return window.OrderStore.STATUS_TEXT[this.order.status] || this.order.status;
+        },
+        statusStyle() {
+          const c = {
+            pending: '#e08a2b', paid: '#1677ff', confirmed: '#21a366', invoiced: '#9a9aae',
+          }[this.order.status] || '#9a9aae';
+          return 'color:' + c + ';background:' + c + '1a;';
+        },
+        get canPay() { return this.order.status === 'pending'; },
+        get canConfirm() { return this.order.status === 'paid'; },
+        get canInvoice() { return this.order.status === 'confirmed'; },
+        get invoiced() { return this.order.status === 'invoiced'; },
+
+        fmtTime(ts) { return window.OrderStore.fmtTime(ts); },
+
+        openPay() { this.showPay = true; },
+        completePay() {
+          this.order = window.OrderStore.updateOrder(this.orderNo, { status: 'paid', payTime: Date.now() });
+          this.showPay = false;
+          this.showToastMsg('支付成功', 'success');
+        },
+        doConfirm() {
+          this.order = window.OrderStore.updateOrder(this.orderNo, { status: 'confirmed' });
+          this.showConfirm = false;
+          this.showToastMsg('已确认收货', 'success');
+        },
+        openInvoice() {
+          this.invoiceEmail = '';
+          this.showInvoice = true;
+        },
+        submitInvoice() {
+          const email = this.invoiceEmail.trim();
+          if (!email) { this.showToastMsg('请填写收取发票的邮箱地址', 'warning'); return; }
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { this.showToastMsg('邮箱格式不正确', 'warning'); return; }
+          this.order = window.OrderStore.updateOrder(this.orderNo, { status: 'invoiced', invoiceEmail: email });
+          this.showInvoice = false;
+          this.showToastMsg('已申请开票，电子发票将发送至您的邮箱', 'success');
+        },
+
+        showToast: false,
+        toastMsg: '',
+        toastType: 'success',
+        toastTimer: null,
+        showToastMsg(msg, type) {
+          this.toastMsg = msg;
+          this.toastType = type || 'success';
+          this.showToast = true;
+          clearTimeout(this.toastTimer);
+          this.toastTimer = setTimeout(() => { this.showToast = false; }, 2400);
+        },
+      }));
+    });
+  </script>
+</body>
+</html>
