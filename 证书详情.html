@@ -740,9 +740,9 @@
           });
           this.printTipStep = 3;
         },
-        // 第 3 步：标记支付完成，进入成功页
+        // 第 3 步：标记支付完成（同时生成物流信息），进入成功页
         completePay() {
-          window.OrderStore.updateOrder(this.orderNo, { status: 'paid', payTime: Date.now() });
+          window.OrderStore.markPaid(this.orderNo);
           this.printTipStep = 4;
         },
         // 从组织单位通知切回官网报名：回到第 1 步重新走流程
