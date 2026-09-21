@@ -317,7 +317,7 @@
           this.showPay = true;
         },
         completePay() {
-          window.OrderStore.updateOrder(this.payOrderNo, { status: 'paid', payTime: Date.now() });
+          window.OrderStore.markPaid(this.payOrderNo);
           this.showPay = false;
           this.refreshOrders();
           this.showToastMsg('支付成功', 'success');
