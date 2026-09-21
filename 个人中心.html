@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>个人中心</title>
   <script src="./browser@4.js"></script>
+  <script src="./order-store.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js" defer></script>
   <style>
     [x-cloak] { display: none !important; }
@@ -26,6 +27,7 @@
     .u-th, .u-td { padding: 18px 12px; font-size: 14px; vertical-align: middle; }
     .u-th { color: #55556a; font-weight: 600; background: #fafafd; }
     .u-tr { border-top: 1px solid #f0f0f5; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 
@@ -109,6 +111,7 @@
                     <th class="u-th text-left" style="width: 90px;">比赛阶段</th>
                     <th class="u-th text-left" style="width: 100px;">证书确认</th>
                     <th class="u-th text-left" style="width: 110px;">报名来源</th>
+                    <th class="u-th text-left" style="width: 110px;">申领状态</th>
                     <th class="u-th text-left">操作</th>
                   </tr>
                 </thead>
@@ -124,7 +127,13 @@
                       </td>
                       <td class="u-td" style="color: #55556a;" x-text="c.source"></td>
                       <td class="u-td">
-                        <a class="u-btn u-btn-outline" :href="'./证书详情.html?name=' + encodeURIComponent(c.name) + '&work=' + encodeURIComponent(c.work) + '&source=' + encodeURIComponent(c.source)">查看详情</a>
+                        <span :style="claimStatusColor(c)" x-text="claimStatus(c)"></span>
+                      </td>
+                      <td class="u-td">
+                        <div class="flex flex-wrap gap-[8px]">
+                          <a class="u-btn u-btn-outline" :href="'./证书详情.html?name=' + encodeURIComponent(c.name) + '&work=' + encodeURIComponent(c.work) + '&source=' + encodeURIComponent(c.source)">查看详情</a>
+                          <span class="u-btn u-btn-outline" @click="openClaimRecords(c)">申领记录</span>
+                        </div>
                       </td>
                     </tr>
                   </template>
@@ -136,6 +145,88 @@
       </div>
     </main>
   </div>
+
+  <!-- ===== 确认证书信息 ===== -->
+  <div x-show="showConfirmInfo" x-cloak class="fixed inset-0 z-[80] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showConfirmInfo = false">
+    <div class="bg-white rounded-[16px] w-[420px] max-w-[92vw] p-[26px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">确认证书信息</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showConfirmInfo = false">✕</div>
+      </div>
+      <div class="mt-[16px] text-center py-[8px]">
+        <div class="text-[36px]">⚠️</div>
+        <p class="mt-[12px] text-[14px] leading-[1.8] text-[#1a1a2e]">请先确认证书信息后再进行申领。</p>
+      </div>
+      <div class="mt-[18px] flex justify-end gap-[12px]">
+        <div class="u-btn u-btn-outline" style="height: 38px; padding: 0 20px; font-size: 14px;" @click="showConfirmInfo = false">取消</div>
+        <div class="u-btn u-btn-solid" style="height: 38px; padding: 0 20px; font-size: 14px;" @click="goConfirmInfo()">确认</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 申领记录 ===== -->
+  <div x-show="showClaimRecords" x-cloak class="fixed inset-0 z-[80] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showClaimRecords = false">
+    <div class="bg-white rounded-[16px] w-[760px] max-w-[94vw] max-h-[86vh] overflow-y-auto p-[26px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">申领记录</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showClaimRecords = false">✕</div>
+      </div>
+
+      <div class="mt-[16px]">
+        <div x-show="records().length === 0" class="text-center py-[48px] text-[14px]" style="color: #9a9aae;">
+          暂无申领订单
+        </div>
+
+        <template x-for="o in records()" :key="o.orderNo">
+          <div class="flex items-center gap-[16px] rounded-[10px] px-[16px] py-[14px] mb-[10px]" style="background: #fbfbfd;">
+            <div class="flex-1 min-w-0">
+              <div class="text-[14px] font-semibold text-[#2b2b3a]" x-text="o.certName + ' · ' + o.certWork"></div>
+              <div class="mt-[4px] text-[12px]" style="color: #9a9aae;"
+                x-text="'订单号：' + o.orderNo + '　金额：￥' + o.amount.toFixed(2) + '　下单：' + fmtTime(o.createTime)"></div>
+            </div>
+            <div class="text-[13px] font-semibold flex-shrink-0" :style="recordStatusColor(o.status)" x-text="recordStatusText(o.status)"></div>
+            <div class="flex gap-[8px] flex-shrink-0">
+              <span x-show="o.status === 'pending'" class="u-btn u-btn-solid" @click="openPay(o.orderNo)">去支付</span>
+              <a x-show="o.status !== 'pending'" class="u-btn u-btn-outline"
+                :href="'./订单详情.html?orderNo=' + encodeURIComponent(o.orderNo)">订单详情</a>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 二维码支付 ===== -->
+  <div x-show="showPay" x-cloak class="fixed inset-0 z-[90] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showPay = false">
+    <div class="bg-white rounded-[16px] w-[440px] max-w-[92vw] p-[28px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">扫码支付</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showPay = false">✕</div>
+      </div>
+
+      <div class="mt-[16px] flex flex-col items-center">
+        <img src="./img/ewm.png" class="w-[170px] h-[170px]" alt="支付二维码" />
+        <div class="mt-[12px] text-[22px] font-bold" style="color: #8742DB;"
+          x-text="'￥' + (payOrder ? payOrder.amount.toFixed(2) : '0.00')"></div>
+        <div class="mt-[8px] text-[13px]" style="color: #e08a2b;">二维码有效期 15 分钟，请尽快完成支付</div>
+      </div>
+
+      <div class="mt-[20px] flex justify-end">
+        <span class="text-[12px] cursor-pointer hover:underline" style="color: #b0b0c0;" @click="completePay()">我已完成支付</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 轻提示 ===== -->
+  <div x-show="showToast" x-cloak class="fixed left-1/2 -translate-x-1/2 z-[120] px-[22px] h-[44px] flex items-center rounded-full text-[14px] text-white"
+    :style="'bottom: 48px; background: ' + (toastType === 'success' ? '#21a366' : toastType === 'error' ? '#ff4d4f' : '#e08a2b') + '; animation: toastIn .2s ease;'"
+    x-text="toastMsg"></div>
 
   <script>
     document.addEventListener('alpine:init', () => {
@@ -165,6 +256,85 @@
           { name: '社会实践证书', award: '--', work: '参赛者：张明华', stage: '国赛', confirm: '未确认', status: '未申领', statusColor: 'color:#9a9aae;', source: '官网报名', applied: false, feedback: false },
           { name: '参赛证书', award: '--', work: '参赛者：张明华', stage: '国赛', confirm: '已确认', status: '未申领', statusColor: 'color:#9a9aae;', source: '官网报名', applied: false, feedback: false },
         ],
+
+        // ===== 申领订单 =====
+        ordersVersion: 0,
+        refreshOrders() { this.ordersVersion++; },
+
+        // 列表中某证书的申领状态（无订单显示未申领）
+        claimStatus(c) {
+          this.ordersVersion; // 建立响应式依赖
+          const o = window.OrderStore.orderOfCert(c.name, c.work);
+          return o ? (window.OrderStore.STATUS_TEXT[o.status] || o.status) : '未申领';
+        },
+        claimStatusColor(c) {
+          this.ordersVersion;
+          const o = window.OrderStore.orderOfCert(c.name, c.work);
+          const map = { pending: '#e08a2b', paid: '#1677ff', confirmed: '#21a366', invoiced: '#9a9aae' };
+          return 'color:' + (o ? (map[o.status] || '#9a9aae') : '#9a9aae') + ';';
+        },
+
+        // 申领记录（全部订单）
+        records() {
+          this.ordersVersion;
+          return window.OrderStore.getOrders();
+        },
+        recordStatusText(s) { return window.OrderStore.STATUS_TEXT[s] || s; },
+        recordStatusColor(s) {
+          const map = { pending: '#e08a2b', paid: '#1677ff', confirmed: '#21a366', invoiced: '#9a9aae' };
+          return 'color:' + (map[s] || '#9a9aae') + ';';
+        },
+        fmtTime(ts) { return window.OrderStore.fmtTime(ts); },
+
+        showClaimRecords: false,
+        showConfirmInfo: false,
+        confirmInfoCert: null,
+        openClaimRecords(c) {
+          // 未确认证书信息时，先提示确认
+          if (c.confirm !== '已确认') {
+            this.confirmInfoCert = c;
+            this.showConfirmInfo = true;
+            return;
+          }
+          this.showClaimRecords = true;
+        },
+        goConfirmInfo() {
+          const c = this.confirmInfoCert;
+          if (!c) return;
+          location.href = './证书详情.html?name=' + encodeURIComponent(c.name)
+            + '&work=' + encodeURIComponent(c.work) + '&source=' + encodeURIComponent(c.source);
+        },
+
+        // 去支付
+        showPay: false,
+        payOrderNo: '',
+        get payOrder() {
+          this.ordersVersion;
+          return window.OrderStore.getOrder(this.payOrderNo);
+        },
+        openPay(orderNo) {
+          this.payOrderNo = orderNo;
+          this.showPay = true;
+        },
+        completePay() {
+          window.OrderStore.updateOrder(this.payOrderNo, { status: 'paid', payTime: Date.now() });
+          this.showPay = false;
+          this.refreshOrders();
+          this.showToastMsg('支付成功', 'success');
+        },
+
+        // ===== 轻提示 =====
+        showToast: false,
+        toastMsg: '',
+        toastType: 'success',
+        toastTimer: null,
+        showToastMsg(msg, type) {
+          this.toastMsg = msg;
+          this.toastType = type || 'success';
+          this.showToast = true;
+          clearTimeout(this.toastTimer);
+          this.toastTimer = setTimeout(() => { this.showToast = false; }, 2400);
+        },
       }));
     });
   </script>
