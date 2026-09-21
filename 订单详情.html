@@ -128,13 +128,22 @@
               </div>
             </div>
 
-            <!-- 物流信息 -->
+            <!-- 收件信息 -->
             <div class="card mt-[16px]">
-              <div class="section-title">物流信息</div>
+              <div class="section-title">收件信息</div>
               <div class="mt-[10px] border-t border-[#f0f0f5]">
                 <div class="info-row"><span class="k">收件人姓名</span><span class="v" x-text="order.shipName"></span></div>
                 <div class="info-row"><span class="k">联系电话</span><span class="v" x-text="order.shipPhone"></span></div>
                 <div class="info-row"><span class="k">收件地址</span><span class="v" x-text="order.shipAddress"></span></div>
+              </div>
+            </div>
+
+            <!-- 物流信息 -->
+            <div class="card mt-[16px]">
+              <div class="section-title">物流信息</div>
+              <div class="mt-[10px] border-t border-[#f0f0f5]">
+                <div class="info-row"><span class="k">物流商名称</span><span class="v" x-text="order.carrier || '—'"></span></div>
+                <div class="info-row"><span class="k">快递单号</span><span class="v" x-text="order.trackingNo || '—'"></span></div>
               </div>
             </div>
 
@@ -295,7 +304,7 @@
 
         openPay() { this.showPay = true; },
         completePay() {
-          this.order = window.OrderStore.updateOrder(this.orderNo, { status: 'paid', payTime: Date.now() });
+          this.order = window.OrderStore.markPaid(this.orderNo);
           this.showPay = false;
           this.showToastMsg('支付成功', 'success');
         },
