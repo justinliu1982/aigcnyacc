@@ -82,15 +82,28 @@
       </header>
 
       <div class="flex-1 px-[32px] pb-[40px] max-w-[960px]">
-        <!-- 面包屑 -->
-        <div class="flex items-center gap-[16px]">
-          <a href="./个人中心.html" class="u-btn u-btn-outline flex-shrink-0" style="height: 34px; font-size: 13px;">
-            <span class="mr-[4px]">←</span><span>返回</span>
-          </a>
-          <div class="flex items-center gap-[8px] text-[14px]">
-            <a href="./个人中心.html" style="color: #8742DB;">我的证书</a>
-            <span class="text-[#c0c0cc]">/</span>
-            <span class="text-[#8f8fa8]">订单详情</span>
+        <!-- 面包屑 + 页面操作（右上角） -->
+        <div class="flex items-center justify-between gap-[16px]">
+          <div class="flex items-center gap-[16px]">
+            <a href="./个人中心.html" class="u-btn u-btn-outline flex-shrink-0" style="height: 34px; font-size: 13px;">
+              <span class="mr-[4px]">←</span><span>返回</span>
+            </a>
+            <div class="flex items-center gap-[8px] text-[14px]">
+              <a href="./个人中心.html" style="color: #8742DB;">我的证书</a>
+              <span class="text-[#c0c0cc]">/</span>
+              <span class="text-[#8f8fa8]">订单详情</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-[12px] flex-shrink-0">
+            <div x-show="canPay" class="u-btn u-btn-solid" style="height: 38px; padding: 0 24px; font-size: 14px;"
+              @click="openPay()">去支付</div>
+            <div x-show="canConfirm" class="u-btn u-btn-solid" style="height: 38px; padding: 0 24px; font-size: 14px;"
+              @click="showConfirm = true">确认收货</div>
+            <div x-show="canInvoice" class="u-btn u-btn-solid" style="height: 38px; padding: 0 24px; font-size: 14px;"
+              @click="openInvoice()">申请开票</div>
+            <div x-show="invoiced" class="u-btn u-btn-solid" style="height: 38px; padding: 0 24px; font-size: 14px;"
+              @click="showInvoiceRecord = true">发票申请记录</div>
           </div>
         </div>
 
@@ -135,18 +148,6 @@
                 <div class="info-row"><span class="k">下单时间</span><span class="v" x-text="fmtTime(order.createTime)"></span></div>
                 <div class="info-row" x-show="order.payTime"><span class="k">支付时间</span><span class="v" x-text="fmtTime(order.payTime)"></span></div>
               </div>
-            </div>
-
-            <!-- 状态操作 -->
-            <div class="mt-[24px] flex justify-center gap-[12px]">
-              <div x-show="canPay" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
-                @click="openPay()">去支付</div>
-              <div x-show="canConfirm" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
-                @click="showConfirm = true">确认收货</div>
-              <div x-show="canInvoice" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
-                @click="openInvoice()">申请开票</div>
-              <div x-show="invoiced" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
-                @click="showInvoiceRecord = true">发票申请记录</div>
             </div>
           </div>
         </template>
@@ -285,10 +286,10 @@
           }[this.order.status] || '#9a9aae';
           return 'color:' + c + ';background:' + c + '1a;';
         },
-        get canPay() { return this.order.status === 'pending'; },
-        get canConfirm() { return this.order.status === 'paid'; },
-        get canInvoice() { return this.order.status === 'confirmed'; },
-        get invoiced() { return this.order.status === 'invoiced'; },
+        get canPay() { return !!this.order && this.order.status === 'pending'; },
+        get canConfirm() { return !!this.order && this.order.status === 'paid'; },
+        get canInvoice() { return !!this.order && this.order.status === 'confirmed'; },
+        get invoiced() { return !!this.order && this.order.status === 'invoiced'; },
 
         fmtTime(ts) { return window.OrderStore.fmtTime(ts); },
 
