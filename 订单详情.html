@@ -12,12 +12,16 @@
     html { font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif; }
     body { margin: 0; background: #f7f8fd; }
 
+    .u-menu-item { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; margin: 0 12px; border-radius: 10px; cursor: pointer; color: #55556a; font-size: 15px; }
+    .u-menu-item:hover { background: rgba(255, 255, 255, 0.65); }
+    .u-menu-item.active { background: #fff; color: #8742DB; font-weight: 600; }
+    .u-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: #8742DB; color: #fff; font-size: 12px; }
+
     .u-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 16px; border-radius: 8px; font-size: 14px; cursor: pointer; white-space: nowrap; }
     .u-btn-outline { border: 1px solid #c9c9d6; color: #55556a; background: #fff; }
     .u-btn-outline:hover { border-color: #8742DB; color: #8742DB; }
     .u-btn-solid { background: #8742DB; color: #fff; }
     .u-btn-solid:hover { background: #7534c4; }
-    .u-btn-gray { background: #f0f0f5; color: #a8a8bc; cursor: not-allowed; }
 
     .info-row { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; font-size: 14px; }
     .info-row .k { color: #9a9aae; flex-shrink: 0; }
@@ -33,74 +37,121 @@
 </head>
 
 <body x-data="orderDetail()" x-cloak>
-  <div class="max-w-[720px] mx-auto px-[24px] py-[32px]">
+  <div class="flex min-h-screen">
 
-    <!-- 顶部 -->
-    <div class="flex items-center gap-[16px]">
-      <a href="./个人中心.html" class="u-btn u-btn-outline flex-shrink-0" style="height: 34px; font-size: 13px;">
-        <span class="mr-[4px]">←</span><span>返回</span>
-      </a>
-      <div class="text-[20px] font-bold text-[#2b2b3a]">订单详情</div>
-    </div>
+    <!-- ===== 左侧边栏 ===== -->
+    <aside class="w-[240px] flex-shrink-0" style="background: #ebe7fb;">
+      <div class="flex items-center gap-[10px] px-[20px] h-[62px]">
+        <div class="w-[30px] h-[30px] rounded-[8px] flex items-center justify-center text-white font-bold text-[17px]" style="background: #874ee9;">A</div>
+        <div class="text-[16px] font-bold text-[#2b2b3a]">AIGCNYACC大赛</div>
+      </div>
 
-    <!-- 未找到订单 -->
-    <div x-show="!order" class="card mt-[24px] text-center py-[60px]">
-      <div class="text-[40px]">🧾</div>
-      <div class="mt-[12px] text-[15px] text-[#6c7293]">未找到该订单</div>
-      <a href="./个人中心.html" class="u-btn u-btn-solid mt-[20px]">返回个人中心</a>
-    </div>
-
-    <template x-if="order">
-      <div>
-        <!-- 状态 + 证书信息 -->
-        <div class="card mt-[24px]">
-          <div class="flex items-center justify-between">
-            <div class="section-title">证书信息</div>
-            <span class="status-pill"
-              :style="statusStyle()"
-              x-text="statusText"></span>
-          </div>
-          <div class="mt-[10px] border-t border-[#f0f0f5]">
-            <div class="info-row"><span class="k">证书名称</span><span class="v" x-text="order.certName"></span></div>
-            <div class="info-row"><span class="k">对应作品</span><span class="v" x-text="order.certWork"></span></div>
-          </div>
-        </div>
-
-        <!-- 物流信息 -->
-        <div class="card mt-[16px]">
-          <div class="section-title">物流信息</div>
-          <div class="mt-[10px] border-t border-[#f0f0f5]">
-            <div class="info-row"><span class="k">收件人姓名</span><span class="v" x-text="order.shipName"></span></div>
-            <div class="info-row"><span class="k">联系电话</span><span class="v" x-text="order.shipPhone"></span></div>
-            <div class="info-row"><span class="k">收件地址</span><span class="v" x-text="order.shipAddress"></span></div>
-          </div>
-        </div>
-
-        <!-- 支付单信息 -->
-        <div class="card mt-[16px]">
-          <div class="section-title">支付单信息</div>
-          <div class="mt-[10px] border-t border-[#f0f0f5]">
-            <div class="info-row"><span class="k">订单编号</span><span class="v" x-text="order.orderNo"></span></div>
-            <div class="info-row"><span class="k">服务费用</span><span class="v" x-text="'￥' + order.amount.toFixed(2)"></span></div>
-            <div class="info-row"><span class="k">支付方式</span><span class="v" x-text="order.payMethod === 'wechat' ? '微信' : '支付宝'"></span></div>
-            <div class="info-row"><span class="k">下单时间</span><span class="v" x-text="fmtTime(order.createTime)"></span></div>
-            <div class="info-row" x-show="order.payTime"><span class="k">支付时间</span><span class="v" x-text="fmtTime(order.payTime)"></span></div>
-            <div class="info-row" x-show="order.invoiceEmail"><span class="k">发票邮箱</span><span class="v" x-text="order.invoiceEmail"></span></div>
-          </div>
-        </div>
-
-        <!-- 状态操作 -->
-        <div class="mt-[24px] flex justify-center gap-[12px]">
-          <div x-show="canPay" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
-            @click="openPay()">去支付</div>
-          <div x-show="canConfirm" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
-            @click="showConfirm = true">确认收货</div>
-          <div x-show="canInvoice" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
-            @click="openInvoice()">申请开票</div>
-          <div x-show="invoiced" class="u-btn u-btn-gray" style="height: 44px; padding: 0 40px; font-size: 15px;">已申请开票</div>
+      <div class="mx-[12px] mt-[8px] bg-white rounded-[16px] px-[16px] py-[20px] text-center">
+        <div class="w-[60px] h-[60px] rounded-full mx-auto flex items-center justify-center text-white text-[26px] font-medium" style="background: #8742DB;">张</div>
+        <div class="mt-[10px] text-[16px] font-semibold text-[#2b2b3a]">张明华</div>
+        <div class="mt-[4px] text-[12px] text-[#9a9aae]">账号ID：AIGC2026-0388</div>
+        <div class="mt-[10px] inline-flex items-center gap-[4px] px-[10px] h-[24px] rounded-full text-[12px]" style="background: #e7f7ee; color: #21a366;">
+          <span>📱</span><span>手机已绑定</span>
         </div>
       </div>
-    </template>
+
+      <nav class="mt-[18px] pb-[24px]">
+        <div class="px-[24px] mb-[8px] text-[13px] text-[#8f8fa8]">个人中心</div>
+        <template x-for="item in menu" :key="item.key">
+          <div class="u-menu-item" :class="activeMenu === item.key ? 'active' : ''" @click="selectMenu(item.key)">
+            <span class="text-[16px]" x-text="item.icon"></span>
+            <span class="flex-1" x-text="item.label"></span>
+            <span class="u-badge" x-show="item.badge" x-text="item.badge"></span>
+          </div>
+        </template>
+      </nav>
+    </aside>
+
+    <!-- ===== 主内容区 ===== -->
+    <main class="flex-1 min-w-0 flex flex-col">
+      <header class="h-[62px] flex-shrink-0 flex items-center justify-end gap-[18px] px-[32px]">
+        <div class="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center cursor-pointer bg-white text-[16px]">🔍</div>
+        <div class="relative w-[34px] h-[34px] rounded-[10px] flex items-center justify-center cursor-pointer bg-white text-[16px]">
+          🔔
+          <span class="absolute top-[5px] right-[6px] w-[7px] h-[7px] rounded-full" style="background: #ff4d4f;"></span>
+        </div>
+        <div class="flex items-center gap-[8px] cursor-pointer">
+          <div class="w-[34px] h-[34px] rounded-full flex items-center justify-center text-white text-[15px]" style="background: #8742DB;">张</div>
+          <span class="text-[14px] text-[#2b2b3a]">张明华</span>
+        </div>
+      </header>
+
+      <div class="flex-1 px-[32px] pb-[40px] max-w-[960px]">
+        <!-- 面包屑 -->
+        <div class="flex items-center gap-[16px]">
+          <a href="./个人中心.html" class="u-btn u-btn-outline flex-shrink-0" style="height: 34px; font-size: 13px;">
+            <span class="mr-[4px]">←</span><span>返回</span>
+          </a>
+          <div class="flex items-center gap-[8px] text-[14px]">
+            <a href="./个人中心.html" style="color: #8742DB;">我的证书</a>
+            <span class="text-[#c0c0cc]">/</span>
+            <span class="text-[#8f8fa8]">订单详情</span>
+          </div>
+        </div>
+
+        <!-- 未找到订单 -->
+        <div x-show="!order" class="card mt-[24px] text-center py-[60px]">
+          <div class="text-[40px]">🧾</div>
+          <div class="mt-[12px] text-[15px] text-[#6c7293]">未找到该订单</div>
+          <a href="./个人中心.html" class="u-btn u-btn-solid mt-[20px]">返回个人中心</a>
+        </div>
+
+        <template x-if="order">
+          <div>
+            <!-- 状态 + 证书信息 -->
+            <div class="card mt-[24px]">
+              <div class="flex items-center justify-between">
+                <div class="section-title">证书信息</div>
+                <span class="status-pill" :style="statusStyle()" x-text="statusText"></span>
+              </div>
+              <div class="mt-[10px] border-t border-[#f0f0f5]">
+                <div class="info-row"><span class="k">证书名称</span><span class="v" x-text="order.certName"></span></div>
+                <div class="info-row"><span class="k">对应作品</span><span class="v" x-text="order.certWork"></span></div>
+              </div>
+            </div>
+
+            <!-- 物流信息 -->
+            <div class="card mt-[16px]">
+              <div class="section-title">物流信息</div>
+              <div class="mt-[10px] border-t border-[#f0f0f5]">
+                <div class="info-row"><span class="k">收件人姓名</span><span class="v" x-text="order.shipName"></span></div>
+                <div class="info-row"><span class="k">联系电话</span><span class="v" x-text="order.shipPhone"></span></div>
+                <div class="info-row"><span class="k">收件地址</span><span class="v" x-text="order.shipAddress"></span></div>
+              </div>
+            </div>
+
+            <!-- 支付单信息 -->
+            <div class="card mt-[16px]">
+              <div class="section-title">支付单信息</div>
+              <div class="mt-[10px] border-t border-[#f0f0f5]">
+                <div class="info-row"><span class="k">订单编号</span><span class="v" x-text="order.orderNo"></span></div>
+                <div class="info-row"><span class="k">服务费用</span><span class="v" x-text="'￥' + order.amount.toFixed(2)"></span></div>
+                <div class="info-row"><span class="k">支付方式</span><span class="v" x-text="order.payMethod === 'wechat' ? '微信' : '支付宝'"></span></div>
+                <div class="info-row"><span class="k">下单时间</span><span class="v" x-text="fmtTime(order.createTime)"></span></div>
+                <div class="info-row" x-show="order.payTime"><span class="k">支付时间</span><span class="v" x-text="fmtTime(order.payTime)"></span></div>
+              </div>
+            </div>
+
+            <!-- 状态操作 -->
+            <div class="mt-[24px] flex justify-center gap-[12px]">
+              <div x-show="canPay" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
+                @click="openPay()">去支付</div>
+              <div x-show="canConfirm" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
+                @click="showConfirm = true">确认收货</div>
+              <div x-show="canInvoice" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
+                @click="openInvoice()">申请开票</div>
+              <div x-show="invoiced" class="u-btn u-btn-solid" style="height: 44px; padding: 0 40px; font-size: 15px;"
+                @click="showInvoiceRecord = true">发票申请记录</div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </main>
   </div>
 
   <!-- ===== 二维码支付 ===== -->
@@ -112,13 +163,11 @@
         <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
           @click="showPay = false">✕</div>
       </div>
-
       <div class="mt-[16px] flex flex-col items-center">
         <img src="./img/ewm.png" class="w-[170px] h-[170px]" alt="支付二维码" />
         <div class="mt-[12px] text-[22px] font-bold" style="color: #8742DB;" x-text="'￥' + (order ? order.amount.toFixed(2) : '0.00')"></div>
         <div class="mt-[8px] text-[13px]" style="color: #e08a2b;">二维码有效期 15 分钟，请尽快完成支付</div>
       </div>
-
       <div class="mt-[20px] flex justify-end">
         <span class="text-[12px] cursor-pointer hover:underline" style="color: #b0b0c0;" @click="completePay()">我已完成支付</span>
       </div>
@@ -154,7 +203,6 @@
         <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
           @click="showInvoice = false">✕</div>
       </div>
-
       <div class="mt-[18px]">
         <div class="text-[13px] text-[#6c7293]">收取发票邮箱地址</div>
         <input type="text" class="fb-input mt-[6px]" x-model="invoiceEmail" placeholder="请输入收取电子发票的邮箱" />
@@ -162,10 +210,31 @@
           电子发票将以 PDF 形式发送至上述邮箱，请确认填写正确。
         </div>
       </div>
-
       <div class="mt-[20px] flex justify-end gap-[12px]">
         <div class="u-btn u-btn-outline" @click="showInvoice = false">取消</div>
         <div class="u-btn u-btn-solid" @click="submitInvoice()">提交</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 发票申请记录 ===== -->
+  <div x-show="showInvoiceRecord" x-cloak class="fixed inset-0 z-[90] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showInvoiceRecord = false">
+    <div class="bg-white rounded-[16px] w-[520px] max-w-[92vw] p-[26px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">发票申请记录</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showInvoiceRecord = false">✕</div>
+      </div>
+
+      <div class="mt-[16px] rounded-[10px] px-[16px] py-[14px]" style="background: #fbfbfd;">
+        <div class="info-row"><span class="k">收取邮箱</span><span class="v" x-text="order ? order.invoiceEmail : ''"></span></div>
+        <div class="info-row"><span class="k">申请时间</span><span class="v" x-text="fmtTime(order ? order.invoiceTime : null)"></span></div>
+        <div class="info-row"><span class="k">状态</span><span class="v" style="color: #21a366;">已申请开票</span></div>
+      </div>
+
+      <div class="mt-[20px] flex justify-end">
+        <div class="u-btn u-btn-solid" @click="showInvoiceRecord = false">关闭</div>
       </div>
     </div>
   </div>
@@ -178,11 +247,27 @@
   <script>
     document.addEventListener('alpine:init', () => {
       Alpine.data('orderDetail', () => ({
+        activeMenu: 'cert',
+        menu: [
+          { key: 'account', icon: '⚙️', label: '账号设置' },
+          { key: 'signup', icon: '📋', label: '参赛报名' },
+          { key: 'status', icon: '📊', label: '报名状态' },
+          { key: 'score', icon: '🏆', label: '我的成绩' },
+          { key: 'cert', icon: '🎓', label: '我的证书' },
+          { key: 'notice', icon: '🔔', label: '大赛通知', badge: 3 },
+          { key: 'feedback', icon: '💬', label: '问题反馈' },
+        ],
+        selectMenu(key) {
+          this.activeMenu = key;
+          if (key === 'cert') location.href = './个人中心.html';
+        },
+
         orderNo: '',
         order: null,
         showPay: false,
         showConfirm: false,
         showInvoice: false,
+        showInvoiceRecord: false,
         invoiceEmail: '',
 
         init() {
@@ -226,7 +311,7 @@
           const email = this.invoiceEmail.trim();
           if (!email) { this.showToastMsg('请填写收取发票的邮箱地址', 'warning'); return; }
           if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { this.showToastMsg('邮箱格式不正确', 'warning'); return; }
-          this.order = window.OrderStore.updateOrder(this.orderNo, { status: 'invoiced', invoiceEmail: email });
+          this.order = window.OrderStore.updateOrder(this.orderNo, { status: 'invoiced', invoiceEmail: email, invoiceTime: Date.now() });
           this.showInvoice = false;
           this.showToastMsg('已申请开票，电子发票将发送至您的邮箱', 'success');
         },
