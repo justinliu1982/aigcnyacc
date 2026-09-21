@@ -518,6 +518,29 @@
     </div>
   </div>
 
+  <!-- ===== 不可重复申领提示 ===== -->
+  <div x-show="showBlockModal" x-cloak class="fixed inset-0 z-[95] flex items-center justify-center"
+    style="background: rgba(0, 0, 0, 0.35)" @click.self="showBlockModal = false">
+    <div class="bg-white rounded-[16px] w-[440px] max-w-[92vw] p-[26px]">
+      <div class="flex items-center justify-between">
+        <div class="text-[18px] font-bold text-[#2b2b3a]">无法重复申领</div>
+        <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
+          @click="showBlockModal = false">✕</div>
+      </div>
+
+      <div class="mt-[16px] text-center py-[8px]">
+        <div class="text-[36px]">⚠️</div>
+        <p class="mt-[12px] text-[14px] leading-[1.8] text-[#1a1a2e]" x-text="blockMsg"></p>
+        <p class="mt-[8px] text-[13px]" style="color: #9a9aae;" x-text="'订单号：' + blockOrderNo"></p>
+      </div>
+
+      <div class="mt-[18px] flex justify-end gap-[12px]">
+        <div class="p-btn p-btn-ghost" style="height: 38px; font-size: 14px;" @click="showBlockModal = false">知道了</div>
+        <div class="p-btn p-btn-primary" style="height: 38px; font-size: 14px;" @click="goBlockOrder()">查看订单</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== 下载数字证书确认 ===== -->
   <div x-show="showDownload" x-cloak class="fixed inset-0 z-[90] flex items-center justify-center"
     style="background: rgba(0, 0, 0, 0.35)" @click.self="showDownload = false">
@@ -694,6 +717,16 @@
           return this.shipReady && this.payAgreed;
         },
         openPrintTip() {
+          // 已有未完成（确认收货前）的申领订单时，不可重复申领
+          const existing = window.OrderStore.orderOfCert(this.certName, this.certWork);
+          if (existing && (existing.status === 'pending' || existing.status === 'paid')) {
+            this.blockOrderNo = existing.orderNo;
+            this.blockMsg = existing.status === 'pending'
+              ? '您已有一笔待支付的申领订单，请先完成支付后再申请。'
+              : '您已有一笔待收货的申领订单，请先确认收货后再申请。';
+            this.showBlockModal = true;
+            return;
+          }
           this.printTipMode = this.orgEntry ? 'org' : 'self';
           this.printTipStep = 1;
           this.payAgreed = false;
@@ -706,6 +739,13 @@
             this.shipAddress = info.shipAddress || '';
           }
           this.showPrintTip = true;
+        },
+        // 不可重复申领提示
+        showBlockModal: false,
+        blockMsg: '',
+        blockOrderNo: '',
+        goBlockOrder() {
+          location.href = './订单详情.html?orderNo=' + encodeURIComponent(this.blockOrderNo);
         },
         // 第 2 步提交：校验后生成待支付订单并进入扫码支付
         printTipSubmitOrder() {
