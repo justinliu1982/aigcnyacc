@@ -213,7 +213,12 @@
         <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
           @click="showInvoice = false">✕</div>
       </div>
-      <div class="mt-[18px]">
+      <div class="mt-[16px] rounded-[8px] px-[12px] py-[10px] text-[12px] leading-[1.7]"
+        style="background: #f7f5fe; color: #55556a;">
+        发票为个人电子普票，抬头信息为证书姓名且不支持修改
+      </div>
+
+      <div class="mt-[16px]">
         <div class="text-[13px] text-[#6c7293]">收取发票邮箱地址</div>
         <input type="text" class="fb-input mt-[6px]" x-model="invoiceEmail" placeholder="请输入收取电子发票的邮箱" />
         <div class="mt-[8px] text-[12px] leading-[1.7]" style="color: #9a9aae;">
