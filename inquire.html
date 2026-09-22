@@ -1172,8 +1172,8 @@
         <div class="flex items-center justify-between">
           <div class="text-[18px] font-bold text-[#2b2b3a]">
             申领纸质证书
-            <span x-show="tStep <= 2" class="text-[13px] font-normal" style="color: #9a9aae;"
-              x-text="'（' + tStep + '/2）'"></span>
+            <span x-show="tStep <= 3" class="text-[13px] font-normal" style="color: #9a9aae;"
+              x-text="'（' + tStep + '/3）'"></span>
           </div>
           <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]" @click="showTClaim = false">✕</div>
         </div>
@@ -1182,7 +1182,7 @@
         <div x-show="tStep === 1" class="mt-[16px] text-left">
           <div class="text-[15px] font-semibold text-[#2b2b3a]">【大赛证书申领通知】</div>
           <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
-            大赛数字证书已开放下载，请登录官网自行下载打印。如需防伪特种纸质证书服务，将产生证书打印及快递等相关事务性服务费用，是否同意。
+            大赛数字证书已开放下载，请登录官网自行下载打印。如需防伪特种纸质证书服务，将由大赛「工作组」为您提供打印及快递等相关事务性服务，是否同意？
           </div>
           <div class="mt-[22px] flex justify-center gap-[12px]">
             <div class="p-btn p-btn-primary" style="width: 158px;" @click="tStep = 2">同意，下一步</div>
@@ -1190,8 +1190,20 @@
           </div>
         </div>
 
-        <!-- 第 2 步：确认物流地址及订单金额 -->
+        <!-- 第 2 步：服务费用确认 -->
         <div x-show="tStep === 2" class="mt-[16px] text-left">
+          <div class="text-[15px] font-semibold text-[#2b2b3a]">【大赛证书申领通知】</div>
+          <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
+            大赛「工作组」为您提供防伪底纹纸质证书服务，将产生证书打印及快递等相关事务性服务费用，是否确认？
+          </div>
+          <div class="mt-[22px] flex justify-center gap-[12px]">
+            <div class="p-btn p-btn-primary" style="width: 158px;" @click="tStep = 3">确认</div>
+            <div class="p-btn p-btn-ghost" style="width: 158px;" @click="showTClaim = false">放弃</div>
+          </div>
+        </div>
+
+        <!-- 第 3 步：确认物流地址及订单金额 -->
+        <div x-show="tStep === 3" class="mt-[16px] text-left">
           <div class="text-[14px] font-semibold text-[#2b2b3a]">物流信息</div>
           <div class="mt-[10px] flex flex-col gap-[12px]">
             <div>
@@ -1252,8 +1264,8 @@
           </div>
         </div>
 
-        <!-- 第 3 步：二维码扫码支付 -->
-        <div x-show="tStep === 3" class="mt-[16px]">
+        <!-- 第 4 步：二维码扫码支付 -->
+        <div x-show="tStep === 4" class="mt-[16px]">
           <div class="flex flex-col items-center">
             <div class="text-[14px] font-semibold text-[#2b2b3a]" x-text="tPayMethod === 'wechat' ? '微信扫码支付' : '支付宝扫码支付'"></div>
             <img src="./img/ewm.png" class="mt-[12px] w-[170px] h-[170px]" alt="支付二维码" />
@@ -1265,8 +1277,8 @@
           </div>
         </div>
 
-        <!-- 第 4 步：支付成功 -->
-        <div x-show="tStep === 4" class="mt-[16px]">
+        <!-- 第 5 步：支付成功 -->
+        <div x-show="tStep === 5" class="mt-[16px]">
           <div class="flex flex-col items-center py-[6px]">
             <div class="w-[56px] h-[56px] rounded-full flex items-center justify-center text-[28px]" style="background: #e9f9f0; color: #21a366;">✓</div>
             <div class="mt-[14px] text-[17px] font-bold text-[#2b2b3a]">支付成功</div>
@@ -2902,11 +2914,11 @@
             payTime: null,
             invoiceEmail: '',
           });
-          this.tStep = 3;
+          this.tStep = 4;
         },
         tCompletePay() {
           window.OrderStore.markPaid(this.tOrderNo);
-          this.tStep = 4;
+          this.tStep = 5;
         },
         // 指导老师 / 学校授权人无网站账号：订单详情以对话框展示临时查询信息
         tFmtTime(ts) { return window.OrderStore.fmtTime(ts); },

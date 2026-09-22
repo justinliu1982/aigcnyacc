@@ -373,8 +373,8 @@
       <div class="flex items-center justify-between">
         <div class="text-[18px] font-bold text-[#2b2b3a]">
           申领纸质证书
-          <span x-show="printTipMode === 'self' && printTipStep <= 2" class="text-[13px] font-normal"
-            style="color: #9a9aae;" x-text="'（' + printTipStep + '/2）'"></span>
+          <span x-show="printTipMode === 'self' && printTipStep <= 3" class="text-[13px] font-normal"
+            style="color: #9a9aae;" x-text="'（' + printTipStep + '/3）'"></span>
         </div>
         <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
           @click="showPrintTip = false">✕</div>
@@ -402,7 +402,7 @@
         <div class="text-[15px] font-semibold text-[#2b2b3a]">【大赛证书申领通知】</div>
 
         <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
-          大赛数字证书已开放下载，请登录官网自行下载打印。如需防伪特种纸质证书服务，将产生证书打印及快递等相关事务性服务费用，是否同意。
+          大赛数字证书已开放下载，请登录官网自行下载打印。如需防伪特种纸质证书服务，将由大赛「工作组」为您提供打印及快递等相关事务性服务，是否同意？
         </div>
 
         <div class="mt-[22px] flex justify-center gap-[12px]">
@@ -418,8 +418,22 @@
         </div>
       </div>
 
-      <!-- 第 2 步：确认物流地址及订单金额 -->
+      <!-- 第 2 步：服务费用确认 -->
       <div x-show="printTipMode === 'self' && printTipStep === 2" class="mt-[16px]">
+        <div class="text-[15px] font-semibold text-[#2b2b3a]">【大赛证书申领通知】</div>
+
+        <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
+          大赛「工作组」为您提供防伪底纹纸质证书服务，将产生证书打印及快递等相关事务性服务费用，是否确认？
+        </div>
+
+        <div class="mt-[22px] flex justify-center gap-[12px]">
+          <div class="p-btn p-btn-primary" style="width: 158px;" @click="printTipStep = 3">确认</div>
+          <div class="p-btn p-btn-ghost" style="width: 158px;" @click="showPrintTip = false">放弃</div>
+        </div>
+      </div>
+
+      <!-- 第 3 步：确认物流地址及订单金额 -->
+      <div x-show="printTipMode === 'self' && printTipStep === 3" class="mt-[16px]">
         <div class="text-[14px] font-semibold text-[#2b2b3a]">物流信息</div>
         <div class="mt-[10px] flex flex-col gap-[12px]">
           <div>
@@ -480,8 +494,8 @@
         </div>
       </div>
 
-      <!-- 第 3 步：二维码扫码支付 -->
-      <div x-show="printTipMode === 'self' && printTipStep === 3" class="mt-[16px]">
+      <!-- 第 4 步：二维码扫码支付 -->
+      <div x-show="printTipMode === 'self' && printTipStep === 4" class="mt-[16px]">
         <div class="flex flex-col items-center">
           <div class="text-[14px] font-semibold text-[#2b2b3a]"
             x-text="payMethod === 'wechat' ? '微信扫码支付' : '支付宝扫码支付'"></div>
@@ -499,8 +513,8 @@
         </div>
       </div>
 
-      <!-- 第 4 步：支付成功 -->
-      <div x-show="printTipMode === 'self' && printTipStep === 4" class="mt-[16px]">
+      <!-- 第 5 步：支付成功 -->
+      <div x-show="printTipMode === 'self' && printTipStep === 5" class="mt-[16px]">
         <div class="flex flex-col items-center py-[6px]">
           <div class="w-[56px] h-[56px] rounded-full flex items-center justify-center text-[28px]"
             style="background: #e9f9f0; color: #21a366;">✓</div>
@@ -747,7 +761,7 @@
         goBlockOrder() {
           location.href = './订单详情.html?orderNo=' + encodeURIComponent(this.blockOrderNo);
         },
-        // 第 2 步提交：校验后生成待支付订单并进入扫码支付
+        // 第 3 步提交：校验后生成待支付订单并进入扫码支付
         printTipSubmitOrder() {
           if (!this.shipReady) {
             if (!this.shipName.trim()) { this.showToastMsg('请填写收件人姓名', 'warning'); return; }
@@ -778,12 +792,12 @@
             payTime: null,
             invoiceEmail: '',
           });
-          this.printTipStep = 3;
+          this.printTipStep = 4;
         },
-        // 第 3 步：标记支付完成（同时生成物流信息），进入成功页
+        // 第 4 步：标记支付完成（同时生成物流信息），进入成功页
         completePay() {
           window.OrderStore.markPaid(this.orderNo);
-          this.printTipStep = 4;
+          this.printTipStep = 5;
         },
         // 从组织单位通知切回官网报名：回到第 1 步重新走流程
         switchToSelf() {
