@@ -1273,29 +1273,59 @@
             <div class="mt-[8px] text-[13px] leading-[22px] text-[#6c7293] text-center">您的纸质证书申领订单已提交，我们将尽快安排打印与寄送。</div>
           </div>
           <div class="mt-[22px] flex justify-center">
-            <div class="p-btn p-btn-primary" style="width: 180px;" @click="tGoOrder()">查看订单详情</div>
+            <div class="p-btn p-btn-primary" style="width: 180px;" @click="showTOrderInfo = true">查看订单详情</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ===== 已有未完成申领订单：代出订单信息 ===== -->
+    <!-- ===== 订单详情（临时订单查询，指导老师 / 学校授权人无网站账号） ===== -->
     <div x-show="showTOrderInfo" x-cloak class="fixed inset-0 z-[75] flex items-center justify-center bg-black/50" @click.self="showTOrderInfo = false">
-      <div class="relative w-[520px] max-w-[92vw] p-[28px] bg-white rounded-[16px]">
+      <div class="relative w-[560px] max-w-[92vw] max-h-[88vh] overflow-y-auto p-[28px] bg-white rounded-[16px]">
         <div class="flex items-center justify-between">
-          <div class="text-[18px] font-bold text-[#2b2b3a]">申领订单信息</div>
+          <div class="text-[18px] font-bold text-[#2b2b3a]">订单详情</div>
           <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]" @click="showTOrderInfo = false">✕</div>
         </div>
-        <div class="mt-[16px] text-left rounded-[10px] px-[16px] py-[12px]" style="background: #fbfbfd;">
-          <div class="tinfo-row"><span class="k">订单编号</span><span class="v" x-text="tOrder ? tOrder.orderNo : ''"></span></div>
-          <div class="tinfo-row"><span class="k">证书名称</span><span class="v" x-text="tOrder ? tOrder.certName : ''"></span></div>
-          <div class="tinfo-row"><span class="k">申领状态</span><span class="v" x-text="tOrder ? tStatusText(tOrder.status) : ''"></span></div>
-          <div class="tinfo-row"><span class="k">服务费用</span><span class="v" x-text="tOrder ? '￥' + tOrder.amount.toFixed(2) : ''"></span></div>
-          <div class="tinfo-row"><span class="k">收件信息</span><span class="v" x-text="tOrder ? (tOrder.shipName + ' ' + tOrder.shipPhone + ' ' + tOrder.shipAddress) : ''"></span></div>
-        </div>
-        <div class="mt-[18px] flex justify-end gap-[12px]">
-          <div class="p-btn p-btn-ghost" style="height: 38px; font-size: 14px;" @click="showTOrderInfo = false">知道了</div>
-          <div class="p-btn p-btn-primary" style="height: 38px; font-size: 14px;" @click="tGoOrder()">查看订单详情</div>
+
+        <template x-if="tOrder">
+          <div class="mt-[16px] text-left">
+            <div class="text-[14px] font-semibold text-[#2b2b3a]">证书信息</div>
+            <div class="mt-[6px] rounded-[10px] px-[16px] py-[6px]" style="background: #fbfbfd;">
+              <div class="tinfo-row"><span class="k">证书名称</span><span class="v" x-text="tOrder.certName"></span></div>
+              <div class="tinfo-row" x-show="tOrder.certWork"><span class="k">老师 / 学校</span><span class="v" x-text="tOrder.certWork"></span></div>
+            </div>
+
+            <div class="mt-[14px] text-[14px] font-semibold text-[#2b2b3a]">收件信息</div>
+            <div class="mt-[6px] rounded-[10px] px-[16px] py-[6px]" style="background: #fbfbfd;">
+              <div class="tinfo-row"><span class="k">收件人姓名</span><span class="v" x-text="tOrder.shipName"></span></div>
+              <div class="tinfo-row"><span class="k">联系电话</span><span class="v" x-text="tOrder.shipPhone"></span></div>
+              <div class="tinfo-row"><span class="k">收件地址</span><span class="v" x-text="tOrder.shipAddress"></span></div>
+            </div>
+
+            <div class="mt-[14px] text-[14px] font-semibold text-[#2b2b3a]">物流信息</div>
+            <div class="mt-[6px] rounded-[10px] px-[16px] py-[6px]" style="background: #fbfbfd;">
+              <div class="tinfo-row"><span class="k">物流商名称</span><span class="v" x-text="tOrder.carrier || '—'"></span></div>
+              <div class="tinfo-row"><span class="k">快递单号</span><span class="v" x-text="tOrder.trackingNo || '—'"></span></div>
+            </div>
+
+            <div class="mt-[14px] text-[14px] font-semibold text-[#2b2b3a]">支付单信息</div>
+            <div class="mt-[6px] rounded-[10px] px-[16px] py-[6px]" style="background: #fbfbfd;">
+              <div class="tinfo-row"><span class="k">订单编号</span><span class="v" x-text="tOrder.orderNo"></span></div>
+              <div class="tinfo-row"><span class="k">服务费用</span><span class="v" x-text="'￥' + tOrder.amount.toFixed(2)"></span></div>
+              <div class="tinfo-row"><span class="k">支付方式</span><span class="v" x-text="tOrder.payMethod === 'wechat' ? '微信' : '支付宝'"></span></div>
+              <div class="tinfo-row"><span class="k">订单状态</span><span class="v" x-text="tStatusText(tOrder.status)"></span></div>
+              <div class="tinfo-row"><span class="k">下单时间</span><span class="v" x-text="tFmtTime(tOrder.createTime)"></span></div>
+              <div class="tinfo-row" x-show="tOrder.payTime"><span class="k">支付时间</span><span class="v" x-text="tFmtTime(tOrder.payTime)"></span></div>
+            </div>
+
+            <div class="mt-[14px] rounded-[10px] px-[14px] py-[10px] text-[12px] leading-[1.7]" style="background: #fffbeb; color: #8a6d3b;">
+              您未注册大赛网站账号，此处为临时订单查询信息，请记录订单编号以便后续查询。
+            </div>
+          </div>
+        </template>
+
+        <div class="mt-[18px] flex justify-center">
+          <div class="p-btn p-btn-primary" style="height: 38px; font-size: 14px; width: 160px;" @click="showTOrderInfo = false">知道了</div>
         </div>
       </div>
     </div>
@@ -2878,9 +2908,8 @@
           window.OrderStore.markPaid(this.tOrderNo);
           this.tStep = 4;
         },
-        tGoOrder() {
-          location.href = './订单详情.html?orderNo=' + encodeURIComponent(this.tOrderNo);
-        },
+        // 指导老师 / 学校授权人无网站账号：订单详情以对话框展示临时查询信息
+        tFmtTime(ts) { return window.OrderStore.fmtTime(ts); },
         showTToast: false,
         tToastMsg: '',
         tToastType: 'success',
