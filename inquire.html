@@ -1112,6 +1112,43 @@
       </div>
     </div>
 
+    <!-- ===== 授权人确认对话框（审核通过后，无授权书环节） ===== -->
+    <div x-show="showSchoolAuthConfirmModal" x-cloak class="fixed inset-0 z-[65] flex items-center justify-center bg-black/50" @click.self="showSchoolAuthConfirmModal = false">
+      <div class="relative w-[520px] p-[32px] bg-white rounded-[24px]">
+        <div class="flex items-center justify-between">
+          <div class="text-[20px] font-medium text-[#8742DB]">授权人确认</div>
+          <div class="w-[30px] h-[30px] flex border-[2px] border-[#8742DB] items-center justify-center cursor-pointer" style="border-radius: 50%" @click="showSchoolAuthConfirmModal = false">
+            <img class="w-[11px] h-[11px]" src="./img/clone_icon_img.png" />
+          </div>
+        </div>
+        <div class="h-[2px] bg-[#8742DB] w-full mt-[20px]"></div>
+
+        <div class="mt-[24px] flex flex-col gap-[16px]">
+          <div>
+            <div class="text-sm text-black/60 mb-[6px] text-left">授权人姓名</div>
+            <input class="w-full h-[48px] px-[16px] text-[15px] border outline-none" style="border-radius: 12px; border-color: rgba(145, 98, 255, 0.2)" type="text" placeholder="请输入授权人姓名" x-model="schoolConfirmName" />
+          </div>
+          <div>
+            <div class="text-sm text-black/60 mb-[6px] text-left">手机号</div>
+            <input class="w-full h-[48px] px-[16px] text-[15px] border outline-none" style="border-radius: 12px; border-color: rgba(145, 98, 255, 0.2)" type="text" placeholder="请输入手机号" x-model="schoolConfirmPhone" />
+          </div>
+          <div>
+            <div class="text-sm text-black/60 mb-[6px] text-left">验证码</div>
+            <div class="flex gap-[12px]">
+              <input class="flex-1 h-[48px] px-[16px] text-[15px] border outline-none" style="border-radius: 12px; border-color: rgba(145, 98, 255, 0.2)" type="text" placeholder="请输入验证码" x-model="schoolConfirmCode" />
+              <div class="w-[120px] h-[48px] flex items-center justify-center text-[14px] font-medium rounded-[12px]" :class="schoolAuthorizerCountdown > 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'" style="border: 1px solid #9162FF; color: #9162FF" @click="sendSchoolAuthorizerCode()">
+                <span x-text="schoolAuthorizerCountdown > 0 ? schoolAuthorizerCountdown + 's' : (schoolAuthorizerSent ? '重新获取' : '发送验证码')"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium rounded-full text-white cursor-pointer"
+          style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)"
+          @click="verifySchoolAuthorizer()">确认</div>
+      </div>
+    </div>
+
     <!-- ===== 学校证书全屏预览 ===== -->
     <div x-show="showSchoolCertPreviewModal" class="fixed inset-0 z-[90] flex items-center justify-center bg-black/80" @click.self="showSchoolCertPreviewModal = false">
       <div class="relative w-full h-full flex items-center justify-center p-[40px]">
@@ -1782,6 +1819,11 @@
         showSchoolCertReviewModal: false,
         schoolCertSubmitted: false,
         schoolCertReviewed: false,
+        // 授权人确认（审核通过后，无授权书环节）
+        showSchoolAuthConfirmModal: false,
+        schoolConfirmName: "",
+        schoolConfirmPhone: "",
+        schoolConfirmCode: "",
         schoolClaimActive: false,
         schoolAuthorizerName: "",
         schoolAuthorizerPhone: "",
@@ -2757,7 +2799,7 @@
           this.teacherPreviewImage = src;
           this.showTeacherCertPreviewModal = true;
         },
-        // ===== 指导老师申领纸质证书（四步流程，与个人中心一致） =====
+        // ===== 指导老师 / 组织学校共用的申领纸质证书四步流程 =====
         showTClaim: false,
         tStep: 1,
         tShipName: '张明华',
@@ -2766,9 +2808,9 @@
         tPayMethod: 'alipay',
         tPayAgreed: false,
         tOrderNo: '',
+        tCertName: '指导老师证书',
+        tCertWork: '',
         showTOrderInfo: false,
-        get tCertName() { return '指导老师证书'; },
-        get tCertWork() { return '指导老师：' + (this.teacherName || '—'); },
         get tShipReady() {
           return !!(this.tShipName.trim()
             && /^\d{11}$/.test(this.tShipPhone.trim())
@@ -2777,9 +2819,11 @@
         get tOrderReady() { return this.tShipReady && this.tPayAgreed; },
         get tOrder() { return window.OrderStore.getOrder(this.tOrderNo); },
         tStatusText(s) { return window.OrderStore.STATUS_TEXT[s] || s; },
-        teacherClaim() {
-          // 已有未完成收货的订单：直接代出订单信息，不再进入申领流程
-          const existing = window.OrderStore.orderOfCert(this.tCertName, this.tCertWork);
+        // 通用入口：已有未完成收货的订单则代出订单信息，否则进入申领流程
+        openClaimFlow(certName, certWork) {
+          this.tCertName = certName;
+          this.tCertWork = certWork;
+          const existing = window.OrderStore.orderOfCert(certName, certWork);
           if (existing && (existing.status === 'pending' || existing.status === 'paid')) {
             this.tOrderNo = existing.orderNo;
             this.showTOrderInfo = true;
@@ -2796,6 +2840,9 @@
             this.tShipAddress = info.shipAddress || '';
           }
           this.showTClaim = true;
+        },
+        teacherClaim() {
+          this.openClaimFlow('指导老师证书', '指导老师：' + (this.teacherName || '—'));
         },
         tSubmitOrder() {
           if (!this.tShipReady) {
@@ -2880,10 +2927,37 @@
           this.schoolPreviewImage = src;
           this.showSchoolCertPreviewModal = true;
         },
-        // 申领纸质证书：组织学校走页面内申请表单（填授权人信息 + 授权委托书）
+        // 申领纸质证书：组织学校分阶段流转
+        // 未申请 → 学校证书申请；已申请待审核 → 审核中提示；审核通过 → 授权人确认 → 通过后进入申领流程
         schoolClaim() {
-          this.schoolClaimActive = true;
-          this.showSchoolCertApplyModal = true;
+          if (!this.schoolCertSubmitted) {
+            this.schoolClaimActive = true;
+            this.showSchoolCertApplyModal = true;
+            return;
+          }
+          if (!this.schoolCertReviewed) {
+            this.schoolCertReviewed = true;
+            this.showSchoolCertReviewModal = true;
+            return;
+          }
+          // 审核通过：进入授权人确认（无授权书环节）
+          this.schoolConfirmName = this.schoolAuthorizerName;
+          this.schoolConfirmPhone = this.schoolAuthorizerPhone;
+          this.schoolConfirmCode = '';
+          this.showSchoolAuthConfirmModal = true;
+        },
+        // 授权人信息核验：通过后进入申领流程，不通过提示信息有误
+        verifySchoolAuthorizer() {
+          const name = this.schoolConfirmName.trim();
+          const phone = this.schoolConfirmPhone.trim();
+          const code = this.schoolConfirmCode.trim();
+          if (!name || !phone || !code) { this.tToast('请填写完整的授权人信息', 'warning'); return; }
+          const matched = name === this.schoolAuthorizerName.trim()
+            && phone === this.schoolAuthorizerPhone.trim()
+            && code === '123456';
+          if (!matched) { this.tToast('验证信息有误', 'error'); return; }
+          this.showSchoolAuthConfirmModal = false;
+          this.openClaimFlow('组织学校获奖证书', '学校：' + (this.schoolName || '—'));
         },
         schoolDownloadClick() {
           if (!this.schoolCertSubmitted) {
@@ -2927,11 +3001,8 @@
           if (!this.schoolAuthorizerCode.trim()) { alert("请输入验证码"); return; }
           if (!this.schoolAuthFileName) { alert("请上传授权委托书"); return; }
           this.schoolCertSubmitted = true;
+          this.schoolClaimActive = false;
           this.showSchoolCertApplyModal = false;
-          if (this.schoolClaimActive) {
-            this.schoolClaimActive = false;
-            this.openComingSoon('即将开放，敬请期待');
-          }
         },
         // 通用提示对话框
         showMessage(msg) {
