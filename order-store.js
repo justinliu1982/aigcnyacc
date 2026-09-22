@@ -50,6 +50,11 @@
   function getShipInfo() { return read(SHIP_KEY, null); }
   function saveShipInfo(info) { write(SHIP_KEY, info); }
 
+  // 组织学校授权申请状态：无账号用户需跨会话保留，以便「支付完成后再来查询」时跳过申请与审核
+  var SCHOOL_KEY = 'aigc_school_claim_v1';
+  function getSchoolClaim() { return read(SCHOOL_KEY, null); }
+  function saveSchoolClaim(info) { write(SCHOOL_KEY, info); }
+
   var STATUS_TEXT = {
     pending: '待支付',
     paid: '已支付',
@@ -106,6 +111,8 @@
     orderOfCert: orderOfCert,
     getShipInfo: getShipInfo,
     saveShipInfo: saveShipInfo,
+    getSchoolClaim: getSchoolClaim,
+    saveSchoolClaim: saveSchoolClaim,
     STATUS_TEXT: STATUS_TEXT,
     genOrderNo: genOrderNo,
     fmtTime: fmtTime,

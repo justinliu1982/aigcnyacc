@@ -2956,9 +2956,32 @@
           this.schoolPreviewImage = src;
           this.showSchoolCertPreviewModal = true;
         },
+        // 组织学校授权申请状态：跨会话保留，模拟「支付完成后再来查询」跳过申请与审核
+        schoolStateRestored: false,
+        restoreSchoolState() {
+          if (this.schoolStateRestored) return;
+          this.schoolStateRestored = true;
+          const s = window.OrderStore.getSchoolClaim();
+          if (!s) return;
+          this.schoolCertSubmitted = !!s.submitted;
+          this.schoolCertReviewed = !!s.reviewed;
+          if (s.name) this.schoolAuthorizerName = s.name;
+          if (s.phone) this.schoolAuthorizerPhone = s.phone;
+          if (s.fileName) this.schoolAuthFileName = s.fileName;
+        },
+        persistSchoolState() {
+          window.OrderStore.saveSchoolClaim({
+            submitted: this.schoolCertSubmitted,
+            reviewed: this.schoolCertReviewed,
+            name: this.schoolAuthorizerName,
+            phone: this.schoolAuthorizerPhone,
+            fileName: this.schoolAuthFileName,
+          });
+        },
         // 申领纸质证书：组织学校分阶段流转
         // 未申请 → 学校证书申请；已申请待审核 → 审核中提示；审核通过 → 授权人确认 → 通过后进入申领流程
         schoolClaim() {
+          this.restoreSchoolState();
           if (!this.schoolCertSubmitted) {
             this.schoolClaimActive = true;
             this.showSchoolCertApplyModal = true;
@@ -2966,10 +2989,11 @@
           }
           if (!this.schoolCertReviewed) {
             this.schoolCertReviewed = true;
+            this.persistSchoolState();
             this.showSchoolCertReviewModal = true;
             return;
           }
-          // 审核通过：进入授权人确认（无授权书环节）
+          // 已审核：进入授权人确认（无授权书环节）；验证通过后由 openClaimFlow 代出订单或进入申领
           this.schoolConfirmName = this.schoolAuthorizerName;
           this.schoolConfirmPhone = this.schoolAuthorizerPhone;
           this.schoolConfirmCode = '';
@@ -2986,7 +3010,7 @@
             && code === '123456';
           if (!matched) { this.tToast('验证信息有误', 'error'); return; }
           this.showSchoolAuthConfirmModal = false;
-          this.openClaimFlow('组织学校获奖证书', '学校：' + (this.schoolName || '—'));
+          this.openClaimFlow('组织学校获奖证书', '学校：' + (this.schoolQueryName || this.schoolName || '—'));
         },
         schoolDownloadClick() {
           if (!this.schoolCertSubmitted) {
@@ -3032,6 +3056,7 @@
           this.schoolCertSubmitted = true;
           this.schoolClaimActive = false;
           this.showSchoolCertApplyModal = false;
+          this.persistSchoolState();
         },
         // 通用提示对话框
         showMessage(msg) {
