@@ -776,7 +776,8 @@
         openPrintTip() {
           // 已有未完成（确认收货前）的申领订单时，不可重复申领
           const existing = window.OrderStore.orderOfCert(this.certName, this.certWork);
-          if (existing && (existing.status === 'pending' || existing.status === 'paid')) {
+          // 进行中订单（待支付 / 待发货 / 待收货）才拦截；已关闭、已完结订单允许再次申领
+          if (window.OrderStore.isActive(existing)) {
             this.blockOrderNo = existing.orderNo;
             this.blockMsg = existing.status === 'pending'
               ? '您已有一笔待支付的申领订单，请先完成支付后再申请。'

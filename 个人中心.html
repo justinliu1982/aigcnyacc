@@ -270,7 +270,7 @@
         claimStatusColor(c) {
           this.ordersVersion;
           const o = window.OrderStore.orderOfCert(c.name, c.work);
-          const map = { pending: '#e08a2b', paid: '#1677ff', confirmed: '#21a366', invoiced: '#9a9aae' };
+          const map = { pending: '#e08a2b', paid: '#1677ff', confirmed: '#21a366', invoiced: '#9a9aae', closed: '#9a9aae' };
           return 'color:' + (o ? (map[o.status] || '#9a9aae') : '#9a9aae') + ';';
         },
 
@@ -281,7 +281,7 @@
         },
         recordStatusText(s) { return window.OrderStore.STATUS_TEXT[s] || s; },
         recordStatusColor(s) {
-          const map = { pending: '#e08a2b', paid: '#1677ff', confirmed: '#21a366', invoiced: '#9a9aae' };
+          const map = { pending: '#e08a2b', paid: '#1677ff', confirmed: '#21a366', invoiced: '#9a9aae', closed: '#9a9aae' };
           return 'color:' + (map[s] || '#9a9aae') + ';';
         },
         fmtTime(ts) { return window.OrderStore.fmtTime(ts); },

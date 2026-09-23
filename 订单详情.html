@@ -128,6 +128,12 @@
               </div>
             </div>
 
+            <!-- 已关闭提示（订单生成后满 24 小时仍未支付，由系统自动关闭） -->
+            <div x-show="order.status === 'closed'" class="mt-[16px] rounded-[10px] px-[16px] py-[12px] text-[13px] leading-[1.7]"
+              style="background: #fffbeb; color: #8a6d3b;">
+              该订单因超时未支付已自动关闭，不再支持继续支付；如需申领纸质证书，请重新提交申领。
+            </div>
+
             <!-- 收件信息 -->
             <div class="card mt-[16px]">
               <div class="section-title">收件信息</div>
@@ -156,6 +162,7 @@
                 <div class="info-row"><span class="k">支付方式</span><span class="v" x-text="order.payMethod === 'wechat' ? '微信' : '支付宝'"></span></div>
                 <div class="info-row"><span class="k">下单时间</span><span class="v" x-text="fmtTime(order.createTime)"></span></div>
                 <div class="info-row" x-show="order.payTime"><span class="k">支付时间</span><span class="v" x-text="fmtTime(order.payTime)"></span></div>
+                <div class="info-row" x-show="order.closeTime"><span class="k">关闭时间</span><span class="v" x-text="fmtTime(order.closeTime)"></span></div>
               </div>
             </div>
           </div>
@@ -296,7 +303,7 @@
         },
         statusStyle() {
           const c = {
-            pending: '#e08a2b', paid: '#1677ff', confirmed: '#21a366', invoiced: '#9a9aae',
+            pending: '#e08a2b', paid: '#1677ff', confirmed: '#21a366', invoiced: '#9a9aae', closed: '#9a9aae',
           }[this.order.status] || '#9a9aae';
           return 'color:' + c + ';background:' + c + '1a;';
         },

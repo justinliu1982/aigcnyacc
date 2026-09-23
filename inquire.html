@@ -1365,6 +1365,11 @@
               <div class="tinfo-row"><span class="k">订单状态</span><span class="v" x-text="tStatusText(tOrder.status)"></span></div>
               <div class="tinfo-row"><span class="k">下单时间</span><span class="v" x-text="tFmtTime(tOrder.createTime)"></span></div>
               <div class="tinfo-row" x-show="tOrder.payTime"><span class="k">支付时间</span><span class="v" x-text="tFmtTime(tOrder.payTime)"></span></div>
+              <div class="tinfo-row" x-show="tOrder.closeTime"><span class="k">关闭时间</span><span class="v" x-text="tFmtTime(tOrder.closeTime)"></span></div>
+            </div>
+
+            <div x-show="tOrder.status === 'closed'" class="mt-[14px] rounded-[10px] px-[14px] py-[10px] text-[12px] leading-[1.7]" style="background: #fffbeb; color: #8a6d3b;">
+              该订单因超时未支付已自动关闭，不再支持继续支付；如需申领纸质证书，请重新提交申领。
             </div>
 
             <div class="mt-[14px] rounded-[10px] px-[14px] py-[10px] text-[12px] leading-[1.7]" style="background: #fffbeb; color: #8a6d3b;">
@@ -2927,7 +2932,8 @@
           this.tCertName = certName;
           this.tCertWork = certWork;
           const existing = window.OrderStore.orderOfCert(certName, certWork);
-          if (existing && (existing.status === 'pending' || existing.status === 'paid')) {
+          // 进行中订单（待支付 / 待发货 / 待收货）才代出订单详情；已关闭、已完结订单允许再次申领
+          if (window.OrderStore.isActive(existing)) {
             this.tOrderNo = existing.orderNo;
             this.showTOrderInfo = true;
             return;

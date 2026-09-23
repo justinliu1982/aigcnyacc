@@ -18,7 +18,25 @@
     try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { /* ignore */ }
   }
 
-  function getOrders() { return read(ORDERS_KEY, []); }
+  // 订单自动关闭：订单生成后满 24 小时仍未支付 → 状态流转为「已关闭」（终态，不再接受支付）
+  var AUTO_CLOSE_MS = 24 * 60 * 60 * 1000;
+  function autoClose(list) {
+    var now = Date.now();
+    var changed = false;
+    for (var i = 0; i < list.length; i++) {
+      var o = list[i];
+      if (o.status === 'pending' && o.createTime && (now - o.createTime) >= AUTO_CLOSE_MS) {
+        o.status = 'closed';
+        o.closeReason = 'timeout';
+        o.closeTime = o.createTime + AUTO_CLOSE_MS;
+        changed = true;
+      }
+    }
+    if (changed) write(ORDERS_KEY, list);
+    return list;
+  }
+  // 读取订单前先执行一次自动关单扫描，保证各页面状态一致
+  function getOrders() { return autoClose(read(ORDERS_KEY, [])); }
   function saveOrders(list) { write(ORDERS_KEY, list); }
   function getOrder(orderNo) {
     return getOrders().find(function (o) { return o.orderNo === orderNo; }) || null;
@@ -60,7 +78,14 @@
     paid: '已支付',
     confirmed: '已收货',
     invoiced: '已开票',
+    closed: '已关闭',
   };
+
+  // 进行中订单：待支付 / 待发货(paid) / 待收货(shipped)；已关闭与已完结订单不阻塞再次申领
+  function isActive(o) {
+    return !!o && (o.status === 'pending' || o.status === 'paid' || o.status === 'shipped');
+  }
+  function isClosed(o) { return !!o && o.status === 'closed'; }
 
   function genOrderNo() {
     var d = new Date();
@@ -89,9 +114,11 @@
     return { carrier: c.name, trackingNo: c.prefix + digits };
   }
   // 标记支付完成：写入支付时间，并在尚无物流信息时生成物流商与快递单号
+  // 仅「待支付」订单可支付；已关闭订单不再接受支付，直接返回 null
   function markPaid(orderNo) {
     var o = getOrder(orderNo);
     if (!o) return null;
+    if (o.status !== 'pending') return null;
     var patch = { status: 'paid', payTime: Date.now() };
     if (!o.trackingNo) {
       var lg = genLogistics();
@@ -114,6 +141,9 @@
     getSchoolClaim: getSchoolClaim,
     saveSchoolClaim: saveSchoolClaim,
     STATUS_TEXT: STATUS_TEXT,
+    AUTO_CLOSE_MS: AUTO_CLOSE_MS,
+    isActive: isActive,
+    isClosed: isClosed,
     genOrderNo: genOrderNo,
     fmtTime: fmtTime,
   };
