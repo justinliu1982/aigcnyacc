@@ -6,6 +6,7 @@
   <title>证书详情</title>
   <script src="./browser@4.js"></script>
   <script src="./order-store.js"></script>
+  <script src="./regions.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js" defer></script>
   <style>
     [x-cloak] { display: none !important; }
@@ -402,7 +403,7 @@
         <div class="text-[15px] font-semibold text-[#2b2b3a]">【大赛证书申领通知】</div>
 
         <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
-          大赛数字证书已开放下载，请登录官网自行下载打印。如需防伪特种纸质证书服务，将由大赛「工作组」为您提供打印及快递等相关事务性服务，是否同意？
+          大赛数字证书已开放下载，请登录官网自行下载打印。如需防伪底纹纸质证书服务，将由大赛「工作组」为您提供打印及快递等相关事务性服务，是否同意？
         </div>
 
         <div class="mt-[22px] flex justify-center gap-[12px]">
@@ -445,13 +446,33 @@
           </div>
           <div>
             <div class="text-[13px] text-[#6c7293]">收件地址</div>
-            <input type="text" class="fb-input mt-[6px]" x-model="shipAddress" placeholder="请输入详细收件地址" />
+            <div class="mt-[6px] flex gap-[8px]">
+              <select class="fb-input flex-1" x-model="shipProvince" @change="onProvinceChange()">
+                <option value="">省份</option>
+                <template x-for="p in provinceList" :key="p">
+                  <option :value="p" x-text="p"></option>
+                </template>
+              </select>
+              <select class="fb-input flex-1" x-model="shipCity" @change="onCityChange()">
+                <option value="">城市</option>
+                <template x-for="c in cityList" :key="c">
+                  <option :value="c" x-text="c"></option>
+                </template>
+              </select>
+              <select class="fb-input flex-1" x-model="shipDistrict">
+                <option value="">区/县</option>
+                <template x-for="d in districtList" :key="d">
+                  <option :value="d" x-text="d"></option>
+                </template>
+              </select>
+            </div>
+            <input type="text" class="fb-input mt-[8px]" x-model="shipDetail" placeholder="请输入详细地址（街道、门牌号等）" />
           </div>
         </div>
 
         <div class="mt-[18px] pt-[16px] flex items-center justify-between" style="border-top: 1px solid #f0f0f5;">
           <div class="text-[14px] font-semibold text-[#2b2b3a]">服务费用</div>
-          <div class="text-[20px] font-bold" style="color: #8742DB;">￥19.00</div>
+          <div class="text-[20px] font-bold" style="color: #8742DB;" x-text="'￥' + claimFee.toFixed(2)"></div>
         </div>
 
         <div class="mt-[18px] pt-[16px]" style="border-top: 1px solid #f0f0f5;">
@@ -500,7 +521,7 @@
 
           <img src="./img/ewm.png" class="mt-[12px] w-[170px] h-[170px]" alt="支付二维码" />
 
-          <div class="mt-[12px] text-[22px] font-bold" style="color: #8742DB;">￥19.00</div>
+          <div class="mt-[12px] text-[22px] font-bold" style="color: #8742DB;" x-text="'￥' + claimFee.toFixed(2)"></div>
 
           <div class="mt-[8px] text-[13px]" style="color: #e08a2b;">二维码有效期 15 分钟，请尽快完成支付</div>
         </div>
@@ -518,7 +539,7 @@
             style="background: #e9f9f0; color: #21a366;">✓</div>
           <div class="mt-[14px] text-[17px] font-bold text-[#2b2b3a]">支付成功</div>
           <div class="mt-[8px] text-[13px] leading-[22px] text-[#6c7293] text-center">
-            您的纸质证书申领订单已提交，我们将尽快安排打印与寄送。
+            您的纸质证书申领订单已提交，大赛「工作组」将尽快安排打印与寄送。
           </div>
         </div>
 
@@ -710,19 +731,43 @@
         showPrintTip: false,
         printTipStep: 1,
         printTipMode: 'self',
-        // 物流收件信息
+        // 物流收件信息（省市区级联 + 详细地址）
         shipName: '张明华',
         shipPhone: '13812341234',
-        shipAddress: '',
+        shipProvince: '',
+        shipCity: '',
+        shipDistrict: '',
+        shipDetail: '',
+        get provinceList() { return window.Regions.provinces; },
+        get cityList() { return window.Regions.cities(this.shipProvince); },
+        get districtList() { return window.Regions.districts(this.shipProvince, this.shipCity); },
+        onProvinceChange() {
+          this.shipCity = '';
+          this.shipDistrict = '';
+        },
+        onCityChange() {
+          this.shipDistrict = '';
+        },
+        get shipFullAddress() {
+          return [this.shipProvince, this.shipCity, this.shipDistrict, this.shipDetail]
+            .map((v) => (v || '').trim()).filter(Boolean).join(' ');
+        },
+        // 服务费用：偏远地区 23，其余 19
+        get claimFee() {
+          return window.Regions.isRemote(this.shipProvince) ? 23 : 19;
+        },
         // 支付方式 / 订单
         payMethod: 'alipay',
         payAgreed: false,
         orderNo: '',
-        // 三项信息完整（姓名 + 11 位电话 + 地址）
+        // 信息完整（姓名 + 11 位电话 + 省市区 + 详细地址）
         get shipReady() {
           return !!(this.shipName.trim()
             && /^\d{11}$/.test(this.shipPhone.trim())
-            && this.shipAddress.trim());
+            && this.shipProvince
+            && this.shipCity
+            && this.shipDistrict
+            && this.shipDetail.trim());
         },
         // 信息完整且已勾选费用确认，才可提交订单
         get orderReady() {
@@ -748,7 +793,10 @@
           if (info) {
             this.shipName = info.shipName || '张明华';
             this.shipPhone = info.shipPhone || '13812341234';
-            this.shipAddress = info.shipAddress || '';
+            this.shipProvince = info.shipProvince || '';
+            this.shipCity = info.shipCity || '';
+            this.shipDistrict = info.shipDistrict || '';
+            this.shipDetail = info.shipDetail || '';
           }
           this.showPrintTip = true;
         },
@@ -764,7 +812,10 @@
           if (!this.shipReady) {
             if (!this.shipName.trim()) { this.showToastMsg('请填写收件人姓名', 'warning'); return; }
             if (!/^\d{11}$/.test(this.shipPhone.trim())) { this.showToastMsg('请填写 11 位联系电话', 'warning'); return; }
-            this.showToastMsg('请填写收件地址', 'warning');
+            if (!this.shipProvince || !this.shipCity || !this.shipDistrict) {
+              this.showToastMsg('请选择收件地址的省 / 市 / 区', 'warning'); return;
+            }
+            this.showToastMsg('请填写详细地址', 'warning');
             return;
           }
           if (!this.payAgreed) { this.showToastMsg('请先确认地址与费用声明', 'warning'); return; }
@@ -772,7 +823,11 @@
           window.OrderStore.saveShipInfo({
             shipName: this.shipName.trim(),
             shipPhone: this.shipPhone.trim(),
-            shipAddress: this.shipAddress.trim(),
+            shipProvince: this.shipProvince,
+            shipCity: this.shipCity,
+            shipDistrict: this.shipDistrict,
+            shipDetail: this.shipDetail.trim(),
+            shipAddress: this.shipFullAddress,
           });
           // 生成待支付订单
           this.orderNo = window.OrderStore.genOrderNo();
@@ -782,8 +837,12 @@
             certWork: this.certWork,
             shipName: this.shipName.trim(),
             shipPhone: this.shipPhone.trim(),
-            shipAddress: this.shipAddress.trim(),
-            amount: 19.00,
+            shipProvince: this.shipProvince,
+            shipCity: this.shipCity,
+            shipDistrict: this.shipDistrict,
+            shipDetail: this.shipDetail.trim(),
+            shipAddress: this.shipFullAddress,
+            amount: this.claimFee,
             payMethod: this.payMethod,
             status: 'pending',
             createTime: Date.now(),

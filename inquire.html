@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="./creator-certificate-template.css" />
   <script src="./creator-certificate-renderer.js"></script>
   <script src="./order-store.js"></script>
+  <script src="./regions.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js" defer></script>
   <script src="./browser@4.js"></script>
 </head>
@@ -1112,6 +1113,18 @@
       </div>
     </div>
 
+    <!-- ===== 已有组织单位申请提示 ===== -->
+    <div x-show="showOrgAppliedModal" x-cloak class="fixed inset-0 z-[65] flex items-center justify-center bg-black/50" @click.self="showOrgAppliedModal = false">
+      <div class="relative w-[480px] max-w-[92vw] p-[32px] bg-white rounded-[24px] text-center">
+        <div class="text-[40px]">📦</div>
+        <div class="mt-[16px] text-[15px] leading-[28px] text-black/80">
+          <div>该学校证书已由组织单位统一申请</div>
+          <div class="mt-[6px]" x-text="'请与' + orgAppliedName + '联系，联系方式：' + orgAppliedPhone"></div>
+        </div>
+        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium cursor-pointer text-white rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="showOrgAppliedModal = false">知道了</div>
+      </div>
+    </div>
+
     <!-- ===== 授权人确认对话框（审核通过后，无授权书环节） ===== -->
     <div x-show="showSchoolAuthConfirmModal" x-cloak class="fixed inset-0 z-[65] flex items-center justify-center bg-black/50" @click.self="showSchoolAuthConfirmModal = false">
       <div class="relative w-[520px] p-[32px] bg-white rounded-[24px]">
@@ -1182,7 +1195,7 @@
         <div x-show="tStep === 1" class="mt-[16px] text-left">
           <div class="text-[15px] font-semibold text-[#2b2b3a]">【大赛证书申领通知】</div>
           <div class="mt-[10px] text-[14px] leading-[26px] text-[#55556a]">
-            大赛数字证书已开放下载，请登录官网自行下载打印。如需防伪特种纸质证书服务，将由大赛「工作组」为您提供打印及快递等相关事务性服务，是否同意？
+            大赛数字证书已开放下载，请登录官网自行下载打印。如需防伪底纹纸质证书服务，将由大赛「工作组」为您提供打印及快递等相关事务性服务，是否同意？
           </div>
           <div class="mt-[22px] flex justify-center gap-[12px]">
             <div class="p-btn p-btn-primary" style="width: 158px;" @click="tStep = 2">同意，下一步</div>
@@ -1216,13 +1229,33 @@
             </div>
             <div>
               <div class="text-[13px] text-[#6c7293]">收件地址</div>
-              <input type="text" class="fb-input mt-[6px]" x-model="tShipAddress" placeholder="请输入详细收件地址" />
+              <div class="mt-[6px] flex gap-[8px]">
+                <select class="fb-input flex-1" x-model="tShipProvince" @change="onTProvinceChange()">
+                  <option value="">省份</option>
+                  <template x-for="p in tProvinceList" :key="p">
+                    <option :value="p" x-text="p"></option>
+                  </template>
+                </select>
+                <select class="fb-input flex-1" x-model="tShipCity" @change="onTCityChange()">
+                  <option value="">城市</option>
+                  <template x-for="c in tCityList" :key="c">
+                    <option :value="c" x-text="c"></option>
+                  </template>
+                </select>
+                <select class="fb-input flex-1" x-model="tShipDistrict">
+                  <option value="">区/县</option>
+                  <template x-for="d in tDistrictList" :key="d">
+                    <option :value="d" x-text="d"></option>
+                  </template>
+                </select>
+              </div>
+              <input type="text" class="fb-input mt-[8px]" x-model="tShipDetail" placeholder="请输入详细地址（街道、门牌号等）" />
             </div>
           </div>
 
           <div class="mt-[18px] pt-[16px] flex items-center justify-between" style="border-top: 1px solid #f0f0f5;">
             <div class="text-[14px] font-semibold text-[#2b2b3a]">服务费用</div>
-            <div class="text-[20px] font-bold" style="color: #8742DB;">￥19.00</div>
+            <div class="text-[20px] font-bold" style="color: #8742DB;" x-text="'￥' + tFee.toFixed(2)"></div>
           </div>
 
           <div class="mt-[18px] pt-[16px]" style="border-top: 1px solid #f0f0f5;">
@@ -1268,7 +1301,7 @@
           <div class="flex flex-col items-center">
             <div class="text-[14px] font-semibold text-[#2b2b3a]" x-text="tPayMethod === 'wechat' ? '微信扫码支付' : '支付宝扫码支付'"></div>
             <img src="./img/ewm.png" class="mt-[12px] w-[170px] h-[170px]" alt="支付二维码" />
-            <div class="mt-[12px] text-[22px] font-bold" style="color: #8742DB;">￥19.00</div>
+            <div class="mt-[12px] text-[22px] font-bold" style="color: #8742DB;" x-text="'￥' + tFee.toFixed(2)"></div>
             <div class="mt-[8px] text-[13px]" style="color: #e08a2b;">二维码有效期 15 分钟，请尽快完成支付</div>
           </div>
           <div class="mt-[22px] flex justify-end">
@@ -1281,7 +1314,7 @@
           <div class="flex flex-col items-center py-[6px]">
             <div class="w-[56px] h-[56px] rounded-full flex items-center justify-center text-[28px]" style="background: #e9f9f0; color: #21a366;">✓</div>
             <div class="mt-[14px] text-[17px] font-bold text-[#2b2b3a]">支付成功</div>
-            <div class="mt-[8px] text-[13px] leading-[22px] text-[#6c7293] text-center">您的纸质证书申领订单已提交，我们将尽快安排打印与寄送。</div>
+            <div class="mt-[8px] text-[13px] leading-[22px] text-[#6c7293] text-center">您的纸质证书申领订单已提交，大赛「工作组」将尽快安排打印与寄送。</div>
           </div>
           <div class="mt-[22px] flex justify-center">
             <div class="p-btn p-btn-primary" style="width: 180px;" @click="showTOrderInfo = true">查看订单详情</div>
@@ -1866,6 +1899,13 @@
         schoolConfirmPhone: "",
         schoolConfirmCode: "",
         schoolClaimActive: false,
+        // 演示：后台已有的组织单位申请（学校名称 → 组织单位与联系方式）
+        orgAppliedSchools: {
+          '瓮安八小': { org: '北京新艺教育科技有限公司', phone: '010-88886666' },
+        },
+        showOrgAppliedModal: false,
+        orgAppliedName: '',
+        orgAppliedPhone: '',
         schoolAuthorizerName: "",
         schoolAuthorizerPhone: "",
         schoolAuthorizerCode: "",
@@ -2840,22 +2880,39 @@
           this.teacherPreviewImage = src;
           this.showTeacherCertPreviewModal = true;
         },
-        // ===== 指导老师 / 组织学校共用的申领纸质证书四步流程 =====
+        // ===== 指导老师 / 组织学校共用的申领纸质证书五步流程 =====
         showTClaim: false,
         tStep: 1,
         tShipName: '张明华',
         tShipPhone: '13812341234',
-        tShipAddress: '',
+        tShipProvince: '',
+        tShipCity: '',
+        tShipDistrict: '',
+        tShipDetail: '',
         tPayMethod: 'alipay',
         tPayAgreed: false,
         tOrderNo: '',
         tCertName: '指导老师证书',
         tCertWork: '',
         showTOrderInfo: false,
+        // 指导老师 / 组织学校证书服务费用统一 25 元
+        tFee: 25,
+        get tProvinceList() { return window.Regions.provinces; },
+        get tCityList() { return window.Regions.cities(this.tShipProvince); },
+        get tDistrictList() { return window.Regions.districts(this.tShipProvince, this.tShipCity); },
+        onTProvinceChange() { this.tShipCity = ''; this.tShipDistrict = ''; },
+        onTCityChange() { this.tShipDistrict = ''; },
+        get tShipFullAddress() {
+          return [this.tShipProvince, this.tShipCity, this.tShipDistrict, this.tShipDetail]
+            .map((v) => (v || '').trim()).filter(Boolean).join(' ');
+        },
         get tShipReady() {
           return !!(this.tShipName.trim()
             && /^\d{11}$/.test(this.tShipPhone.trim())
-            && this.tShipAddress.trim());
+            && this.tShipProvince
+            && this.tShipCity
+            && this.tShipDistrict
+            && this.tShipDetail.trim());
         },
         get tOrderReady() { return this.tShipReady && this.tPayAgreed; },
         get tOrder() { return window.OrderStore.getOrder(this.tOrderNo); },
@@ -2878,7 +2935,10 @@
           if (info) {
             this.tShipName = info.shipName || '张明华';
             this.tShipPhone = info.shipPhone || '13812341234';
-            this.tShipAddress = info.shipAddress || '';
+            this.tShipProvince = info.shipProvince || '';
+            this.tShipCity = info.shipCity || '';
+            this.tShipDistrict = info.shipDistrict || '';
+            this.tShipDetail = info.shipDetail || '';
           }
           this.showTClaim = true;
         },
@@ -2889,14 +2949,21 @@
           if (!this.tShipReady) {
             if (!this.tShipName.trim()) { this.tToast('请填写收件人姓名', 'warning'); return; }
             if (!/^\d{11}$/.test(this.tShipPhone.trim())) { this.tToast('请填写 11 位联系电话', 'warning'); return; }
-            this.tToast('请填写收件地址', 'warning');
+            if (!this.tShipProvince || !this.tShipCity || !this.tShipDistrict) {
+              this.tToast('请选择收件地址的省 / 市 / 区', 'warning'); return;
+            }
+            this.tToast('请填写详细地址', 'warning');
             return;
           }
           if (!this.tPayAgreed) { this.tToast('请先确认地址与费用声明', 'warning'); return; }
           window.OrderStore.saveShipInfo({
             shipName: this.tShipName.trim(),
             shipPhone: this.tShipPhone.trim(),
-            shipAddress: this.tShipAddress.trim(),
+            shipProvince: this.tShipProvince,
+            shipCity: this.tShipCity,
+            shipDistrict: this.tShipDistrict,
+            shipDetail: this.tShipDetail.trim(),
+            shipAddress: this.tShipFullAddress,
           });
           this.tOrderNo = window.OrderStore.genOrderNo();
           window.OrderStore.addOrder({
@@ -2905,8 +2972,12 @@
             certWork: this.tCertWork,
             shipName: this.tShipName.trim(),
             shipPhone: this.tShipPhone.trim(),
-            shipAddress: this.tShipAddress.trim(),
-            amount: 19.00,
+            shipProvince: this.tShipProvince,
+            shipCity: this.tShipCity,
+            shipDistrict: this.tShipDistrict,
+            shipDetail: this.tShipDetail.trim(),
+            shipAddress: this.tShipFullAddress,
+            amount: this.tFee,
             payMethod: this.tPayMethod,
             status: 'pending',
             createTime: Date.now(),
@@ -2992,6 +3063,14 @@
         // 申领纸质证书：组织学校分阶段流转
         // 未申请 → 学校证书申请；已申请待审核 → 审核中提示；审核通过 → 授权人确认 → 通过后进入申领流程
         schoolClaim() {
+          // 后台已有组织单位申请：提示直接联系组织单位，不再走申领流程
+          const applied = this.orgAppliedSchools[String(this.schoolQueryName || '').trim()];
+          if (applied) {
+            this.orgAppliedName = applied.org;
+            this.orgAppliedPhone = applied.phone;
+            this.showOrgAppliedModal = true;
+            return;
+          }
           this.restoreSchoolState();
           if (!this.schoolCertSubmitted) {
             this.schoolClaimActive = true;
