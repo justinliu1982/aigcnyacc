@@ -1301,7 +1301,7 @@
           <div class="flex flex-col items-center">
             <div class="text-[14px] font-semibold text-[#2b2b3a]" x-text="tPayMethod === 'wechat' ? '微信扫码支付' : '支付宝扫码支付'"></div>
             <img src="./img/ewm.png" class="mt-[12px] w-[170px] h-[170px]" alt="支付二维码" />
-            <div class="mt-[12px] text-[22px] font-bold" style="color: #8742DB;" x-text="'￥' + tFee.toFixed(2)"></div>
+            <div class="mt-[12px] text-[22px] font-bold" style="color: #8742DB;" x-text="'￥' + tPayAmount.toFixed(2)"></div>
             <div class="mt-[8px] text-[13px]" style="color: #e08a2b;">二维码有效期 15 分钟，请尽快完成支付</div>
           </div>
           <div class="mt-[22px] flex justify-end">
@@ -1378,8 +1378,12 @@
           </div>
         </template>
 
-        <div class="mt-[18px] flex justify-center">
-          <div class="p-btn p-btn-primary" style="height: 38px; font-size: 14px; width: 160px;" @click="showTOrderInfo = false">知道了</div>
+        <div class="mt-[18px] flex justify-center gap-[12px]">
+          <!-- 待支付订单：底部提供「去支付」，点击后再次代出该订单的支付二维码 -->
+          <div x-show="tOrder && tOrder.status === 'pending'" class="p-btn p-btn-primary"
+            style="height: 38px; font-size: 14px; width: 160px;" @click="tGoPay()">去支付</div>
+          <div class="p-btn" :class="tOrder && tOrder.status === 'pending' ? 'p-btn-ghost' : 'p-btn-primary'"
+            style="height: 38px; font-size: 14px; width: 160px;" @click="showTOrderInfo = false">知道了</div>
         </div>
       </div>
     </div>
@@ -2902,6 +2906,8 @@
         tPayMethod: 'alipay',
         tPayAgreed: false,
         tOrderNo: '',
+        // 订单变更版本号：订单读写后自增，驱动 tOrder 相关视图刷新
+        tOrdersVersion: 0,
         tCertName: '指导老师证书',
         tCertWork: '',
         showTOrderInfo: false,
@@ -2925,7 +2931,7 @@
             && this.tShipDetail.trim());
         },
         get tOrderReady() { return this.tShipReady && this.tPayAgreed; },
-        get tOrder() { return window.OrderStore.getOrder(this.tOrderNo); },
+        get tOrder() { this.tOrdersVersion; return window.OrderStore.getOrder(this.tOrderNo); },
         tStatusText(s) { return window.OrderStore.STATUS_TEXT[s] || s; },
         // 通用入口：已有未完成收货的订单则代出订单信息，否则进入申领流程
         openClaimFlow(certName, certWork) {
@@ -2996,10 +3002,29 @@
             invoiceEmail: '',
           });
           this.tStep = 4;
+          this.tOrdersVersion++;
         },
         tCompletePay() {
           window.OrderStore.markPaid(this.tOrderNo);
+          this.tOrdersVersion++;
           this.tStep = 5;
+        },
+        // 支付二维码展示金额：以订单实际金额为准，避免与订单金额不一致
+        get tPayAmount() {
+          return this.tOrder && typeof this.tOrder.amount === 'number' ? this.tOrder.amount : this.tFee;
+        },
+        // 订单详情中「去支付」：关闭订单详情，代出该订单的支付二维码继续完成支付
+        tGoPay() {
+          const o = this.tOrder;
+          if (!o) { this.tToast('未找到该订单', 'error'); return; }
+          if (o.status !== 'pending') { this.tToast('该订单当前状态不可支付', 'warning'); return; }
+          this.tOrderNo = o.orderNo;
+          this.tCertName = o.certName;
+          this.tCertWork = o.certWork;
+          this.tPayMethod = o.payMethod === 'wechat' ? 'wechat' : 'alipay';
+          this.showTOrderInfo = false;
+          this.tStep = 4;
+          this.showTClaim = true;
         },
         // 指导老师 / 学校授权人无网站账号：订单详情以对话框展示临时查询信息
         tFmtTime(ts) { return window.OrderStore.fmtTime(ts); },
