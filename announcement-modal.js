@@ -249,10 +249,8 @@
     var TIMEOUT_MS = 5000;   // 页面无密码门时，最多等 5 秒让其他弹窗先完成
 
     function tick() {
-      if (!gateVisible()) {
-        // 无密码门（或已解锁）→ 直接弹
-        if (!document.getElementById('pwd-gate')) { cb(); return; }
-      }
+      // 密码门不存在或已隐藏（display 变为 none）→ 视为可弹出
+      if (!gateVisible()) { cb(); return; }
       if (waited >= LIMIT_MS) return;
       waited += 300;
       window.setTimeout(tick, 300);
