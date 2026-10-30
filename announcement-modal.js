@@ -45,6 +45,7 @@
   var STORAGE_KEY = CFG.storagePrefix + CFG.id;
   var ROOT_ID = 'aigc-note-root';
   var shown = false;
+  var started = false;
   var scrollLocked = false;
   var prevOverflow = '';
 
@@ -267,15 +268,22 @@
   /* ---------- 启动 ---------- */
 
   function start() {
+    if (started) return;
+    started = true;
     if (isDismissed()) return;
     whenReadyToShow(show);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', start);
-  } else {
+  // 不依赖 DOMContentLoaded：本脚本置于 </body> 前，此时 body 已可用；
+  // 站点存在外部慢资源（如第三方 jQuery）时 DOMContentLoaded 可能被长时间阻塞，
+  // 若仅监听该事件会导致公告始终不弹。
+  if (document.body) {
     start();
+  } else if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
   }
+  // 兜底：极端情况下（脚本提前执行）1 秒后再尝试一次
+  window.setTimeout(start, 1000);
 
   // 对外接口（便于调试与后续复用）
   window.AnnouncementModal = {
