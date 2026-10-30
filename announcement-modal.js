@@ -1,5 +1,5 @@
 /*!
- * 站点公告弹窗 —— 证书信息核对与纸质证书申领功能关闭提示
+ * 站点公告弹窗 —— 证书信息核对与纸质证书申领事务性服务关闭提示
  *
  * 用法（在页面 </body> 前引入即可，无需依赖 Tailwind / jQuery / Alpine）：
  *   <script src="./announcement-modal.js?v=20261030c"></script>
