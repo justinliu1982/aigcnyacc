@@ -28,6 +28,8 @@
     '#aigc-closed-preview-btn:hover{background:#8742DB;color:#fff;}' +
     '#aigc-closed-preview-btn.active{background:#8742DB;color:#fff;border-color:#8742DB;}' +
     'body.aigc-closed-mode .aigc-claim-btn{display:none!important;}' +
+    'body.aigc-closed-mode .aigc-download-dialog{border:2px solid #8742DB;' +
+    'box-shadow:0 12px 40px rgba(135,66,219,.28),0 2px 12px rgba(135,66,219,.12);}' +
     '@media (max-width:560px){#aigc-closed-preview-btn{right:12px;bottom:12px;height:38px;padding:0 14px;font-size:13px;}}';
 
   function injectCss() {

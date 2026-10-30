@@ -577,11 +577,17 @@
   <!-- ===== 下载数字证书确认 ===== -->
   <div x-show="showDownload" x-cloak class="fixed inset-0 z-[90] flex items-center justify-center"
     style="background: rgba(0, 0, 0, 0.35)" @click.self="showDownload = false">
-    <div class="bg-white rounded-[16px] w-[480px] max-w-[92vw] p-[28px]">
+    <div class="bg-white rounded-[16px] w-[480px] max-w-[92vw] p-[28px] aigc-download-dialog">
       <div class="flex items-center justify-between">
         <div class="text-[18px] font-bold text-[#2b2b3a]">下载数字证书</div>
         <div class="w-[28px] h-[28px] flex items-center justify-center rounded-full cursor-pointer text-[16px] text-[#b0b0c0] hover:text-[#55556a] hover:bg-[#f4f4f8]"
           @click="showDownload = false">✕</div>
+      </div>
+
+      <!-- 关停后状态：下载已开放，对话框提亮提示 -->
+      <div x-show="closedPreviewOn" class="mt-[12px] rounded-[8px] px-[12px] py-[10px] text-[13px] leading-[1.6]"
+        style="background: #f1ebfd; border: 1px solid #d8c8f7; color: #8742DB; font-weight: 500;">
+        ✓ 数字证书下载已开放，无需确认证书信息，可直接下载。
       </div>
 
       <div class="mt-[18px] rounded-[10px] px-[16px] py-[14px]" style="background: #fbfbfd;">
@@ -646,6 +652,8 @@
           if (q.get('name')) this.certName = q.get('name');
           if (q.get('work')) this.certWork = q.get('work');
           if (q.get('source')) this.certSource = q.get('source');
+          // 关停状态切换联动：切换时触发响应式刷新（下载对话框提亮、按钮高亮等）
+          window.AIGC_ON_CLOSED_PREVIEW_CHANGE = () => { this.previewVersion++; };
         },
 
         selectMenu(key) {
@@ -670,7 +678,9 @@
           return false;
         },
         // 关闭后状态：下载数字证书无需先确认证书信息
+        previewVersion: 0,
         get closedPreviewOn() {
+          this.previewVersion; // 建立响应式依赖
           return !!(window.ClosedPreview && window.ClosedPreview.isClosed());
         },
         downloadGate() {
