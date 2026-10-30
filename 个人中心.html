@@ -132,7 +132,7 @@
                       <td class="u-td">
                         <div class="flex flex-wrap gap-[8px]">
                           <a class="u-btn u-btn-outline" :href="'./证书详情.html?name=' + encodeURIComponent(c.name) + '&work=' + encodeURIComponent(c.work) + '&source=' + encodeURIComponent(c.source)">查看详情</a>
-                          <span class="u-btn u-btn-outline" @click="openClaimRecords(c)">申领记录</span>
+                          <span class="u-btn u-btn-outline aigc-record-btn" @click="openClaimRecords(c)">申领记录</span>
                         </div>
                       </td>
                     </tr>
@@ -337,6 +337,22 @@
         },
       }));
     });
+  </script>
+  <script src="./closed-preview.js"></script>
+  <script>
+    // 关闭后状态：我的证书列表中「申领记录」按钮——有申领记录的显示，无申领记录的隐藏
+    window.AIGC_ON_CLOSED_PREVIEW_CHANGE = function (closed) {
+      var d = null;
+      try { d = window.Alpine ? Alpine.$data(document.body) : null; } catch (e) { d = null; }
+      var trs = document.querySelectorAll('tbody tr');
+      for (var i = 0; i < trs.length; i++) {
+        var btn = trs[i].querySelector('.aigc-record-btn');
+        var c = d && d.certs && d.certs[i];
+        if (!btn || !c) continue;
+        var has = !!(window.OrderStore && window.OrderStore.orderOfCert(c.name, c.work));
+        btn.style.display = (closed && !has) ? 'none' : '';
+      }
+    };
   </script>
 </body>
 </html>

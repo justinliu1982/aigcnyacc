@@ -433,7 +433,7 @@
               </div>
               <!-- 申领此证书按钮：逻辑同“申请纸质证书” -->
               <div
-                class="w-[156px] h-[42px] flex justify-center items-center rounded-full cursor-pointer"
+                class="w-[156px] h-[42px] flex justify-center items-center rounded-full cursor-pointer aigc-claim-btn"
                 style="background: linear-gradient(to right, #9370ff, #b05bff);"
                 @click="closeCertDetail(); openPaperClaim()">
                 <span class="text-[16px] text-white font-medium">申领此证书</span>
@@ -952,7 +952,7 @@
           </template>
         </div>
 
-        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium rounded-full text-white"
+        <div class="mt-[24px] w-full h-[48px] flex items-center justify-center text-[16px] font-medium rounded-full text-white aigc-claim-btn"
           :class="selectedCertKey ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'"
           style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)"
           @click="selectedCertKey ? confirmCertSelect() : null">申领此证书</div>
@@ -976,7 +976,7 @@
         </div>
         <div class="mt-[30px] flex justify-center gap-[16px]">
           <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="teacherDownloadClick()">下载数字证书</div>
-          <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="teacherClaim()">申领纸质证书</div>
+          <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full aigc-claim-btn" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="teacherClaim()">申领纸质证书</div>
         </div>
       </div>
     </div>
@@ -1043,7 +1043,7 @@
         </div>
         <div class="mt-[30px] flex justify-center gap-[16px]">
           <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="schoolDownloadClick()">下载数字证书</div>
-          <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="schoolClaim()">申领纸质证书</div>
+          <div class="w-[160px] h-[48px] flex items-center justify-center text-[16px] font-medium text-white cursor-pointer rounded-full aigc-claim-btn" style="background: linear-gradient(180deg, #c062ff 0%, #9072ff 100%)" @click="schoolClaim()">申领纸质证书</div>
         </div>
       </div>
     </div>
@@ -3499,6 +3499,8 @@
 
   <!-- 站点公告弹窗：证书信息核对与纸质证书申领功能关闭提示 -->
   <script src="./announcement-modal.js?v=20261030g"></script>
+  <!-- 右下角「已关闭状态」预览切换按钮 -->
+  <script src="./closed-preview.js"></script>
 </body>
 
 </html>

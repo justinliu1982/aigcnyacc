@@ -143,18 +143,18 @@
 
             <div class="mt-[20px] flex flex-col gap-[10px]">
               <!-- ① 证书问题反馈：确认信息后置灰不可点击 -->
-              <div class="d-btn" :class="confirmed ? 'd-btn-gray' : 'd-btn-outline'"
+              <div class="d-btn aigc-claim-btn" :class="confirmed ? 'd-btn-gray' : 'd-btn-outline'"
                 @click="confirmed ? null : openFeedback()">
                 <span>✏️</span><span>证书问题反馈</span>
               </div>
 
               <!-- ② 确认证书信息：确认后转为已确认状态 -->
-              <div x-show="!confirmed" class="d-btn d-btn-primary" @click="openConfirmInfo()">✓ 确认证书信息</div>
-              <div x-show="confirmed" class="h-[40px] rounded-[8px] flex items-center justify-center text-[14px] font-medium"
+              <div x-show="!confirmed" class="d-btn d-btn-primary aigc-claim-btn" @click="openConfirmInfo()">✓ 确认证书信息</div>
+              <div x-show="confirmed" class="h-[40px] rounded-[8px] flex items-center justify-center text-[14px] font-medium aigc-claim-btn"
                 style="background: #e9f9f0; color: #21a366;">✓ 证书信息已确认</div>
 
               <!-- ③ 申领纸质证书：未确认信息前置灰 -->
-              <div class="d-btn" :class="confirmed ? 'd-btn-primary' : 'd-btn-gray'"
+              <div class="d-btn aigc-claim-btn" :class="confirmed ? 'd-btn-primary' : 'd-btn-gray'"
                 @click="requireConfirmed() && openPrintTip()">
                 <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" class="flex-shrink-0">
                   <rect x="1" y="1" width="14" height="12.5" rx="3" fill="#F0466B" />
@@ -164,9 +164,9 @@
                 <span>申领纸质证书</span>
               </div>
 
-              <!-- ④ 下载数字证书：未确认信息前置灰 -->
-              <div class="d-btn" :class="confirmed ? 'd-btn-primary' : 'd-btn-gray'"
-                @click="requireConfirmed() && openDownload()">
+              <!-- ④ 下载数字证书：关闭后状态无需依赖确认，可直接点击下载 -->
+              <div class="d-btn" :class="confirmed || closedPreviewOn ? 'd-btn-primary' : 'd-btn-gray'"
+                @click="downloadGate()">
                 <span class="text-[17px] leading-none">↓</span><span>下载数字证书</span>
               </div>
             </div>
@@ -669,6 +669,14 @@
           this.showToastMsg('请先确认证书信息', 'warning');
           return false;
         },
+        // 关闭后状态：下载数字证书无需先确认证书信息
+        get closedPreviewOn() {
+          return !!(window.ClosedPreview && window.ClosedPreview.isClosed());
+        },
+        downloadGate() {
+          if (this.closedPreviewOn || this.confirmed) { this.openDownload(); return; }
+          if (this.requireConfirmed()) this.openDownload();
+        },
 
         // ===== 证书问题反馈 =====
         showFeedback: false,
@@ -890,5 +898,6 @@
       }));
     });
   </script>
+  <script src="./closed-preview.js"></script>
 </body>
 </html>
